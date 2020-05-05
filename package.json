@@ -1,0 +1,13 @@
+{
+  "name": "ps2.liquidwarp.net",
+  "version": "1.0.0",
+  "main": "sass/mystyles.scss",
+  "devDependencies": {
+    "bulma": "^0.8.2",
+    "node-sass": "^4.14.1"
+  },
+  "license": "MIT",
+  "scripts": {
+    "css-build": "node-sass --omit-source-map-url sass/mybulma.scss statics/css/mybulma.css"
+  }
+}

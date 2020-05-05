@@ -1,0 +1,35 @@
+{% extends "base.html.jinja" %}
+
+{% block title %}infantry weapons stats{% endblock %}
+
+{% block breadcrumb %}
+    <section class="section">
+        <nav class="breadcrumb" aria-label="breadcrumbs">
+            <ul>
+                <li><a href="/index.html">Home</a></li>
+                <li><a href="/stats.html">Stats</a></li>
+                <li class="is-active"><a href="/stats/infantry-weapons.html" aria-current="page">Infantry weapons</a></li>
+            </ul>
+        </nav>
+    </section>
+{% endblock %}
+
+{% block content %}
+    <p class="title is-1">Infantry weapons stats</p>
+    <br />
+    {% for fac, v1 in faction_category_infantry_weapons|items %}
+        <br />
+        <p class="title is-2">{{ fac|enum_name }}</p>
+        {% for cat, v2 in v1|items %}
+            <br />
+            <p class="title is-3">{{ cat|enum_name }}</p>
+            <ul>
+            {% for w in v2 %}
+                <li>
+                    <a href="/stats/infantry-weapons/{{ w.slug }}-{{ w.item_id }}.html">{{ w.name }}</a>
+                </li>
+            {% endfor %}
+            </ul>
+        {% endfor %}
+    {% endfor %}
+{% endblock %}
