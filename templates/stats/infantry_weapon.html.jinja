@@ -9,7 +9,11 @@
                 <li><a href="/index.html">Home</a></li>
                 <li><a href="/stats.html">Stats</a></li>
                 <li><a href="/stats/infantry-weapons.html">Infantry weapons</a></li>
-                <li class="is-active"><a href="/stats/infantry-weapons/{{ weapon.slug }}.html" aria-current="page">{{ weapon.name }}</a></li>
+                <li class="is-active">
+                    <a href="/stats/infantry-weapons/{{ weapon.slug }}.html" aria-current="page">
+                        {{ weapon.name }}
+                    </a>
+                </li>
             </ul>
         </nav>
     </section>
@@ -19,7 +23,12 @@
     <div class="container is-fluid">
         {% if weapon.image_path is not none %}
             <figure class="image">
-                <img src="https://census.daybreakgames.com{{ weapon.image_path }}" width="256" height="128" style="max-width: 100%; width: auto">
+                <img
+                    src="https://census.daybreakgames.com{{ weapon.image_path }}"
+                    width="256"
+                    height="128"
+                    style="max-width: 100%; width: auto"
+                />
             </figure>
         {% endif %}
 
@@ -65,45 +74,6 @@
         </table>
 
         <br />
-
-        <p class="title is-2">Attachments</p>
-
-        {% for attachment in weapon.attachments %}
-            {% if attachment.is_default is not true %}
-                <div class="contailer is-fluid">
-                    <p class="title is-3">{{ attachment.name }}</p>
-
-                    {% if attachment.description is not none %}
-                        <p class="title is-5">{{ attachment.description }}</p>
-                    {% endif %}
-
-                    {% if attachment.image_path is not none %}
-                        <figure class="image">
-                            <img src="https://census.daybreakgames.com{{ attachment.image_path }}" width="256" height="128" style="max-width: 100%; width: auto">
-                        </figure>
-                    {% endif %}
-
-                    <p class="title is-4">Effects</p>
-
-                    {% for effect in attachment.effects %}
-                        <table class="table">
-                            <tbody>
-                                {% for attachment_effect_key, attachment_effect_value in effect|items %}
-                                    <tr>
-                                        <th>{{ attachment_effect_key }}</th>
-                                        <td>{{ attachment_effect_value }}</td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-
-                        <br />
-                    {% endfor %}
-                </div>
-
-                <br />
-            {% endif %}
-        {% endfor %}
 
         <p class="title is-2">Fire groups</p>
 
@@ -204,18 +174,22 @@
                                     <th>Pellets count @ damage</th>
                                     <td>
                                         {{ direct.pellets_count }} @ <br />
-                                        {{ direct.damage_per_pellet(direct.max_damage_range) }} before {{ direct.max_damage_range }}m<br />
-                                        {{ direct.damage_per_pellet(direct.min_damage_range) }} after {{ direct.min_damage_range }}m
+                                        {{ direct.damage_per_pellet(direct.max_damage_range) }}
+                                        before {{ direct.max_damage_range }}m<br />
+                                        {{ direct.damage_per_pellet(direct.min_damage_range) }}
+                                        after {{ direct.min_damage_range }}m
                                     </td>
                                 </tr>
                                 {% if direct.pellets_count > 1 %}
-                                <tr>
-                                    <th>Damage per shot</th>
-                                    <td>
-                                        {{ direct.damage_per_shot(direct.max_damage_range) }} before {{ direct.max_damage_range }}m<br />
-                                        {{ direct.damage_per_shot(direct.min_damage_range) }} after {{ direct.min_damage_range }}m
-                                    </td>
-                                </tr>
+                                    <tr>
+                                        <th>Damage per shot</th>
+                                        <td>
+                                            {{ direct.damage_per_shot(direct.max_damage_range) }}
+                                            before {{ direct.max_damage_range }}m<br />
+                                            {{ direct.damage_per_shot(direct.min_damage_range) }}
+                                            after {{ direct.min_damage_range }}m
+                                        </td>
+                                    </tr>
                                 {% endif %}
                                 <tr>
                                     <th>Location multipliers</th>
@@ -256,8 +230,10 @@
                                     <tr>
                                         <th>Damage per shot</th>
                                         <td>
-                                            {{ indirect.damage_per_shot(indirect.max_damage_range) }} before {{ indirect.max_damage_range }}m<br />
-                                            {{ indirect.damage_per_shot(indirect.min_damage_range) }} after {{ indirect.min_damage_range }}m
+                                            {{ indirect.damage_per_shot(indirect.max_damage_range) }}
+                                            before {{ indirect.max_damage_range }}m<br />
+                                            {{ indirect.damage_per_shot(indirect.min_damage_range) }}
+                                            after {{ indirect.min_damage_range }}m
                                         </td>
                                     </tr>
                                     <tr>
@@ -347,7 +323,10 @@
                                 {% if timing.spool_up_time is not none and timing.spool_up_time > 0 %}
                                     <tr>
                                         <th>Spooling</th>
-                                        <td>{{ timing.spool_up_initial_refire_time }}ms initial refire for {{ timing.spool_up_time}}ms</td>
+                                        <td>
+                                            {{ timing.spool_up_initial_refire_time }}ms
+                                            initial refire for {{ timing.spool_up_time}}ms
+                                        </td>
                                     </tr>
                                 {% endif %}
                             </tbody>
@@ -452,6 +431,50 @@
             </div>
 
             <br />
+        {% endfor %}
+
+        <p class="title is-2">Attachments</p>
+
+        {% for attachment in weapon.attachments %}
+            {% if attachment.is_default is not true %}
+                <div class="contailer is-fluid">
+                    <p class="title is-3">{{ attachment.name }}</p>
+
+                    {% if attachment.description is not none %}
+                        <p class="title is-5">{{ attachment.description }}</p>
+                    {% endif %}
+
+                    {% if attachment.image_path is not none %}
+                        <figure class="image">
+                            <img
+                                src="https://census.daybreakgames.com{{ attachment.image_path }}"
+                                width="256"
+                                height="128"
+                                style="max-width: 100%; width: auto"
+                            />
+                        </figure>
+                    {% endif %}
+
+                    <p class="title is-4">Effects</p>
+
+                    {% for effect in attachment.effects %}
+                        <table class="table">
+                            <tbody>
+                                {% for attachment_effect_key, attachment_effect_value in effect|items %}
+                                    <tr>
+                                        <th>{{ attachment_effect_key }}</th>
+                                        <td>{{ attachment_effect_value }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                        <br />
+                    {% endfor %}
+                </div>
+
+                <br />
+            {% endif %}
         {% endfor %}
 
     </div>
