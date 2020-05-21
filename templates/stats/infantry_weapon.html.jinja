@@ -529,54 +529,58 @@
 
     <p class="title is-2" id="attachments">Attachments</p>
 
-    {% for attachment in weapon.attachments %}
-        <div class="box">
-            <p
-                class="title is-3"
-                id="attachment-{{ attachment.slug }}"
-            >
-            {{ attachment.name }}{{ " (default)" if attachment.is_default else "" }}
-            </p>
+    {% if weapon.attachments|length > 0 %}
+        {% for attachment in weapon.attachments %}
+            <div class="box">
+                <p
+                    class="title is-3"
+                    id="attachment-{{ attachment.slug }}"
+                >
+                {{ attachment.name }}{{ " (default)" if attachment.is_default else "" }}
+                </p>
 
-            {% if attachment.description is not none %}
-                <p class="title is-5">{{ attachment.description }}</p>
-            {% endif %}
+                {% if attachment.description is not none %}
+                    <p class="title is-5">{{ attachment.description }}</p>
+                {% endif %}
 
-            {% if attachment.image_path is not none and not attachment.is_default %}
-                <figure class="image">
-                    <img
-                        src="https://census.daybreakgames.com{{ attachment.image_path }}"
-                        width="256"
-                        height="128"
-                        style="max-width: 100%; width: auto"
-                    />
-                </figure>
-            {% endif %}
+                {% if attachment.image_path is not none and not attachment.is_default %}
+                    <figure class="image">
+                        <img
+                            src="https://census.daybreakgames.com{{ attachment.image_path }}"
+                            width="256"
+                            height="128"
+                            style="max-width: 100%; width: auto"
+                        />
+                    </figure>
+                {% endif %}
 
-            {% if attachment.effects %}
-                <p class="title is-4">Effects</p>
+                {% if attachment.effects %}
+                    <p class="title is-4">Effects</p>
 
-                <div class="columns is-multiline">
-                    {% for effect in attachment.effects %}
-                        <div class="column box is-6">
-                            <table class="table">
-                                <tbody>
-                                    {% for attachment_effect_key, attachment_effect_value in effect|items %}
-                                        <tr>
-                                            <th>{{ attachment_effect_key }}</th>
-                                            <td>{{ attachment_effect_value }}</td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    {% endfor %}
-                </div>
-            {% else %}
-                <p>No listed effects</p>
-            {% endif %}
-        </div>
+                    <div class="columns is-multiline">
+                        {% for effect in attachment.effects %}
+                            <div class="column box is-6">
+                                <table class="table">
+                                    <tbody>
+                                        {% for attachment_effect_key, attachment_effect_value in effect|items %}
+                                            <tr>
+                                                <th>{{ attachment_effect_key }}</th>
+                                                <td>{{ attachment_effect_value }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>No listed effects</p>
+                {% endif %}
+            </div>
 
-        <br />
-    {% endfor %}
+            <br />
+        {% endfor %}
+    {% else %}
+        <p>No attachments</p>
+    {% endif %}
 {% endblock %}
