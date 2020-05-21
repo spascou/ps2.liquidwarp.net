@@ -38,7 +38,39 @@
 
         <br />
 
-        <p class="title is-2">Basic information</p>
+        <div class="content is-medium">
+            <ul>
+                <li><a href="#basic-information">Basic information</a></li>
+                <li>
+                    <a href="#fire-groups">Fire groups</a>
+                    <ul>
+                        {% for fire_group in weapon.fire_groups %}
+                            <li>
+                                <a href="#fire-group-{{ fire_group.index }}">
+                                    {{ fire_group.index }}: {{ fire_group.description }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                <li>
+                    <a href="#attachments">Attachments</a>
+                    <ul>
+                        {% for attachment in weapon.attachments %}
+                            <li>
+                                <a href="#attachment-{{ attachment.slug }}">
+                                    {{ attachment.name }}{{ " (default)" if attachment.is_default else "" }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <br />
+
+        <p class="title is-2" id="basic-information">Basic information</p>
 
         <table class="table">
             <tbody>
@@ -75,11 +107,16 @@
 
         <br />
 
-        <p class="title is-2">Fire groups</p>
+        <p class="title is-2" id="fire-groups">Fire groups</p>
 
         {% for fire_group in weapon.fire_groups %}
             <div class="container is-fluid">
-                <p class="title is-3">Fire group index {{ fire_group.index }}: {{ fire_group.description }}</p>
+                <p
+                    class="title is-3"
+                    id="fire-group-{{ fire_group.index }}"
+                >
+                    Fire group {{ fire_group.index }}: {{ fire_group.description }}
+                </p>
 
                 <p class="title is-4">Basic information</p>
 
@@ -92,11 +129,13 @@
                     </tbody>
                 </table>
 
+                <br />
+
                 <p class="title is-4">Fire modes</p>
 
                 {% for fire_mode in fire_group.fire_modes %}
                     <div class="container is-fluid">
-                        <p class="title is-5">{{ fire_mode.type|enum_name }} fire mode</p>
+                        <p class="title is-5">Fire mode: {{ fire_mode.type|enum_name }}</p>
 
                         <p class="title is-6">Basic information</p>
 
@@ -121,8 +160,11 @@
                             </tbody>
                         </table>
 
+                        <br />
+
+                        <p class="title is-6">Ammo</p>
+
                         {% if fire_mode.ammo is not none %}
-                            <p class="title is-6">Ammo</p>
                             {% set ammo = fire_mode.ammo %}
 
                             <table class="table">
@@ -141,10 +183,15 @@
                                     </tr>
                                 </tbody>
                             </table>
+                        {% else %}
+                            <p>No ammo</p>
                         {% endif %}
 
+                        <br />
+
+                        <p class="title is-6">Heat</p>
+
                         {% if fire_mode.heat is not none %}
-                            <p class="title is-6">Heat</p>
                             {% set heat = fire_mode.heat %}
 
                             <table class="table">
@@ -163,26 +210,40 @@
                                     </tr>
                                 </tbody>
                             </table>
+                        {% else %}
+                            <p>No heat</p>
                         {% endif %}
+
+                        <br />
 
                         <p class="title is-6">Direct damage</p>
 
                         {% set direct = fire_mode.direct_damage_profile %}
                         <table class="table">
                             <tbody>
-                                <tr>
-                                    <th>Pellets count @ damage</th>
-                                    <td>
-                                        {{ direct.pellets_count }} @ <br />
-                                        {{ direct.damage_per_pellet(direct.max_damage_range) }}
-                                        before {{ direct.max_damage_range }}m<br />
-                                        {{ direct.damage_per_pellet(direct.min_damage_range) }}
-                                        after {{ direct.min_damage_range }}m
-                                    </td>
-                                </tr>
                                 {% if direct.pellets_count > 1 %}
                                     <tr>
+                                        <th>Pellets count @ damage</th>
+                                        <td>
+                                            {{ direct.pellets_count }} @ <br />
+                                            {{ direct.damage_per_pellet(direct.max_damage_range) }}
+                                            before {{ direct.max_damage_range }}m<br />
+                                            {{ direct.damage_per_pellet(direct.min_damage_range) }}
+                                            after {{ direct.min_damage_range }}m
+                                        </td>
+                                    </tr>
+                                    <tr>
                                         <th>Damage per shot</th>
+                                        <td>
+                                            {{ direct.damage_per_shot(direct.max_damage_range) }}
+                                            before {{ direct.max_damage_range }}m<br />
+                                            {{ direct.damage_per_shot(direct.min_damage_range) }}
+                                            after {{ direct.min_damage_range }}m
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <th>Damage</th>
                                         <td>
                                             {{ direct.damage_per_shot(direct.max_damage_range) }}
                                             before {{ direct.max_damage_range }}m<br />
@@ -221,9 +282,11 @@
                             </tbody>
                         </table>
 
-                        {% if fire_mode.indirect_damage_profile is not none %}
-                            <p class="title is-6">Indirect damage</p>
+                        <br />
 
+                        <p class="title is-6">Indirect damage</p>
+
+                        {% if fire_mode.indirect_damage_profile is not none %}
                             {% set indirect = fire_mode.indirect_damage_profile %}
                             <table class="table">
                                 <tbody>
@@ -247,7 +310,11 @@
                                     </tr>
                                 </tbody>
                             </table>
+                        {% else %}
+                            <p>No indirect damage</p>
                         {% endif %}
+
+                        <br />
 
                         <p class="title is-6">Projectile</p>
 
@@ -266,20 +333,30 @@
                                     <th>Flight type</th>
                                     <td>{{ projectile.flight_type|enum_name }}</td>
                                 </tr>
-                                {% if projectile.gravity is not none %}
-                                    <tr>
-                                        <th>Gravity</th>
-                                        <td>{{ projectile.gravity }}</td>
-                                    </tr>
-                                {% endif %}
-                                {% if projectile.drag is not none and projectile.drag > 0 %}
-                                    <tr>
-                                        <th>Drag</th>
-                                        <td>{{ projectile.drag }}</td>
-                                    </tr>
-                                {% endif %}
+                                <tr>
+                                    <th>Gravity</th>
+                                    <td>
+                                        {% if projectile.gravity is not none %}
+                                            {{ projectile.gravity }}
+                                        {% else %}
+                                            No gravity
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Drag</th>
+                                    <td>
+                                        {% if projectile.drag is not none and projectile.drag > 0 %}
+                                            {{ projectile.drag }}
+                                        {% else %}
+                                            No drag
+                                        {% endif %}
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
+
+                        <br />
 
                         <p class="title is-6">Timing</p>
 
@@ -332,6 +409,8 @@
                             </tbody>
                         </table>
 
+                        <br />
+
                         <p class="title is-6">Recoil</p>
 
                         {% set recoil = fire_mode.recoil %}
@@ -357,12 +436,16 @@
                                     <th>Min / max horizontal</th>
                                     <td>{{ recoil.min_horizontal }}° / {{ recoil.max_horizontal }}°</td>
                                 </tr>
-                                {% if recoil.horizontal_tolerance is not none %}
                                     <tr>
                                         <th>Horizontal tolerance / max horizontal deviation</th>
-                                        <td>{{ recoil.horizontal_tolerance }}° / {{ recoil.max_horizontal_deviation }}°</td>
+                                        <td>
+                                        {% if recoil.horizontal_tolerance is not none %}
+                                            {{ recoil.horizontal_tolerance }}° / {{ recoil.max_horizontal_deviation }}°
+                                        {% else %}
+                                            No horizontal tolerance / ∞°
+                                        {% endif %}
+                                        </td>
                                     </tr>
-                                {% endif %}
                                 <tr>
                                     <th>Min / max horizontal increase</th>
                                     <td>{{ recoil.min_horizontal_increase }}° / {{ recoil.max_horizontal_increase }}°</td>
@@ -374,6 +457,8 @@
                             </tbody>
                         </table>
 
+                        <br />
+
                         <p class="title is-6">Cone of fire</p>
 
                         {% for player_state, cone_of_fire in fire_mode.player_state_cone_of_fire|items %}
@@ -383,7 +468,7 @@
                                 <table class="table">
                                     <tbody>
                                         <tr>
-                                            <th>Min / max angle</th>
+                                            <th>Min / max spread</th>
                                             <td>{{ cone_of_fire.min_angle }}° / {{ cone_of_fire.max_angle }}°</td>
                                         </tr>
                                         <tr>
@@ -433,28 +518,33 @@
             <br />
         {% endfor %}
 
-        <p class="title is-2">Attachments</p>
+        <p class="title is-2" id="attachments">Attachments</p>
 
         {% for attachment in weapon.attachments %}
-            {% if attachment.is_default is not true %}
-                <div class="contailer is-fluid">
-                    <p class="title is-3">{{ attachment.name }}</p>
+            <div class="contailer is-fluid">
+                <p
+                    class="title is-3"
+                    id="attachment-{{ attachment.slug }}"
+                >
+                {{ attachment.name }}{{ " (default)" if attachment.is_default else "" }}
+                </p>
 
-                    {% if attachment.description is not none %}
-                        <p class="title is-5">{{ attachment.description }}</p>
-                    {% endif %}
+                {% if attachment.description is not none %}
+                    <p class="title is-5">{{ attachment.description }}</p>
+                {% endif %}
 
-                    {% if attachment.image_path is not none %}
-                        <figure class="image">
-                            <img
-                                src="https://census.daybreakgames.com{{ attachment.image_path }}"
-                                width="256"
-                                height="128"
-                                style="max-width: 100%; width: auto"
-                            />
-                        </figure>
-                    {% endif %}
+                {% if attachment.image_path is not none and not attachment.is_default %}
+                    <figure class="image">
+                        <img
+                            src="https://census.daybreakgames.com{{ attachment.image_path }}"
+                            width="256"
+                            height="128"
+                            style="max-width: 100%; width: auto"
+                        />
+                    </figure>
+                {% endif %}
 
+                {% if attachment.effects %}
                     <p class="title is-4">Effects</p>
 
                     {% for effect in attachment.effects %}
@@ -471,10 +561,12 @@
 
                         <br />
                     {% endfor %}
-                </div>
+                {% else %}
+                    <p>No listed effects</p>
+                {% endif %}
+            </div>
 
-                <br />
-            {% endif %}
+            <br />
         {% endfor %}
 
     </div>
