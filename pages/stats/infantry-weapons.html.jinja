@@ -3,15 +3,13 @@
 {% block title %}infantry weapons stats{% endblock %}
 
 {% block breadcrumb %}
-    <section class="section">
-        <nav class="breadcrumb" aria-label="breadcrumbs">
-            <ul>
-                <li><a href="/index.html">Home</a></li>
-                <li><a href="/stats.html">Stats</a></li>
-                <li class="is-active"><a href="/stats/infantry-weapons.html" aria-current="page">Infantry weapons</a></li>
-            </ul>
-        </nav>
-    </section>
+    <nav class="breadcrumb" aria-label="breadcrumbs">
+        <ul>
+            <li><a href="/index.html">Home</a></li>
+            <li><a href="/stats.html">Stats</a></li>
+            <li class="is-active"><a href="/stats/infantry-weapons.html" aria-current="page">Infantry weapons</a></li>
+        </ul>
+    </nav>
 {% endblock %}
 
 {% block content %}
@@ -24,7 +22,7 @@
 
         <div class="columns is-multiline">
             {% for cat, v2 in v1|items %}
-                <div class="column is-4">
+                <div class="column box is-4">
                     <p class="title is-3">{{ cat|enum_name }}</p>
                     <ul>
                         {% for w in v2 %}
