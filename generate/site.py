@@ -32,7 +32,7 @@ def _items_filter(d: dict) -> List[Tuple[Any, Any]]:
 
 def _enum_name_filter(e: Enum) -> str:
     faction_resolver: Dict[Faction, str] = {
-        Faction.NONE: "None",
+        Faction.NONE: "No faction",
         Faction.VANU_SOVEREIGNTY: "Vanu Sovereignty",
         Faction.NEW_CONGLOMERATE: "New Conglomerate",
         Faction.TERRAN_REPUBLIC: "Terran Republic",

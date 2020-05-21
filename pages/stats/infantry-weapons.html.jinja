@@ -16,20 +16,25 @@
 
 {% block content %}
     <p class="title is-1">Infantry weapons stats</p>
+
     <br />
+
     {% for fac, v1 in faction_category_infantry_weapons|items %}
-        <br />
         <p class="title is-2">{{ fac|enum_name }}</p>
-        {% for cat, v2 in v1|items %}
-            <br />
-            <p class="title is-3">{{ cat|enum_name }}</p>
-            <ul>
-            {% for w in v2 %}
-                <li>
-                    <a href="/stats/infantry-weapons/{{ w.slug }}-{{ w.item_id }}.html">{{ w.name }}</a>
-                </li>
+
+        <div class="columns is-multiline">
+            {% for cat, v2 in v1|items %}
+                <div class="column is-4">
+                    <p class="title is-3">{{ cat|enum_name }}</p>
+                    <ul>
+                        {% for w in v2 %}
+                            <li>
+                                <a href="/stats/infantry-weapons/{{ w.slug }}-{{ w.item_id }}.html">{{ w.name }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
             {% endfor %}
-            </ul>
-        {% endfor %}
+        </div>
     {% endfor %}
 {% endblock %}
