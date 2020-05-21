@@ -110,7 +110,7 @@
         <p class="title is-2" id="fire-groups">Fire groups</p>
 
         {% for fire_group in weapon.fire_groups %}
-            <div class="container is-fluid">
+            <div class="container box is-fluid">
                 <p
                     class="title is-3"
                     id="fire-group-{{ fire_group.index }}"
@@ -134,7 +134,7 @@
                 <p class="title is-4">Fire modes</p>
 
                 {% for fire_mode in fire_group.fire_modes %}
-                    <div class="container is-fluid">
+                    <div class="container box is-fluid">
                         <p class="title is-5">Fire mode: {{ fire_mode.type|enum_name }}</p>
 
                         <p class="title is-6">Basic information</p>
@@ -462,7 +462,7 @@
                         <p class="title is-6">Cone of fire</p>
 
                         {% for player_state, cone_of_fire in fire_mode.player_state_cone_of_fire|items %}
-                            <div class="container is-fluid">
+                            <div class="container box is-fluid">
                                 <p class="subtitle is-6">{{ player_state|enum_name }}</p>
 
                                 <table class="table">
@@ -521,7 +521,7 @@
         <p class="title is-2" id="attachments">Attachments</p>
 
         {% for attachment in weapon.attachments %}
-            <div class="contailer is-fluid">
+            <div class="container box is-fluid">
                 <p
                     class="title is-3"
                     id="attachment-{{ attachment.slug }}"
