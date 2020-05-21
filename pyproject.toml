@@ -18,7 +18,7 @@ keywords = []
 
 [tool.poetry.dependencies]
 python = "^3.8"
-ps2-analysis = "^0.5"
+ps2-analysis = "^0.6"
 jinja2 = "^2.11"
 google-cloud-storage = "^1.28"
 

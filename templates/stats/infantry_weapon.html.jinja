@@ -164,7 +164,7 @@
                                     <div class="box">
                                         <p class="title is-6">Ammo</p>
 
-                                        {% if fire_mode.ammo is not none %}
+                                        {% if fire_mode.ammo is not none and fire_mode.ammo.ammo_per_shot > 0 %}
                                             {% set ammo = fire_mode.ammo %}
 
                                             <table class="table">
@@ -318,43 +318,47 @@
                                     <div class="box">
                                         <p class="title is-6">Projectile</p>
 
-                                        {% set projectile = fire_mode.projectile %}
-                                        <table class="table">
-                                            <tbody>
-                                                <tr>
-                                                    <th>Speed</th>
-                                                    <td>{{ projectile.speed }}m/s</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>Life time / max range</th>
-                                                    <td>{{ projectile.life_time }}ms / {{ projectile.max_range }}m</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>Flight type</th>
-                                                    <td>{{ projectile.flight_type|enum_name }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>Gravity</th>
-                                                    <td>
-                                                        {% if projectile.gravity is not none %}
-                                                            {{ projectile.gravity }}
-                                                        {% else %}
-                                                            No gravity
-                                                        {% endif %}
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th>Drag</th>
-                                                    <td>
-                                                        {% if projectile.drag is not none and projectile.drag > 0 %}
-                                                            {{ projectile.drag }}
-                                                        {% else %}
-                                                            No drag
-                                                        {% endif %}
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                        {% if fire_mode.projectile is not none %}
+                                            {% set projectile = fire_mode.projectile %}
+                                            <table class="table">
+                                                <tbody>
+                                                    <tr>
+                                                        <th>Speed</th>
+                                                        <td>{{ projectile.speed }}m/s</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Life time / max range</th>
+                                                        <td>{{ projectile.life_time }}ms / {{ projectile.max_range }}m</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Flight type</th>
+                                                        <td>{{ projectile.flight_type|enum_name }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Gravity</th>
+                                                        <td>
+                                                            {% if projectile.gravity is not none %}
+                                                                {{ projectile.gravity }}
+                                                            {% else %}
+                                                                No gravity
+                                                            {% endif %}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Drag</th>
+                                                        <td>
+                                                            {% if projectile.drag is not none and projectile.drag > 0 %}
+                                                                {{ projectile.drag }}
+                                                            {% else %}
+                                                                No drag
+                                                            {% endif %}
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        {% else %}
+                                            <p>No projectile</p>
+                                        {% endif %}
                                     </div>
 
                                     <div class="box">
