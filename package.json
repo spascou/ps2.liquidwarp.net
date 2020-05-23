@@ -8,6 +8,6 @@
   },
   "license": "MIT",
   "scripts": {
-    "css-build": "node-sass --omit-source-map-url sass/mybulma.scss statics/css/mybulma.css"
+    "css-build": "node-sass --omit-source-map-url sass/mybulma.scss statics/css/mybulma.min.css --output-style compressed"
   }
 }
