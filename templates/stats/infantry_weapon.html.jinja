@@ -96,7 +96,13 @@
                 </tr>
                 <tr>
                     <th>Sprint recovery time</th>
-                    <td>{{ weapon.sprint_recovery_time }}ms</td>
+                    <td>
+                        {% if weapon.sprint_recovery_time > 0 %}
+                            {{ weapon.sprint_recovery_time }}ms
+                        {% else %}
+                            Instant
+                        {% endif %}
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -108,10 +114,7 @@
         <div class="columns is-multiline">
             {% for fire_group in weapon.fire_groups %}
                 <div class="column box">
-                    <p
-                        class="title is-3"
-                        id="fire-group-{{ fire_group.index }}"
-                    >
+                    <p class="title is-3" id="fire-group-{{ fire_group.index }}">
                         Fire group {{ fire_group.index }}: {{ fire_group.description }}
                     </p>
 
@@ -122,7 +125,13 @@
                             <tbody>
                                 <tr>
                                     <th>Transition time</th>
-                                    <td>{{ fire_group.transition_time }}ms</td>
+                                    <td>
+                                        {% if fire_group.transition_time > 0 %}
+                                            {{ fire_group.transition_time }}ms
+                                        {% else %}
+                                            Instant
+                                        {% endif %}
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -225,18 +234,20 @@
                                                     <tr>
                                                         <th>Pellets count @ damage</th>
                                                         <td>
-                                                            {{ direct.pellets_count }} @ <br />
-                                                            {{ direct.damage_per_pellet(direct.max_damage_range) }}
-                                                            before {{ direct.max_damage_range }}m<br />
-                                                            {{ direct.damage_per_pellet(direct.min_damage_range) }}
-                                                            after {{ direct.min_damage_range }}m
+                                                            {% if direct.min_damage_range == direct.max_damage_range and direct.min_damage == direct.max_damage %}
+                                                                {{ direct.pellets_count }} @ {{ direct.max_damage }}
+                                                            {% else %}
+                                                                {{ direct.pellets_count }} @<br />
+                                                                {{ direct.max_damage }} before {{ direct.max_damage_range }}m,<br />
+                                                                {{ direct.min_damage }} after {{ direct.min_damage_range }}m
+                                                            {% endif %}
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <th>Damage per shot</th>
                                                         <td>
                                                             {{ direct.damage_per_shot(direct.max_damage_range) }}
-                                                            before {{ direct.max_damage_range }}m<br />
+                                                            before {{ direct.max_damage_range }}m,<br />
                                                             {{ direct.damage_per_shot(direct.min_damage_range) }}
                                                             after {{ direct.min_damage_range }}m
                                                         </td>
@@ -245,38 +256,54 @@
                                                     <tr>
                                                         <th>Damage</th>
                                                         <td>
-                                                            {{ direct.damage_per_shot(direct.max_damage_range) }}
-                                                            before {{ direct.max_damage_range }}m<br />
-                                                            {{ direct.damage_per_shot(direct.min_damage_range) }}
-                                                            after {{ direct.min_damage_range }}m
+                                                            {% if direct.min_damage_range == direct.max_damage_range and direct.min_damage == direct.max_damage %}
+                                                                {{ direct.max_damage }}
+                                                            {% else %}
+                                                                {{ direct.max_damage }} before {{ direct.max_damage_range }}m,<br />
+                                                                {{ direct.min_damage }} after {{ direct.min_damage_range }}m
+                                                            {% endif %}
                                                         </td>
                                                     </tr>
                                                 {% endif %}
+
                                                 <tr>
                                                     <th>Location multipliers</th>
                                                     <td>
-                                                        {% for damage_location, damage_multiplier in direct.location_multiplier|items %}
-                                                            {{ damage_multiplier }}x on {{ damage_location|enum_name }}<br />
-                                                        {% endfor %}
+                                                        {% if direct.location_multipliers|length > 0 %}
+                                                            {% for damage_location, damage_multiplier in direct.location_multiplier|items %}
+                                                                {{ damage_multiplier }}x on {{ damage_location|enum_name }}<br />
+                                                            {% endfor %}
+                                                        {% else %}
+                                                            No location multipliers
+                                                        {% endif %}
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <th>Shots to kill</th>
                                                     <td>
-                                                        {{ direct.shots_to_kill(distance=direct.max_damage_range, location=DamageLocation.HEAD) }}
-                                                        headshots before {{ direct.max_damage_range }}m<br />
-                                                        {{ direct.shots_to_kill(distance=direct.min_damage_range, location=DamageLocation.HEAD) }}
-                                                        headshots after {{ direct.min_damage_range }}m<br />
-                                                        <br />
-                                                        {{ direct.shots_to_kill(distance=direct.max_damage_range, location=DamageLocation.TORSO) }}
-                                                        bodyshots before {{ direct.max_damage_range }}m<br />
-                                                        {{ direct.shots_to_kill(distance=direct.min_damage_range, location=DamageLocation.TORSO) }}
-                                                        bodyshots after {{ direct.min_damage_range }}m<br />
-                                                        <br />
-                                                        {{ direct.shots_to_kill(distance=direct.max_damage_range, location=DamageLocation.LEGS) }}
-                                                        legshots before {{ direct.max_damage_range }}m<br />
-                                                        {{ direct.shots_to_kill(distance=direct.min_damage_range, location=DamageLocation.LEGS) }}
-                                                        legshots after {{ direct.min_damage_range }}m
+                                                        {% if direct.min_damage_range == direct.max_damage_range and direct.min_damage == direct.max_damage %}
+                                                            {{ direct.shots_to_kill(distance=direct.max_damage_range, location=DamageLocation.HEAD) }}
+                                                            headshots,<br />
+                                                            {{ direct.shots_to_kill(distance=direct.max_damage_range, location=DamageLocation.TORSO) }}
+                                                            bodyshots,<br />
+                                                            {{ direct.shots_to_kill(distance=direct.max_damage_range, location=DamageLocation.LEGS) }}
+                                                            legshots
+                                                        {% else %}
+                                                            {{ direct.shots_to_kill(distance=direct.max_damage_range, location=DamageLocation.HEAD) }}
+                                                            headshots before {{ direct.max_damage_range }}m,<br />
+                                                            {{ direct.shots_to_kill(distance=direct.min_damage_range, location=DamageLocation.HEAD) }}
+                                                            headshots after {{ direct.min_damage_range }}m,<br />
+                                                            <br />
+                                                            {{ direct.shots_to_kill(distance=direct.max_damage_range, location=DamageLocation.TORSO) }}
+                                                            bodyshots before {{ direct.max_damage_range }}m,<br />
+                                                            {{ direct.shots_to_kill(distance=direct.min_damage_range, location=DamageLocation.TORSO) }}
+                                                            bodyshots after {{ direct.min_damage_range }}m,<br />
+                                                            <br />
+                                                            {{ direct.shots_to_kill(distance=direct.max_damage_range, location=DamageLocation.LEGS) }}
+                                                            legshots before {{ direct.max_damage_range }}m,<br />
+                                                            {{ direct.shots_to_kill(distance=direct.min_damage_range, location=DamageLocation.LEGS) }}
+                                                            legshots after {{ direct.min_damage_range }}m
+                                                        {% endif %}
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -294,7 +321,7 @@
                                                         <th>Damage per shot</th>
                                                         <td>
                                                             {{ indirect.damage_per_shot(indirect.max_damage_range) }}
-                                                            before {{ indirect.max_damage_range }}m<br />
+                                                            before {{ indirect.max_damage_range }}m,<br />
                                                             {{ indirect.damage_per_shot(indirect.min_damage_range) }}
                                                             after {{ indirect.min_damage_range }}m
                                                         </td>
@@ -303,7 +330,7 @@
                                                         <th>Shots to kill</th>
                                                         <td>
                                                             {{ indirect.shots_to_kill(distance=indirect.max_damage_range) }}
-                                                            shots before {{ indirect.max_damage_range }}m<br />
+                                                            shots before {{ indirect.max_damage_range }}m,<br />
                                                             {{ indirect.shots_to_kill(distance=indirect.min_damage_range, location=DamageLocation.TORSO) }}
                                                             shots before {{ indirect.min_damage_range }}m
                                                         </td>
@@ -337,7 +364,7 @@
                                                     <tr>
                                                         <th>Gravity</th>
                                                         <td>
-                                                            {% if projectile.gravity is not none %}
+                                                            {% if projectile.gravity %}
                                                                 {{ projectile.gravity }}
                                                             {% else %}
                                                                 No gravity
@@ -347,7 +374,7 @@
                                                     <tr>
                                                         <th>Drag</th>
                                                         <td>
-                                                            {% if projectile.drag is not none and projectile.drag > 0 %}
+                                                            {% if projectile.drag %}
                                                                 {{ projectile.drag }}
                                                             {% else %}
                                                                 No drag
@@ -373,7 +400,7 @@
                                                         <td>Automatic</td>
                                                     {% elif timing.burst_length and timing.burst_refire_time %}
                                                         <td>{{ timing.burst_length }}x burst with {{ timing.burst_refire_time }}ms refire</td>
-                                                    {% elif timing.chamber_time is not none and timing.chamber_time > 0 %}
+                                                    {% elif timing.chamber_time %}
                                                         <td>Bolt-action with {{ timing.chamber_time }}ms chambering</td>
                                                     {% else %}
                                                         <td>Semi-automatic</td>
@@ -383,25 +410,25 @@
                                                     <th>Refire time</th>
                                                     <td>{{ timing.refire_time }}ms</td>
                                                 </tr>
-                                                {% if timing.fire_duration is not none and timing.fire_duration > 0 %}
+                                                {% if timing.fire_duration %}
                                                     <tr>
                                                         <th>Fire duration</th>
                                                         <td>{{ timing.fire_duration }}ms</td>
                                                     </tr>
                                                 {% endif %}
-                                                {% if timing.delay > 0 %}
+                                                {% if timing.delay %}
                                                     <tr>
                                                         <th>Delay</th>
                                                         <td>{{ timing.delay }}ms</td>
                                                     </tr>
                                                 {% endif %}
-                                                {% if timing.charge_up_time > 0 %}
+                                                {% if timing.charge_up_time %}
                                                     <tr>
                                                         <th>Charge time</th>
                                                         <td>{{ timing.charge_up_time }}ms</td>
                                                     </tr>
                                                 {% endif %}
-                                                {% if timing.spool_up_time is not none and timing.spool_up_time > 0 %}
+                                                {% if timing.spool_up_time %}
                                                     <tr>
                                                         <th>Spooling</th>
                                                         <td>
@@ -422,15 +449,33 @@
                                             <tbody>
                                                 <tr>
                                                     <th>Min / max rotation</th>
-                                                    <td>{{ recoil.min_angle }}° / {{ recoil.max_angle }}°</td>
+                                                    <td>
+                                                        {% if recoil.min_angle or recoil.max_angle %}
+                                                            {{ recoil.min_angle }}° / {{ recoil.max_angle }}°
+                                                        {% else %}
+                                                            No rotation
+                                                        {% endif %}
+                                                    </td>
                                                 </tr>
                                                 <tr>
                                                     <th>Min / max vertical</th>
-                                                    <td>{{ recoil.min_vertical }}° / {{ recoil.max_vertical }}°</td>
+                                                    <td>
+                                                        {% if recoil.min_vertical or recoil.max_vertical %}
+                                                            {{ recoil.min_vertical }}° / {{ recoil.max_vertical }}°
+                                                        {% else %}
+                                                            No vertical recoil
+                                                        {% endif %}
+                                                    </td>
                                                 </tr>
                                                 <tr>
                                                     <th>Standing / crouched vertical increase</th>
-                                                    <td>{{ recoil.vertical_increase }}° / {{ recoil.crouched_vertical_increase }}°</td>
+                                                    <td>
+                                                        {% if recoil.vertical_increase or recoil.crouched_vertical_increase %}
+                                                            {{ recoil.vertical_increase }}° / {{ recoil.crouched_vertical_increase }}°
+                                                        {% else %}
+                                                            No vertical increase
+                                                        {% endif %}
+                                                    </td>
                                                 </tr>
                                                 <tr>
                                                     <th>First shot vertical multiplier</th>
@@ -438,7 +483,13 @@
                                                 </tr>
                                                 <tr>
                                                     <th>Min / max horizontal</th>
-                                                    <td>{{ recoil.min_horizontal }}° / {{ recoil.max_horizontal }}°</td>
+                                                    <td>
+                                                        {% if recoil.min_horizontal or recoil.max_horizontal %}
+                                                            {{ recoil.min_horizontal }}° / {{ recoil.max_horizontal }}°
+                                                        {% else %}
+                                                            No horizontal recoil
+                                                        {% endif %}
+                                                    </td>
                                                 </tr>
                                                     <tr>
                                                         <th>Horizontal tolerance / max horizontal deviation</th>
@@ -452,11 +503,23 @@
                                                     </tr>
                                                 <tr>
                                                     <th>Min / max horizontal increase</th>
-                                                    <td>{{ recoil.min_horizontal_increase }}° / {{ recoil.max_horizontal_increase }}°</td>
+                                                    <td>
+                                                        {% if recoil.min_horizontal_increase or recoil.max_horizontal_increase %}
+                                                            {{ recoil.min_horizontal_increase }}° / {{ recoil.max_horizontal_increase }}°
+                                                        {% else %}
+                                                            No horizontal increase
+                                                        {% endif %}
+                                                    </td>
                                                 </tr>
                                                 <tr>
                                                     <th>Recovery</th>
-                                                    <td>{{ recoil.recovery_rate }}°/s after {{ recoil.recovery_delay }}ms</td>
+                                                    <td>
+                                                        {% if recoil.recovery_rate %}
+                                                            {{ recoil.recovery_rate }}°/s after {{ recoil.recovery_delay }}ms
+                                                        {% else %}
+                                                            No recovery
+                                                        {% endif %}
+                                                    </td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -465,54 +528,80 @@
                                     <div class="box">
                                         <p class="title is-6">Cone of fire</p>
 
-                                        {% for player_state, cone_of_fire in fire_mode.player_state_cone_of_fire|items %}
-                                            <div class="box">
-                                                <p class="subtitle is-6">{{ player_state|enum_name }}</p>
+                                        {% if fire_mode.player_state_cone_of_fire|length > 0 %}
+                                            {% for player_state, cone_of_fire in fire_mode.player_state_cone_of_fire|items %}
+                                                <div class="box">
+                                                    <p class="subtitle is-6">{{ player_state|enum_name }}</p>
 
-                                                <table class="table">
-                                                    <tbody>
-                                                        <tr>
-                                                            <th>Min / max spread</th>
-                                                            <td>{{ cone_of_fire.min_angle }}° / {{ cone_of_fire.max_angle }}°</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Bloom</th>
-                                                            <td>{{ cone_of_fire.bloom }}°</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Recovery</th>
-                                                            <td>{{ cone_of_fire.recovery_rate }}°/s after {{ cone_of_fire.recovery_delay }}ms</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Standing / moving multipliers</th>
-                                                            <td>{{ cone_of_fire.multiplier }}x / {{ cone_of_fire.moving_multiplier }}x</td>
-                                                        </tr>
-                                                        {% if cone_of_fire.pellet_spread is not none and cone_of_fire.pellet_spread > 0 %}
+                                                    <table class="table">
+                                                        <tbody>
                                                             <tr>
-                                                                <th>Pellet spread</th>
-                                                                <td>{{ cone_of_fire.pellet_spread }}°</td>
+                                                                <th>Min / max spread</th>
+                                                                <td>
+                                                                    {% if cone_of_fire.min_angle or cone_of_fire.max_angle %}
+                                                                        {{ cone_of_fire.min_angle }}° / {{ cone_of_fire.max_angle }}°
+                                                                    {% else %}
+                                                                        No spread
+                                                                    {% endif %}
+                                                                </td>
                                                             </tr>
-                                                        {% endif %}
-                                                    </tbody>
-                                                </table>
-                                            </div>
+                                                            <tr>
+                                                                <th>Bloom</th>
+                                                                <td>
+                                                                    {% if cone_of_fire.bloom %}
+                                                                        {{ cone_of_fire.bloom }}°
+                                                                    {% else %}
+                                                                        No bloom
+                                                                    {% endif %}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Recovery</th>
+                                                                <td>
+                                                                    {% if cone_of_fire.recovery_rate %}
+                                                                        {{ cone_of_fire.recovery_rate }}°/s after {{ cone_of_fire.recovery_delay }}ms
+                                                                    {% else %}
+                                                                        No recovery
+                                                                    {% endif %}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Standing / moving multipliers</th>
+                                                                <td>{{ cone_of_fire.multiplier }}x / {{ cone_of_fire.moving_multiplier }}x</td>
+                                                            </tr>
+                                                            {% if cone_of_fire.pellet_spread %}
+                                                                <tr>
+                                                                    <th>Pellet spread</th>
+                                                                    <td>{{ cone_of_fire.pellet_spread }}°</td>
+                                                                </tr>
+                                                            {% endif %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
 
-                                            <br />
-                                        {% endfor %}
+                                                <br />
+                                            {% endfor %}
+                                        {% else %}
+                                            <p>No cone of fire</p>
+                                        {% endif %}
                                     </div>
 
                                     <div class="box">
                                         <p class="title is-6">Can ADS</p>
-                                        <table class="table">
-                                            <tbody>
-                                            {% for player_state, can_ads in fire_mode.player_state_can_ads|items %}
-                                                <tr>
-                                                    <th>{{ player_state|enum_name }}</th>
-                                                    <td>{{ can_ads }}</td>
-                                                </tr>
-                                            {% endfor %}
-                                            </tbody>
-                                        </table>
+                                        {% if fire_mode.player_state_can_ads|length > 0 %}
+                                            <table class="table">
+                                                <tbody>
+                                                {% for player_state, can_ads in fire_mode.player_state_can_ads|items %}
+                                                    <tr>
+                                                        <th>{{ player_state|enum_name }}</th>
+                                                        <td>{{ can_ads }}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        {% else %}
+                                            <p>Cannot ADS</p>
+                                        {% endif %}
                                     </div>
                                 </div>
 
@@ -532,11 +621,8 @@
     {% if weapon.attachments|length > 0 %}
         {% for attachment in weapon.attachments %}
             <div class="box">
-                <p
-                    class="title is-3"
-                    id="attachment-{{ attachment.slug }}"
-                >
-                {{ attachment.name }}{{ " (default)" if attachment.is_default else "" }}
+                <p class="title is-3" id="attachment-{{ attachment.slug }}">
+                    {{ attachment.name }}{{ " (default)" if attachment.is_default else "" }}
                 </p>
 
                 {% if attachment.description is not none %}
