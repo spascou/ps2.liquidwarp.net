@@ -26,11 +26,13 @@ if __name__ == "__main__":
     action_group = parser.add_mutually_exclusive_group(required=True)
     action_group.add_argument("--generate", dest="generate", action="store_true")
     action_group.add_argument("--upload", dest="upload", action="store_true")
-    action_group.add_argument("--full", dest="full", action="store_true")
+    action_group.add_argument("--upgrade", dest="upgrade", action="store_true")
+
+    parser.add_argument("--clean", dest="clean", action="store_true")
 
     args = parser.parse_args()
 
-    if args.full is True or args.generate is True:
+    if args.upgrade is True or args.generate is True:
         clean_site(directory=SITE_DIRECTORY)
         update_site(
             templates_directory=TEMPLATES_DIRECTORY,
@@ -41,6 +43,8 @@ if __name__ == "__main__":
             census_service_id=CENSUS_SERVICE_ID,
         )
 
-    if args.full is True or args.upload is True:
+    if args.clean is True:
         clean_bucket(bucket_name=BUCKET_NAME)
+
+    if args.upgrade is True or args.upload is True:
         upload_to_bucket(directory_path=SITE_DIRECTORY, bucket_name=BUCKET_NAME)
