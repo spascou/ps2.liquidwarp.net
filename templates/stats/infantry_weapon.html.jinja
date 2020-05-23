@@ -269,7 +269,7 @@
                                                 <tr>
                                                     <th>Location multipliers</th>
                                                     <td>
-                                                        {% if direct.location_multipliers|length > 0 %}
+                                                        {% if direct.location_multiplier|length > 0 %}
                                                             {% for damage_location, damage_multiplier in direct.location_multiplier|items %}
                                                                 {{ damage_multiplier }}x on {{ damage_location|enum_name }}<br />
                                                             {% endfor %}
