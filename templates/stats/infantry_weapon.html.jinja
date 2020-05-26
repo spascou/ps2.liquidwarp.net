@@ -215,7 +215,13 @@
                                                     </tr>
                                                     <tr>
                                                         <th>With / without overheat recovery time</th>
-                                                        <td>{{ heat.full_recovery_time }}ms / {{ heat.overheat_recovery_time }}ms</td>
+                                                        <td>
+                                                            {% if heat.recovery_rate > 0 %}
+                                                                {{ heat.full_recovery_time }}ms / {{ heat.overheat_recovery_time }}ms
+                                                            {% else %}
+                                                                No recovery
+                                                            {% endif %}
+                                                        </td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -227,87 +233,106 @@
                                     <div class="box">
                                         <p class="title is-6">Direct damage</p>
 
-                                        {% set direct = fire_mode.direct_damage_profile %}
-                                        <table class="table">
-                                            <tbody>
-                                                {% if direct.pellets_count > 1 %}
+                                        {% if fire_mode.direct_damage_profile is not none %}
+                                            {% set direct = fire_mode.direct_damage_profile %}
+                                            <table class="table">
+                                                <tbody>
+                                                    {% if direct.pellets_count > 1 %}
+                                                        <tr>
+                                                            <th>Pellets count @ damage</th>
+                                                            <td>
+                                                                {% if direct.min_damage_range == direct.max_damage_range and direct.min_damage == direct.max_damage %}
+                                                                    {{ direct.pellets_count }} @ {{ direct.max_damage }}
+                                                                {% else %}
+                                                                    {{ direct.pellets_count }} @<br />
+                                                                    {{ direct.max_damage }} before {{ direct.max_damage_range }}m,<br />
+                                                                    {{ direct.min_damage }} after {{ direct.min_damage_range }}m
+                                                                {% endif %}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Damage per shot</th>
+                                                            <td>
+                                                                {{ direct.damage_per_shot(direct.max_damage_range) }}
+                                                                before {{ direct.max_damage_range }}m,<br />
+                                                                {{ direct.damage_per_shot(direct.min_damage_range) }}
+                                                                after {{ direct.min_damage_range }}m
+                                                            </td>
+                                                        </tr>
+                                                    {% else %}
+                                                        <tr>
+                                                            <th>Damage</th>
+                                                            <td>
+                                                                {% if direct.min_damage_range == direct.max_damage_range and direct.min_damage == direct.max_damage %}
+                                                                    {{ direct.max_damage }}
+                                                                {% else %}
+                                                                    {{ direct.max_damage }} before {{ direct.max_damage_range }}m,<br />
+                                                                    {{ direct.min_damage }} after {{ direct.min_damage_range }}m
+                                                                {% endif %}
+                                                            </td>
+                                                        </tr>
+                                                    {% endif %}
                                                     <tr>
-                                                        <th>Pellets count @ damage</th>
+                                                        <th>Location multipliers</th>
                                                         <td>
-                                                            {% if direct.min_damage_range == direct.max_damage_range and direct.min_damage == direct.max_damage %}
-                                                                {{ direct.pellets_count }} @ {{ direct.max_damage }}
+                                                            {% if direct.location_multiplier|length > 0 %}
+                                                                {% for damage_location, damage_multiplier in direct.location_multiplier|items %}
+                                                                    {{ damage_multiplier }}x on {{ damage_location|enum_name }}<br />
+                                                                {% endfor %}
                                                             {% else %}
-                                                                {{ direct.pellets_count }} @<br />
-                                                                {{ direct.max_damage }} before {{ direct.max_damage_range }}m,<br />
-                                                                {{ direct.min_damage }} after {{ direct.min_damage_range }}m
+                                                                No location multipliers
                                                             {% endif %}
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <th>Damage per shot</th>
-                                                        <td>
-                                                            {{ direct.damage_per_shot(direct.max_damage_range) }}
-                                                            before {{ direct.max_damage_range }}m,<br />
-                                                            {{ direct.damage_per_shot(direct.min_damage_range) }}
-                                                            after {{ direct.min_damage_range }}m
-                                                        </td>
-                                                    </tr>
-                                                {% else %}
-                                                    <tr>
-                                                        <th>Damage</th>
+                                                        <th>Shots to kill</th>
                                                         <td>
                                                             {% if direct.min_damage_range == direct.max_damage_range and direct.min_damage == direct.max_damage %}
-                                                                {{ direct.max_damage }}
+                                                                {{ direct.shots_to_kill(distance=direct.max_damage_range, location=DamageLocation.HEAD) }}
+                                                                headshots,<br />
+                                                                {{ direct.shots_to_kill(distance=direct.max_damage_range, location=DamageLocation.TORSO) }}
+                                                                bodyshots,<br />
+                                                                {{ direct.shots_to_kill(distance=direct.max_damage_range, location=DamageLocation.LEGS) }}
+                                                                legshots
                                                             {% else %}
-                                                                {{ direct.max_damage }} before {{ direct.max_damage_range }}m,<br />
-                                                                {{ direct.min_damage }} after {{ direct.min_damage_range }}m
+                                                                {{ direct.shots_to_kill(distance=direct.max_damage_range, location=DamageLocation.HEAD) }}
+                                                                headshots before {{ direct.max_damage_range }}m,<br />
+                                                                {{ direct.shots_to_kill(distance=direct.min_damage_range, location=DamageLocation.HEAD) }}
+                                                                headshots after {{ direct.min_damage_range }}m,<br />
+                                                                <br />
+                                                                {{ direct.shots_to_kill(distance=direct.max_damage_range, location=DamageLocation.TORSO) }}
+                                                                bodyshots before {{ direct.max_damage_range }}m,<br />
+                                                                {{ direct.shots_to_kill(distance=direct.min_damage_range, location=DamageLocation.TORSO) }}
+                                                                bodyshots after {{ direct.min_damage_range }}m,<br />
+                                                                <br />
+                                                                {{ direct.shots_to_kill(distance=direct.max_damage_range, location=DamageLocation.LEGS) }}
+                                                                legshots before {{ direct.max_damage_range }}m,<br />
+                                                                {{ direct.shots_to_kill(distance=direct.min_damage_range, location=DamageLocation.LEGS) }}
+                                                                legshots after {{ direct.min_damage_range }}m
                                                             {% endif %}
                                                         </td>
                                                     </tr>
-                                                {% endif %}
+                                                </tbody>
+                                            </table>
 
-                                                <tr>
-                                                    <th>Location multipliers</th>
-                                                    <td>
-                                                        {% if direct.location_multiplier|length > 0 %}
-                                                            {% for damage_location, damage_multiplier in direct.location_multiplier|items %}
-                                                                {{ damage_multiplier }}x on {{ damage_location|enum_name }}<br />
-                                                            {% endfor %}
-                                                        {% else %}
-                                                            No location multipliers
-                                                        {% endif %}
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th>Shots to kill</th>
-                                                    <td>
-                                                        {% if direct.min_damage_range == direct.max_damage_range and direct.min_damage == direct.max_damage %}
-                                                            {{ direct.shots_to_kill(distance=direct.max_damage_range, location=DamageLocation.HEAD) }}
-                                                            headshots,<br />
-                                                            {{ direct.shots_to_kill(distance=direct.max_damage_range, location=DamageLocation.TORSO) }}
-                                                            bodyshots,<br />
-                                                            {{ direct.shots_to_kill(distance=direct.max_damage_range, location=DamageLocation.LEGS) }}
-                                                            legshots
-                                                        {% else %}
-                                                            {{ direct.shots_to_kill(distance=direct.max_damage_range, location=DamageLocation.HEAD) }}
-                                                            headshots before {{ direct.max_damage_range }}m,<br />
-                                                            {{ direct.shots_to_kill(distance=direct.min_damage_range, location=DamageLocation.HEAD) }}
-                                                            headshots after {{ direct.min_damage_range }}m,<br />
-                                                            <br />
-                                                            {{ direct.shots_to_kill(distance=direct.max_damage_range, location=DamageLocation.TORSO) }}
-                                                            bodyshots before {{ direct.max_damage_range }}m,<br />
-                                                            {{ direct.shots_to_kill(distance=direct.min_damage_range, location=DamageLocation.TORSO) }}
-                                                            bodyshots after {{ direct.min_damage_range }}m,<br />
-                                                            <br />
-                                                            {{ direct.shots_to_kill(distance=direct.max_damage_range, location=DamageLocation.LEGS) }}
-                                                            legshots before {{ direct.max_damage_range }}m,<br />
-                                                            {{ direct.shots_to_kill(distance=direct.min_damage_range, location=DamageLocation.LEGS) }}
-                                                            legshots after {{ direct.min_damage_range }}m
-                                                        {% endif %}
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                            <p class="title is-6">Direct damage effect</p>
+                                            {% if direct.effect %}
+                                                <table class="table">
+                                                    <tbody>
+                                                        {% for direct_effect_key, direct_effect_value in direct.effect|items %}
+                                                            <tr>
+                                                                <th>{{ direct_effect_key }}</th>
+                                                                <td>{{ direct_effect_value|enum_name }}</td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            {% else %}
+                                                <p>No effect</p>
+                                            {% endif %}
+                                        {% else %}
+                                            <p>No direct damage</p>
+                                        {% endif %}
                                     </div>
 
                                     <div class="box">
@@ -337,6 +362,22 @@
                                                     </tr>
                                                 </tbody>
                                             </table>
+
+                                            <p class="title is-6">Indirect damage effect</p>
+                                            {% if indirect.effect %}
+                                                <table class="table">
+                                                    <tbody>
+                                                        {% for indirect_effect_key, indirect_effect_value in indirect.effect|items %}
+                                                            <tr>
+                                                                <th>{{ indirect_effect_key }}</th>
+                                                                <td>{{ indirect_effect_value|enum_name }}</td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            {% else %}
+                                                <p>No effect</p>
+                                            {% endif %}
                                         {% else %}
                                             <p>No indirect damage</p>
                                         {% endif %}

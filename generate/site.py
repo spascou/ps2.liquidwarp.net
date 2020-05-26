@@ -18,6 +18,8 @@ from ps2_census.enums import (
     ItemCategory,
     PlayerState,
     ProjectileFlightType,
+    ResistType,
+    TargetType,
 )
 
 STATICS_FOLDER: str = "statics"
@@ -31,69 +33,104 @@ def _items_filter(d: dict) -> List[Tuple[Any, Any]]:
 
 
 def _enum_name_filter(e: Enum) -> str:
-    faction_resolver: Dict[Faction, str] = {
-        Faction.NONE: "No faction",
-        Faction.VANU_SOVEREIGNTY: "Vanu Sovereignty",
-        Faction.NEW_CONGLOMERATE: "New Conglomerate",
-        Faction.TERRAN_REPUBLIC: "Terran Republic",
-        Faction.NS_OPERATIVES: "NS Operatives",
-    }
-    fire_mode_type_resolver: Dict[FireModeType, str] = {
-        FireModeType.PROJECTILE: "Hip fire",
-        FireModeType.IRON_SIGHT: "ADS",
-        FireModeType.MELEE: "Melee",
-        FireModeType.TRIGGER_ITEM_ABILITY: "Item ability",
-        FireModeType.THROWN: "Throw",
-    }
-    item_category_resolver: Dict[ItemCategory, str] = {
-        ItemCategory.KNIFE: "Knife",
-        ItemCategory.PISTOL: "Pistol",
-        ItemCategory.SHOTGUN: "Shotgun",
-        ItemCategory.SMG: "SMG",
-        ItemCategory.LMG: "LMG",
-        ItemCategory.ASSAULT_RIFLE: "Assault rifle",
-        ItemCategory.CARBINE: "Carbine",
-        ItemCategory.SNIPER_RIFLE: "Sniper rifle",
-        ItemCategory.SCOUT_RIFLE: "Scout rifle",
-        ItemCategory.HEAVY_WEAPON: "Heavy weapon",
-        ItemCategory.BATTLE_RIFLE: "Battle rifle",
-        ItemCategory.CROSSBOW: "Crossbow",
-        ItemCategory.HYBRID_RIFLE: "Hybrid rifle",
-    }
-    projectile_flight_type_resolver: Dict[ProjectileFlightType, str] = {
-        ProjectileFlightType.BALLISTIC: "Ballistic",
-        ProjectileFlightType.TRUE_BALLISTIC: "True ballistic",
-        ProjectileFlightType.DYNAMIC: "Dynamic",
-        ProjectileFlightType.PROXIMITY_DETONATE: "Proximity detonate",
-    }
-    damage_location_resolver: Dict[DamageLocation, str] = {
-        DamageLocation.HEAD: "Head",
-        DamageLocation.TORSO: "Body",
-        DamageLocation.LEGS: "Legs",
-    }
-    player_state_resolver: Dict[PlayerState, str] = {
-        PlayerState.STANDING: "Standing",
-        PlayerState.CROUCHING: "Crouching",
-        PlayerState.RUNNING: "Running",
-        PlayerState.SPRINTING: "Sprinting",
-        PlayerState.FALLING_LONG: "Falling",
-        PlayerState.CROUCH_WALKING: "Crouch walking",
-    }
+    if isinstance(e, Enum):
+        faction_resolver: Dict[Faction, str] = {
+            Faction.NONE: "No faction",
+            Faction.VANU_SOVEREIGNTY: "Vanu Sovereignty",
+            Faction.NEW_CONGLOMERATE: "New Conglomerate",
+            Faction.TERRAN_REPUBLIC: "Terran Republic",
+            Faction.NS_OPERATIVES: "NS Operatives",
+        }
+        fire_mode_type_resolver: Dict[FireModeType, str] = {
+            FireModeType.PROJECTILE: "Hip fire",
+            FireModeType.IRON_SIGHT: "ADS",
+            FireModeType.MELEE: "Melee",
+            FireModeType.TRIGGER_ITEM_ABILITY: "Item ability",
+            FireModeType.THROWN: "Throw",
+        }
+        item_category_resolver: Dict[ItemCategory, str] = {
+            ItemCategory.ROCKET_LAUNCHER: "Rocket launcher",
+            ItemCategory.EXPLOSIVE: "Explosive",
+            ItemCategory.GRENADE: "Grenade",
+            ItemCategory.KNIFE: "Knife",
+            ItemCategory.PISTOL: "Pistol",
+            ItemCategory.SHOTGUN: "Shotgun",
+            ItemCategory.SMG: "SMG",
+            ItemCategory.LMG: "LMG",
+            ItemCategory.ASSAULT_RIFLE: "Assault rifle",
+            ItemCategory.CARBINE: "Carbine",
+            ItemCategory.SNIPER_RIFLE: "Sniper rifle",
+            ItemCategory.SCOUT_RIFLE: "Scout rifle",
+            ItemCategory.HEAVY_WEAPON: "Heavy weapon",
+            ItemCategory.BATTLE_RIFLE: "Battle rifle",
+            ItemCategory.CROSSBOW: "Crossbow",
+            ItemCategory.HYBRID_RIFLE: "Hybrid rifle",
+        }
+        projectile_flight_type_resolver: Dict[ProjectileFlightType, str] = {
+            ProjectileFlightType.BALLISTIC: "Ballistic",
+            ProjectileFlightType.TRUE_BALLISTIC: "True ballistic",
+            ProjectileFlightType.DYNAMIC: "Dynamic",
+            ProjectileFlightType.PROXIMITY_DETONATE: "Proximity detonate",
+        }
+        damage_location_resolver: Dict[DamageLocation, str] = {
+            DamageLocation.HEAD: "Head",
+            DamageLocation.TORSO: "Body",
+            DamageLocation.LEGS: "Legs",
+        }
+        player_state_resolver: Dict[PlayerState, str] = {
+            PlayerState.STANDING: "Standing",
+            PlayerState.CROUCHING: "Crouching",
+            PlayerState.RUNNING: "Running",
+            PlayerState.SPRINTING: "Sprinting",
+            PlayerState.FALLING_LONG: "Falling",
+            PlayerState.CROUCH_WALKING: "Crouch walking",
+        }
+        resist_type_resolver: Dict[ResistType, str] = {
+            ResistType.NONE: "None",
+            ResistType.MELEE: "Melee",
+            ResistType.SMALL_ARM: "Small arm",
+            ResistType.HEAVY_MACHINE_GUN: "Heavy machine gun",
+            ResistType.HEAVY_ANTI_ARMOR: "Heavy anti armor",
+            ResistType.EXPLOSIVE: "Explosive",
+            ResistType.TANK_SHELL: "Tank shell",
+            ResistType.AIRCRAFT_MACHINE_GUN: "Aircraft machine gun",
+            ResistType.ANTI_VEHICLE_MINE: "Anti-vehicle mine",
+            ResistType.FLAK_EXPLOSIVE_BLAST: "Flak explosive blast",
+            ResistType.ANTI_AIRCRAFT_MACHINE_GUN: "Anti aircraft machine gun",
+            ResistType.AIR_TO_GROUND_WARHEAD: "Air to ground warhead",
+            ResistType.ARMOR_PIERCING_CHAIN_GUN: "Armor-piercing chain gun",
+            ResistType.DEFAULT_ROCKET_LAUNCHER: "Rocket launcher",
+            ResistType.ANTI_MATERIEL_RIFLE: "Anti-materiel rifle",
+            ResistType.WHALE_HUNTER: "Whale hunter",
+            ResistType.CORE_EXPLOSION: "Core explosion",
+        }
+        target_type_resolver: Dict[TargetType, str] = {
+            TargetType.SELF: "Self",
+            TargetType.ANY: "Any",
+            TargetType.ENEMY: "Enemy",
+            TargetType.ALLY: "Ally",
+        }
 
-    if isinstance(e, Faction):
-        return faction_resolver[e]
-    elif isinstance(e, FireModeType):
-        return fire_mode_type_resolver[e]
-    elif isinstance(e, ItemCategory):
-        return item_category_resolver[e]
-    elif isinstance(e, ProjectileFlightType):
-        return projectile_flight_type_resolver[e]
-    elif isinstance(e, DamageLocation):
-        return damage_location_resolver[e]
-    elif isinstance(e, PlayerState):
-        return player_state_resolver[e]
+        if isinstance(e, Faction):
+            return faction_resolver[e]
+        elif isinstance(e, FireModeType):
+            return fire_mode_type_resolver[e]
+        elif isinstance(e, ItemCategory):
+            return item_category_resolver[e]
+        elif isinstance(e, ProjectileFlightType):
+            return projectile_flight_type_resolver[e]
+        elif isinstance(e, DamageLocation):
+            return damage_location_resolver[e]
+        elif isinstance(e, PlayerState):
+            return player_state_resolver[e]
+        elif isinstance(e, ResistType):
+            return resist_type_resolver[e]
+        elif isinstance(e, TargetType):
+            return target_type_resolver[e]
+        else:
+            return e.name
     else:
-        return e.name
+        return str(e)
 
 
 def clean_site(directory: str):
