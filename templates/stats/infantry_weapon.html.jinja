@@ -288,27 +288,29 @@
                                                         <th>Shots to kill</th>
                                                         <td>
                                                             {% if direct.min_damage_range == direct.max_damage_range and direct.min_damage == direct.max_damage %}
-                                                                {{ direct.shots_to_kill(distance=direct.max_damage_range, location=DamageLocation.HEAD) }}
-                                                                headshots,<br />
-                                                                {{ direct.shots_to_kill(distance=direct.max_damage_range, location=DamageLocation.TORSO) }}
-                                                                bodyshots,<br />
-                                                                {{ direct.shots_to_kill(distance=direct.max_damage_range, location=DamageLocation.LEGS) }}
-                                                                legshots
+                                                                {% for r, s in direct.shots_to_kill_ranges(location=DamageLocation.HEAD) %}
+                                                                    {{ s }} headshots <br />
+                                                                {% endfor %}
+                                                                <br />
+                                                                {% for r, s in direct.shots_to_kill_ranges(location=DamageLocation.TORSO) %}
+                                                                    {{ s }} bodyshots <br />
+                                                                {% endfor %}
+                                                                <br />
+                                                                {% for r, s in direct.shots_to_kill_ranges(location=DamageLocation.LEGS) %}
+                                                                    {{ s }} legshots <br />
+                                                                {% endfor %}
                                                             {% else %}
-                                                                {{ direct.shots_to_kill(distance=direct.max_damage_range, location=DamageLocation.HEAD) }}
-                                                                headshots before {{ direct.max_damage_range }}m,<br />
-                                                                {{ direct.shots_to_kill(distance=direct.min_damage_range, location=DamageLocation.HEAD) }}
-                                                                headshots after {{ direct.min_damage_range }}m,<br />
+                                                                {% for r, s in direct.shots_to_kill_ranges(location=DamageLocation.HEAD) %}
+                                                                    {{ s }} headshots at {{ r }}m <br />
+                                                                {% endfor %}
                                                                 <br />
-                                                                {{ direct.shots_to_kill(distance=direct.max_damage_range, location=DamageLocation.TORSO) }}
-                                                                bodyshots before {{ direct.max_damage_range }}m,<br />
-                                                                {{ direct.shots_to_kill(distance=direct.min_damage_range, location=DamageLocation.TORSO) }}
-                                                                bodyshots after {{ direct.min_damage_range }}m,<br />
+                                                                {% for r, s in direct.shots_to_kill_ranges(location=DamageLocation.TORSO) %}
+                                                                    {{ s }} bodyshots at {{ r }}m <br />
+                                                                {% endfor %}
                                                                 <br />
-                                                                {{ direct.shots_to_kill(distance=direct.max_damage_range, location=DamageLocation.LEGS) }}
-                                                                legshots before {{ direct.max_damage_range }}m,<br />
-                                                                {{ direct.shots_to_kill(distance=direct.min_damage_range, location=DamageLocation.LEGS) }}
-                                                                legshots after {{ direct.min_damage_range }}m
+                                                                {% for r, s in direct.shots_to_kill_ranges(location=DamageLocation.LEGS) %}
+                                                                    {{ s }} legshots at {{ r }}m <br />
+                                                                {% endfor %}
                                                             {% endif %}
                                                         </td>
                                                     </tr>
@@ -354,10 +356,9 @@
                                                     <tr>
                                                         <th>Shots to kill</th>
                                                         <td>
-                                                            {{ indirect.shots_to_kill(distance=indirect.max_damage_range) }}
-                                                            shots before {{ indirect.max_damage_range }}m,<br />
-                                                            {{ indirect.shots_to_kill(distance=indirect.min_damage_range, location=DamageLocation.TORSO) }}
-                                                            shots before {{ indirect.min_damage_range }}m
+                                                            {% for r, s in indirect.shots_to_kill_ranges(location=DamageLocation.TORSO) %}
+                                                                {{ s }} shots at {{ r }}m<br />
+                                                            {% endfor %}
                                                         </td>
                                                     </tr>
                                                 </tbody>
