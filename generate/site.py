@@ -12,6 +12,8 @@ from ps2_analysis.data_file import DataFile, update_data_file
 from ps2_analysis.infantry_weapons.damage_profile import DamageLocation
 from ps2_analysis.infantry_weapons.generate import generate_infantry_weapons
 from ps2_analysis.infantry_weapons.infantry_weapon import InfantryWeapon
+from ps2_analysis.vehicle_weapons.generate import generate_vehicle_weapons
+from ps2_analysis.vehicle_weapons.vehicle_weapon import VehicleWeapon
 from ps2_census.enums import (
     Faction,
     FireModeType,
@@ -26,6 +28,7 @@ STATICS_FOLDER: str = "statics"
 TEMPLATE_EXTENSION: str = "html.jinja"
 
 INFANTRY_WEAPON_STATS_TEMPLATE_PATH: str = "stats/infantry_weapon.html.jinja"
+VEHICLE_WEAPON_STATS_TEMPLATE_PATH: str = "stats/vehicle_weapon.html.jinja"
 
 
 def _items_filter(d: dict) -> List[Tuple[Any, Any]]:
@@ -66,6 +69,36 @@ def _enum_name_filter(e: Enum) -> str:
             ItemCategory.CROSSBOW: "Crossbow",
             ItemCategory.HYBRID_RIFLE: "Hybrid rifle",
             ItemCategory.AERIAL_COMBAT_WEAPON: "Aerial combat weapon",
+            ItemCategory.VEHICLE_WEAPONS: "Vehicle weapon",
+            ItemCategory.FLASH_PRIMARY_WEAPON: "Flash primary",
+            ItemCategory.GALAXY_LEFT_WEAPON: "Galaxy left",
+            ItemCategory.GALAXY_TAIL_WEAPON: "Galazy tail",
+            ItemCategory.GALAXY_RIGHT_WEAPON: "Galaxy right",
+            ItemCategory.GALAXY_TOP_WEAPON: "Galaxy top",
+            ItemCategory.HARASSER_TOP_GUNNER: "Harasser top",
+            ItemCategory.LIBERATOR_BELLY_WEAPON: "Liberator belly",
+            ItemCategory.LIBERATOR_NOSE_CANNON: "Liberator nose",
+            ItemCategory.LIBERATOR_TAIL_WEAPON: "Liberator tail",
+            ItemCategory.LIGHTNING_PRIMARY_WEAPON: "Lightning",
+            ItemCategory.MAGRIDER_GUNNER_WEAPON: "Magrider gunner",
+            ItemCategory.MAGRIDER_PRIMARY_WEAPON: "Magrider primary",
+            ItemCategory.MOSQUITO_NOSE_CANNON: "Mosquito nose",
+            ItemCategory.MOSQUITO_WING_MOUNT: "Mosquito wing",
+            ItemCategory.PROWLER_GUNNER_WEAPON: "Prowler gunner",
+            ItemCategory.PROWLER_PRIMARY_WEAPON: "Prowler primary",
+            ItemCategory.REAVER_NOSE_CANNON: "Reaver nose",
+            ItemCategory.REAVER_WING_MOUNT: "Reaver wing",
+            ItemCategory.SCYTHE_NOSE_CANNON: "Scythe nose",
+            ItemCategory.SCYTHE_WING_MOUNT: "Scythe wing",
+            ItemCategory.SUNDERER_FRONT_GUNNER: "Sunderer front",
+            ItemCategory.SUNDERER_REAR_GUNNER: "Sunderer rear",
+            ItemCategory.VANGUARD_GUNNER_WEAPON: "Vanguard gunner",
+            ItemCategory.VANGUARD_PRIMARY_WEAPON: "Vanguard primary",
+            ItemCategory.VALKYRIE_NOSE_GUNNER: "Valkyrie nose",
+            ItemCategory.ANT_TOP_TURRET: "Ant top",
+            ItemCategory.BASTION_POINT_DEFENSE: "Bastion point defense",
+            ItemCategory.BASTION_BOMBARD: "Bastion bombard",
+            ItemCategory.BASTION_WEAPON_SYSTEM: "Bastion weapon system",
         }
         projectile_flight_type_resolver: Dict[ProjectileFlightType, str] = {
             ProjectileFlightType.BALLISTIC: "Ballistic",
@@ -165,6 +198,11 @@ def update_site(
         directory=data_files_directory,
         service_id=census_service_id,
     )
+    update_data_file(
+        data_file=DataFile.VEHICLE_WEAPONS,
+        directory=data_files_directory,
+        service_id=census_service_id,
+    )
 
     # Generate data sets
     infantry_weapons: List[InfantryWeapon] = generate_infantry_weapons(
@@ -185,6 +223,24 @@ def update_site(
         )
     }
 
+    vehicle_weapons: List[VehicleWeapon] = generate_vehicle_weapons(
+        data_files_directory=data_files_directory
+    )
+
+    faction_category_vehicle_weapons: Dict[
+        Faction, Dict[ItemCategory, List[VehicleWeapon]]
+    ] = {
+        faction: {
+            category: list(fcw_it)
+            for category, fcw_it in groupby(
+                sorted(fw_it, key=lambda x: x.category), lambda x: x.category
+            )
+        }
+        for faction, fw_it in groupby(
+            sorted(vehicle_weapons, key=lambda x: x.faction), lambda x: x.faction
+        )
+    }
+
     # Generate CSS
     subprocess.check_call("npm run css-build", shell=True)
 
@@ -199,6 +255,7 @@ def update_site(
         "DamageLocation": DamageLocation,
         "update_datetime": update_datetime,
         "faction_category_infantry_weapons": faction_category_infantry_weapons,
+        "faction_category_vehicle_weapons": faction_category_vehicle_weapons,
     }
 
     # Generate pages
@@ -222,6 +279,7 @@ def update_site(
         )
 
     # Dynamically generated pages
+    # Infantry weapons stats
     infantry_weapon_stats_template: Template = j2_env.get_template(
         INFANTRY_WEAPON_STATS_TEMPLATE_PATH
     )
@@ -242,6 +300,29 @@ def update_site(
 
         infantry_weapon_stats_template.stream(**j2_context, **{"weapon": w}).dump(
             str(i_w_s_output_path)
+        )
+
+    # Vehicle weapons stats
+    vehicle_weapon_stats_template: Template = j2_env.get_template(
+        VEHICLE_WEAPON_STATS_TEMPLATE_PATH
+    )
+
+    vehicle_weapon_stats_output_dir: Path = Path(
+        output_directory, "stats", "vehicle-weapons"
+    )
+
+    vehicle_weapon_stats_output_dir.mkdir(parents=True, exist_ok=True)
+
+    v: VehicleWeapon
+    for v in vehicle_weapons:
+        i_v_s_output_path: Path = (
+            vehicle_weapon_stats_output_dir.joinpath(f"{v.slug}-{v.item_id}.html")
+        )
+
+        print(f"Creating {i_v_s_output_path}")
+
+        vehicle_weapon_stats_template.stream(**j2_context, **{"weapon": v}).dump(
+            str(i_v_s_output_path)
         )
 
     # Copy statics
