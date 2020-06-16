@@ -65,6 +65,7 @@ def _enum_name_filter(e: Enum) -> str:
             ItemCategory.BATTLE_RIFLE: "Battle rifle",
             ItemCategory.CROSSBOW: "Crossbow",
             ItemCategory.HYBRID_RIFLE: "Hybrid rifle",
+            ItemCategory.AERIAL_COMBAT_WEAPON: "Aerial combat weapon",
         }
         projectile_flight_type_resolver: Dict[ProjectileFlightType, str] = {
             ProjectileFlightType.BALLISTIC: "Ballistic",

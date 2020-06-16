@@ -301,15 +301,15 @@
                                                                 {% endfor %}
                                                             {% else %}
                                                                 {% for r, s in direct.shots_to_kill_ranges(location=DamageLocation.HEAD) %}
-                                                                    {{ s }} headshots at {{ r }}m <br />
+                                                                    {{ s }} headshots from {{ r }}m <br />
                                                                 {% endfor %}
                                                                 <br />
                                                                 {% for r, s in direct.shots_to_kill_ranges(location=DamageLocation.TORSO) %}
-                                                                    {{ s }} bodyshots at {{ r }}m <br />
+                                                                    {{ s }} bodyshots from {{ r }}m <br />
                                                                 {% endfor %}
                                                                 <br />
                                                                 {% for r, s in direct.shots_to_kill_ranges(location=DamageLocation.LEGS) %}
-                                                                    {{ s }} legshots at {{ r }}m <br />
+                                                                    {{ s }} legshots from {{ r }}m <br />
                                                                 {% endfor %}
                                                             {% endif %}
                                                         </td>
@@ -357,7 +357,7 @@
                                                         <th>Shots to kill</th>
                                                         <td>
                                                             {% for r, s in indirect.shots_to_kill_ranges(location=DamageLocation.TORSO) %}
-                                                                {{ s }} shots at {{ r }}m<br />
+                                                                {{ s }} shots from {{ r }}m<br />
                                                             {% endfor %}
                                                         </td>
                                                     </tr>
