@@ -99,6 +99,11 @@ def _enum_name_filter(e: Enum) -> str:
             ItemCategory.BASTION_POINT_DEFENSE: "Bastion point defense",
             ItemCategory.BASTION_BOMBARD: "Bastion bombard",
             ItemCategory.BASTION_WEAPON_SYSTEM: "Bastion weapon system",
+            ItemCategory.COLOSSUS_PRIMARY_WEAPON: "Colossus primary",
+            ItemCategory.COLOSSUS_FRONT_RIGHT_WEAPON: "Colossus front right",
+            ItemCategory.COLOSSUS_FRONT_LEFT_WEAPON: "Colossus front left",
+            ItemCategory.COLOSSUS_REAR_RIGHT_WEAPON: "Colossus rear right",
+            ItemCategory.COLOSSUS_REAR_LEFT_WEAPON: "Colossus rear left",
         }
         projectile_flight_type_resolver: Dict[ProjectileFlightType, str] = {
             ProjectileFlightType.BALLISTIC: "Ballistic",
@@ -116,8 +121,10 @@ def _enum_name_filter(e: Enum) -> str:
             PlayerState.CROUCHING: "Crouching",
             PlayerState.RUNNING: "Running",
             PlayerState.SPRINTING: "Sprinting",
-            PlayerState.FALLING_LONG: "Falling",
+            PlayerState.FALLING_LONG: "Falling long",
             PlayerState.CROUCH_WALKING: "Crouch walking",
+            PlayerState.FALLING_SHORT: "Falling short",
+            PlayerState.JUMPING: "Jumping",
         }
         resist_type_resolver: Dict[ResistType, str] = {
             ResistType.NONE: "None",
