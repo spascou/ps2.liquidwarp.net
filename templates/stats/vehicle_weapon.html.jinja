@@ -68,7 +68,7 @@
     <div class="content">
         <p class="title is-2" id="basic-information">Basic information</p>
 
-        <table class="table">
+        <table class="table is-striped">
             <tbody>
                 <tr>
                     <th>Item / weapon ID</th>
@@ -113,7 +113,7 @@
 
         <div class="columns is-multiline">
             {% for fire_group in weapon.fire_groups %}
-                <div class="column box">
+                <div class="column box {{ loop.cycle(*fire_group_background_classes) }}">
                     <p class="title is-3" id="fire-group-{{ fire_group.index }}">
                         Fire group {{ fire_group.index }}: {{ fire_group.description }}
                     </p>
@@ -121,7 +121,7 @@
                     <div class="content">
                         <p class="title is-4">Basic information</p>
 
-                        <table class="table">
+                        <table class="table is-striped">
                             <tbody>
                                 <tr>
                                     <th>Transition time</th>
@@ -142,13 +142,13 @@
 
                         <div class="columns is-multiline">
                             {% for fire_mode in fire_group.fire_modes %}
-                                <div class="column box">
+                                <div class="column box {{ loop.cycle(*fire_mode_background_classes) }}">
                                     <p class="title is-5">Fire mode: {{ fire_mode.type|enum_name }}</p>
 
                                     <div class="box">
                                         <p class="title is-6">Basic information</p>
 
-                                        <table class="table">
+                                        <table class="table is-striped">
                                             <tbody>
                                                 <tr>
                                                     <th>Is ADS</th>
@@ -176,7 +176,7 @@
                                         {% if fire_mode.ammo is not none and fire_mode.ammo.ammo_per_shot > 0 %}
                                             {% set ammo = fire_mode.ammo %}
 
-                                            <table class="table">
+                                            <table class="table is-striped">
                                                 <tbody>
                                                     <tr>
                                                         <th>Clip size / total capacity</th>
@@ -203,7 +203,7 @@
                                         {% if fire_mode.heat is not none %}
                                             {% set heat = fire_mode.heat %}
 
-                                            <table class="table">
+                                            <table class="table is-striped">
                                                 <tbody>
                                                     <tr>
                                                         <th>Shots to overheat / total capacity</th>
@@ -235,7 +235,7 @@
 
                                         {% if fire_mode.direct_damage_profile is not none %}
                                             {% set direct = fire_mode.direct_damage_profile %}
-                                            <table class="table">
+                                            <table class="table is-striped">
                                                 <tbody>
                                                     {% if direct.pellets_count > 1 %}
                                                         <tr>
@@ -289,7 +289,7 @@
 
                                             <p class="title is-6">Direct damage effect</p>
                                             {% if direct.effect %}
-                                                <table class="table">
+                                                <table class="table is-striped">
                                                     <tbody>
                                                         {% for direct_effect_key, direct_effect_value in direct.effect|items %}
                                                             <tr>
@@ -312,7 +312,7 @@
 
                                         {% if fire_mode.indirect_damage_profile is not none %}
                                             {% set indirect = fire_mode.indirect_damage_profile %}
-                                            <table class="table">
+                                            <table class="table is-striped">
                                                 <tbody>
                                                     <tr>
                                                         <th>Damage per shot</th>
@@ -328,7 +328,7 @@
 
                                             <p class="title is-6">Indirect damage effect</p>
                                             {% if indirect.effect %}
-                                                <table class="table">
+                                                <table class="table is-striped">
                                                     <tbody>
                                                         {% for indirect_effect_key, indirect_effect_value in indirect.effect|items %}
                                                             <tr>
@@ -351,7 +351,7 @@
 
                                         {% if fire_mode.projectile is not none %}
                                             {% set projectile = fire_mode.projectile %}
-                                            <table class="table">
+                                            <table class="table is-striped">
                                                 <tbody>
                                                     <tr>
                                                         <th>Speed</th>
@@ -396,7 +396,7 @@
                                         <p class="title is-6">Timing</p>
 
                                         {% set timing = fire_mode.fire_timing %}
-                                        <table class="table">
+                                        <table class="table is-striped">
                                             <tbody>
                                                 <tr>
                                                     <th>Type</th>
@@ -449,7 +449,7 @@
                                         <p class="title is-6">Recoil</p>
 
                                         {% set recoil = fire_mode.recoil %}
-                                        <table class="table">
+                                        <table class="table is-striped">
                                             <tbody>
                                                 <tr>
                                                     <th>Min / max rotation</th>
@@ -537,7 +537,7 @@
                                                 <div class="box">
                                                     <p class="subtitle is-6">{{ player_state|enum_name }}</p>
 
-                                                    <table class="table">
+                                                    <table class="table is-striped">
                                                         <tbody>
                                                             <tr>
                                                                 <th>Min / max spread</th>
@@ -593,7 +593,7 @@
                                     <div class="box">
                                         <p class="title is-6">Can ADS</p>
                                         {% if fire_mode.player_state_can_ads|length > 0 %}
-                                            <table class="table">
+                                            <table class="table is-striped">
                                                 <tbody>
                                                 {% for player_state, can_ads in fire_mode.player_state_can_ads|items %}
                                                     <tr>
@@ -650,7 +650,7 @@
                     <div class="columns is-multiline">
                         {% for effect in attachment.effects %}
                             <div class="column box is-6">
-                                <table class="table">
+                                <table class="table is-striped">
                                     <tbody>
                                         {% for attachment_effect_key, attachment_effect_value in effect|items %}
                                             <tr>
