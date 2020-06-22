@@ -30,6 +30,16 @@ TEMPLATE_EXTENSION: str = "html.jinja"
 INFANTRY_WEAPON_STATS_TEMPLATE_PATH: str = "stats/infantry_weapon.html.jinja"
 VEHICLE_WEAPON_STATS_TEMPLATE_PATH: str = "stats/vehicle_weapon.html.jinja"
 
+FIRE_GROUP_BACKGROUND_CLASSES: List[str] = [
+    "has-background-link-light",
+    "has-background-success-light",
+]
+
+FIRE_MODE_BACKGROUND_CLASSES: List[str] = [
+    "has-background-primary-light",
+    "has-background-warning-light",
+]
+
 
 def _items_filter(d: dict) -> List[Tuple[Any, Any]]:
     return list(d.items())
@@ -263,6 +273,8 @@ def update_site(
         "update_datetime": update_datetime,
         "faction_category_infantry_weapons": faction_category_infantry_weapons,
         "faction_category_vehicle_weapons": faction_category_vehicle_weapons,
+        "fire_group_background_classes": FIRE_GROUP_BACKGROUND_CLASSES,
+        "fire_mode_background_classes": FIRE_MODE_BACKGROUND_CLASSES,
     }
 
     # Generate pages
