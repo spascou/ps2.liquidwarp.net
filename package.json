@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "sass/mystyles.scss",
   "devDependencies": {
-    "bulma": "^0.8.2",
+    "bulma": "^0.9.0",
     "node-sass": "^4.14.1"
   },
   "license": "MIT",
