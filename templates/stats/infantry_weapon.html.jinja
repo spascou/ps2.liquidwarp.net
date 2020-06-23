@@ -41,7 +41,7 @@
                 <ul>
                     {% for fire_group in weapon.fire_groups %}
                         <li>
-                            <a href="#fire-group-{{ fire_group.index }}">
+                            <a href="#fire-group-{{ fire_group.slug }}">
                                 {{ fire_group.description }}
                             </a>
                         </li>
@@ -114,7 +114,7 @@
         <div class="columns is-multiline">
             {% for fire_group in weapon.fire_groups %}
                 <div class="column box {{ loop.cycle(*fire_group_background_classes) }}">
-                    <p class="title is-3" id="fire-group-{{ fire_group.index }}">
+                    <p class="title is-3" id="fire-group-{{ fire_group.slug }}">
                         {{ fire_group.description }}
                     </p>
 
