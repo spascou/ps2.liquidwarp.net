@@ -553,7 +553,7 @@ description = "Daybreak Game's Planetside 2 data analysis (UNOFFICIAL)"
 name = "ps2-analysis"
 optional = false
 python-versions = ">=3.8,<4.0"
-version = "0.9.3"
+version = "0.10.0"
 
 [package.dependencies]
 altair = ">=4.1,<5.0"
@@ -872,7 +872,7 @@ description = "Measures the displayed width of unicode strings in a terminal"
 name = "wcwidth"
 optional = false
 python-versions = "*"
-version = "0.2.4"
+version = "0.2.5"
 
 [[package]]
 category = "main"
@@ -883,7 +883,7 @@ python-versions = ">=3.6.1"
 version = "8.1"
 
 [metadata]
-content-hash = "2e361de19bd23432f8de16863c6c36987f7a38e780a0b408c154467efb30c6d4"
+content-hash = "f5fd864a852f3ecde114ed0fe3a13257ffffed4a19eee2280bb24487f6d084a4"
 python-versions = "^3.8"
 
 [metadata.files]
@@ -1198,8 +1198,8 @@ protobuf = [
     {file = "protobuf-3.12.2.tar.gz", hash = "sha256:49ef8ab4c27812a89a76fa894fe7a08f42f2147078392c0dee51d4a444ef6df5"},
 ]
 ps2-analysis = [
-    {file = "ps2_analysis-0.9.3-py3-none-any.whl", hash = "sha256:eb0c63811b443696af1209e7b103eb6e7f0ebb2488261454d941261aa6d35d91"},
-    {file = "ps2_analysis-0.9.3.tar.gz", hash = "sha256:52e8319db4a60e570cf45f86a76174f1d0a688901c8bb885c3828f46ca6b685e"},
+    {file = "ps2_analysis-0.10.0-py3-none-any.whl", hash = "sha256:b9530cb1ed355a4d62fd97ed52c19098530bd051207989a75c9507b6dc4839cf"},
+    {file = "ps2_analysis-0.10.0.tar.gz", hash = "sha256:8b0a98b616325916b3dc327fb09c8749bfbeac1b45c8830e7aa858d7eab73041"},
 ]
 ps2-census = [
     {file = "ps2_census-0.12.8-py3-none-any.whl", hash = "sha256:691e9ca970a43c5cfc8f7bf082f354ceaca01a38551dff36ee646839c204edc3"},
@@ -1372,8 +1372,8 @@ urllib3 = [
     {file = "urllib3-1.25.9.tar.gz", hash = "sha256:3018294ebefce6572a474f0604c2021e33b3fd8006ecd11d62107a5d2a963527"},
 ]
 wcwidth = [
-    {file = "wcwidth-0.2.4-py2.py3-none-any.whl", hash = "sha256:79375666b9954d4a1a10739315816324c3e73110af9d0e102d906fdb0aec009f"},
-    {file = "wcwidth-0.2.4.tar.gz", hash = "sha256:8c6b5b6ee1360b842645f336d9e5d68c55817c26d3050f46b235ef2bc650e48f"},
+    {file = "wcwidth-0.2.5-py2.py3-none-any.whl", hash = "sha256:beb4802a9cebb9144e99086eff703a642a13d6a0052920003a230f3294bbe784"},
+    {file = "wcwidth-0.2.5.tar.gz", hash = "sha256:c4d647b99872929fdb7bdcaa4fbe7f01413ed3d98077df798530e5b04f116c83"},
 ]
 websockets = [
     {file = "websockets-8.1-cp36-cp36m-macosx_10_6_intel.whl", hash = "sha256:3762791ab8b38948f0c4d281c8b2ddfa99b7e510e46bd8dfa942a5fff621068c"},
