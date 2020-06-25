@@ -8,20 +8,20 @@ from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
 from jinja2 import Environment, FileSystemLoader, Template
+from ps2_analysis.fire_groups.damage_profile import DamageLocation
 from ps2_analysis.fire_groups.data_files import (
     update_data_files as update_fire_groups_data_files,
 )
-from ps2_analysis.infantry_weapons.damage_profile import DamageLocation
-from ps2_analysis.infantry_weapons.data_files import (
+from ps2_analysis.weapons.infantry.data_files import (
     update_data_files as update_infantry_weapons_data_files,
 )
-from ps2_analysis.infantry_weapons.generate import generate_infantry_weapons
-from ps2_analysis.infantry_weapons.infantry_weapon import InfantryWeapon
-from ps2_analysis.vehicle_weapons.data_files import (
+from ps2_analysis.weapons.infantry.generate import generate_infantry_weapons
+from ps2_analysis.weapons.infantry.infantry_weapon import InfantryWeapon
+from ps2_analysis.weapons.vehicle.data_files import (
     update_data_files as update_vehicle_weapons_data_files,
 )
-from ps2_analysis.vehicle_weapons.generate import generate_vehicle_weapons
-from ps2_analysis.vehicle_weapons.vehicle_weapon import VehicleWeapon
+from ps2_analysis.weapons.vehicle.generate import generate_vehicle_weapons
+from ps2_analysis.weapons.vehicle.vehicle_weapon import VehicleWeapon
 from ps2_census.enums import (
     Faction,
     FireModeType,
