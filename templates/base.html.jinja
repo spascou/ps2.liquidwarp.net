@@ -9,7 +9,7 @@
         <link rel="stylesheet" href="/statics/css/mybulma.min.css">
     </head>
     <body>
-        {% block navbar %}
+        {% block top_navbar %}
             <nav class="navbar" role="navigation" aria-label="main navigation">
                 <div class="navbar-brand">
                     <a class="navbar-item" href="/index.html">
@@ -82,5 +82,14 @@
                 </p>
             </div>
         </footer>
+        {% block bottom_navbar %}
+            <nav class="navbar is-fixed-bottom" role="navigation" aria-label="main navigation">
+                <div class="navbar-end">
+                    <a class="navbar-item" href="#">
+                        Back to top
+                    </a>
+                </div>
+            </nav>
+        {% endblock %}
     </body>
 </html>
