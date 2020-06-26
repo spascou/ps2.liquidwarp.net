@@ -122,6 +122,12 @@ def _enum_name_filter(e: Enum) -> str:
             ItemCategory.COLOSSUS_FRONT_LEFT_WEAPON: "Colossus front left",
             ItemCategory.COLOSSUS_REAR_RIGHT_WEAPON: "Colossus rear right",
             ItemCategory.COLOSSUS_REAR_LEFT_WEAPON: "Colossus rear left",
+            ItemCategory.AA_MAX_RIGHT: "MAX AA right",
+            ItemCategory.AA_MAX_LEFT: "MAX AA left",
+            ItemCategory.AV_MAX_RIGHT: "MAX AV right",
+            ItemCategory.AV_MAX_LEFT: "MAX AV left",
+            ItemCategory.AI_MAX_RIGHT: "MAX AI right",
+            ItemCategory.AI_MAX_LEFT: "MAX AI left",
         }
         projectile_flight_type_resolver: Dict[ProjectileFlightType, str] = {
             ProjectileFlightType.BALLISTIC: "Ballistic",
