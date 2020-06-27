@@ -35,13 +35,13 @@
 
     <aside class="menu">
         <ul class="menu-list">
-            <li><a href="#basic-information">Basic information</a></li>
+            <li><a href="#basic-information" class="has-text-link">Basic information</a></li>
             <li>
-                <a href="#fire-groups">Fire groups</a>
+                <a href="#fire-groups" class="has-text-link">Fire groups</a>
                 <ul>
                     {% for fire_group in weapon.fire_groups %}
                         <li>
-                            <a href="#fire-group-{{ fire_group.fire_group_id }}">
+                            <a href="#fire-group-{{ fire_group.fire_group_id }}" class="has-text-link">
                                 {{ fire_group.description }}
                             </a>
                         </li>
@@ -49,18 +49,18 @@
                 </ul>
             </li>
             <li>
-                <a href="#attachments">Attachments</a>
+                <a href="#attachments" class="has-text-link">Attachments</a>
                 <ul>
                     {% for attachment in weapon.attachments %}
                         <li>
-                            <a href="#attachment-{{ attachment.attachment_item_id }}">
+                            <a href="#attachment-{{ attachment.attachment_item_id }}" class="has-text-link">
                                 {{ attachment.name }}{{ " (default)" if attachment.is_default else "" }}
                             </a>
                             {% if attachment.fire_groups|length > 0 %}
                                 <ul>
                                     {% for fire_group in attachment.fire_groups %}
                                         <li>
-                                            <a href="#fire-group-{{fire_group.fire_group_id }}">
+                                            <a href="#fire-group-{{fire_group.fire_group_id }}" class="has-text-link">
                                                 {{ fire_group.description }}
                                             </a>
                                         </li>
