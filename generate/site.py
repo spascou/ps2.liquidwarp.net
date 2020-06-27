@@ -48,6 +48,14 @@ FIRE_MODE_BACKGROUND_CLASSES: List[str] = [
     "has-background-warning",
 ]
 
+FACTION_BACKGROUND_COLORS: Dict[Faction, str] = {
+    Faction.NONE: "",
+    Faction.VANU_SOVEREIGNTY: "#352c4f",
+    Faction.NEW_CONGLOMERATE: "#1a2b3d",
+    Faction.TERRAN_REPUBLIC: "#692b34",
+    Faction.NS_OPERATIVES: "",
+}
+
 
 def _items_filter(d: dict) -> List[Tuple[Any, Any]]:
     return list(d.items())
@@ -286,6 +294,7 @@ def update_site(
     j2_context: Dict[str, Any] = {
         "DamageLocation": DamageLocation,
         "update_datetime": update_datetime,
+        "faction_background_colors": FACTION_BACKGROUND_COLORS,
         "faction_category_infantry_weapons": faction_category_infantry_weapons,
         "faction_category_vehicle_weapons": faction_category_vehicle_weapons,
         "fire_group_background_classes": FIRE_GROUP_BACKGROUND_CLASSES,
