@@ -39,13 +39,13 @@ INFANTRY_WEAPON_STATS_TEMPLATE_PATH: str = "stats/infantry_weapon.html.jinja"
 VEHICLE_WEAPON_STATS_TEMPLATE_PATH: str = "stats/vehicle_weapon.html.jinja"
 
 FIRE_GROUP_BACKGROUND_CLASSES: List[str] = [
-    "has-background-link-light",
-    "has-background-success-light",
+    "has-background-primary",
+    "has-background-success",
 ]
 
 FIRE_MODE_BACKGROUND_CLASSES: List[str] = [
-    "has-background-primary-light",
-    "has-background-warning-light",
+    "has-background-info",
+    "has-background-warning",
 ]
 
 

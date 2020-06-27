@@ -22,15 +22,17 @@
 
         <div class="columns is-multiline">
             {% for cat, v2 in v1|items %}
-                <div class="column box is-4">
-                    <p class="title is-3">{{ cat|enum_name }}</p>
-                    <ul>
-                        {% for w in v2 %}
-                            <li>
-                                <a href="/stats/vehicle-weapons/{{ w.slug }}-{{ w.item_id }}.html">{{ w.name }}</a>
-                            </li>
-                        {% endfor %}
-                    </ul>
+                <div class="column is-4">
+                    <div class="box">
+                        <p class="title is-3">{{ cat|enum_name }}</p>
+                        <ul>
+                            {% for w in v2 %}
+                                <li>
+                                    <a href="/stats/vehicle-weapons/{{ w.slug }}-{{ w.item_id }}.html">{{ w.name }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
                 </div>
             {% endfor %}
         </div>
