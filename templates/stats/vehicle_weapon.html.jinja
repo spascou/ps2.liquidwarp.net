@@ -782,36 +782,6 @@
                                                                                 {% endif %}
                                                                             </td>
                                                                         </tr>
-                                                                        <tr>
-                                                                            <th>Shots to kill</th>
-                                                                            <td>
-                                                                                {% if direct.min_damage_range == direct.max_damage_range and direct.min_damage == direct.max_damage %}
-                                                                                    {% for r, s in direct.shots_to_kill_ranges(location=DamageLocation.HEAD) %}
-                                                                                        {{ s }} headshots <br />
-                                                                                    {% endfor %}
-                                                                                    <br />
-                                                                                    {% for r, s in direct.shots_to_kill_ranges(location=DamageLocation.TORSO) %}
-                                                                                        {{ s }} bodyshots <br />
-                                                                                    {% endfor %}
-                                                                                    <br />
-                                                                                    {% for r, s in direct.shots_to_kill_ranges(location=DamageLocation.LEGS) %}
-                                                                                        {{ s }} legshots <br />
-                                                                                    {% endfor %}
-                                                                                {% else %}
-                                                                                    {% for r, s in direct.shots_to_kill_ranges(location=DamageLocation.HEAD) %}
-                                                                                        {{ s }} headshots from {{ r }}m <br />
-                                                                                    {% endfor %}
-                                                                                    <br />
-                                                                                    {% for r, s in direct.shots_to_kill_ranges(location=DamageLocation.TORSO) %}
-                                                                                        {{ s }} bodyshots from {{ r }}m <br />
-                                                                                    {% endfor %}
-                                                                                    <br />
-                                                                                    {% for r, s in direct.shots_to_kill_ranges(location=DamageLocation.LEGS) %}
-                                                                                        {{ s }} legshots from {{ r }}m <br />
-                                                                                    {% endfor %}
-                                                                                {% endif %}
-                                                                            </td>
-                                                                        </tr>
                                                                     </tbody>
                                                                 </table>
 
