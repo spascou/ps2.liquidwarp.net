@@ -199,6 +199,20 @@
                                                 </table>
                                             </div>
 
+                                            {% if fire_mode.simulation_image_path %}
+                                            <div class="box">
+                                                <p class="title is-5">Magazine dump simulation</p>
+
+                                                <figure class="image">
+                                                    <img
+                                                        src="{{ fire_mode.simulation_image_path }}"
+                                                        style="max-width: 100%; width: auto"
+                                                    />
+                                                </figure>
+                                            </div>
+                                            {% endif %}
+
+
                                             {% if fire_mode.ammo is not none and fire_mode.ammo.ammo_per_shot > 0 %}
                                                 {% set ammo = fire_mode.ammo %}
 
@@ -765,6 +779,19 @@
                                                                 </tbody>
                                                             </table>
                                                         </div>
+
+                                                        {% if fire_mode.simulation_image_path %}
+                                                        <div class="box">
+                                                            <p class="title is-5">Magazine dump simulation</p>
+
+                                                            <figure class="image">
+                                                                <img
+                                                                    src="{{ fire_mode.simulation_image_path }}"
+                                                                    style="max-width: 100%; width: auto"
+                                                                />
+                                                            </figure>
+                                                        </div>
+                                                        {% endif %}
 
                                                         {% if fire_mode.ammo is not none and fire_mode.ammo.ammo_per_shot > 0 %}
                                                             {% set ammo = fire_mode.ammo %}

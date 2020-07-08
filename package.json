@@ -5,7 +5,10 @@
   "devDependencies": {
     "bulma": "^0.9",
     "bulmaswatch": "^0.8",
-    "node-sass": "^4.14"
+    "node-sass": "^4.14",
+    "vega-lite": "^4.13",
+    "vega-cli": "^5.13",
+    "canvas": "^2.6"
   },
   "license": "MIT",
   "scripts": {

@@ -7,11 +7,16 @@ from itertools import groupby
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
+import altair
+import altair_saver
+from htmlmin import minify
 from jinja2 import Environment, FileSystemLoader, Template
 from ps2_analysis.fire_groups.damage_profile import DamageLocation
 from ps2_analysis.fire_groups.data_files import (
     update_data_files as update_fire_groups_data_files,
 )
+from ps2_analysis.fire_groups.fire_group import FireGroup
+from ps2_analysis.fire_groups.fire_mode import FireMode
 from ps2_analysis.weapons.infantry.data_files import (
     update_data_files as update_infantry_weapons_data_files,
 )
@@ -281,6 +286,9 @@ def update_site(
         )
     }
 
+    # Altair dark theme
+    altair.themes.enable("dark")
+
     # Generate CSS
     subprocess.check_call("npm run css-build", shell=True)
 
@@ -317,9 +325,12 @@ def update_site(
 
         print(f"Creating {output_path}")
 
-        j2_env.get_template(str(source_template_path)).stream(**j2_context).dump(
-            str(output_path)
-        )
+        with open(output_path, "w") as f:
+            f.write(
+                minify(
+                    j2_env.get_template(str(source_template_path)).render(**j2_context)
+                )
+            )
 
     # Dynamically generated pages
     # Infantry weapons stats
@@ -333,17 +344,56 @@ def update_site(
 
     infantry_weapon_stats_output_dir.mkdir(parents=True, exist_ok=True)
 
-    w: InfantryWeapon
-    for w in infantry_weapons:
+    ifw_sim_path: Path = Path(
+        STATICS_FOLDER, "images", "simulations", "infantry-weapons"
+    )
+    ifw_sim_output_dir: Path = Path(output_directory).joinpath(ifw_sim_path)
+    ifw_sim_output_dir.mkdir(parents=True, exist_ok=True)
+
+    wp: InfantryWeapon
+    for wp in infantry_weapons:
+
+        # Generate shooting simulations
+        fg: FireGroup
+        for fg in wp.fire_groups:
+
+            fm: FireMode
+            for fm in fg.fire_modes:
+
+                if fm.ammo or fm.heat:
+
+                    i_w_sim_filename: str = f"{wp.slug}-{wp.item_id}-fg{fg.fire_group_id}-fm{fm.fire_mode_id}.png"
+
+                    i_w_sim_path: Path = ifw_sim_path.joinpath(i_w_sim_filename)
+
+                    i_w_sim_output_path: Path = (
+                        ifw_sim_output_dir.joinpath(i_w_sim_filename)
+                    )
+
+                    print(f"Creating {i_w_sim_output_path}")
+
+                    c: altair.HConcatChart = fm.generate_altair_simulation(
+                        shots=fm.max_consecutive_shots, runs=100, recentering=False
+                    )
+
+                    altair_saver.save(c, str(i_w_sim_output_path))
+
+                    fm.simulation_image_path = "/" + str(i_w_sim_path)
+
         i_w_s_output_path: Path = (
-            infantry_weapon_stats_output_dir.joinpath(f"{w.slug}-{w.item_id}.html")
+            infantry_weapon_stats_output_dir.joinpath(f"{wp.slug}-{wp.item_id}.html")
         )
 
         print(f"Creating {i_w_s_output_path}")
 
-        infantry_weapon_stats_template.stream(**j2_context, **{"weapon": w}).dump(
-            str(i_w_s_output_path)
-        )
+        with open(i_w_s_output_path, "w") as f:
+            f.write(
+                minify(
+                    infantry_weapon_stats_template.render(
+                        **j2_context, **{"weapon": wp}
+                    )
+                )
+            )
 
     # Vehicle weapons stats
     vehicle_weapon_stats_template: Template = j2_env.get_template(
@@ -364,9 +414,12 @@ def update_site(
 
         print(f"Creating {i_v_s_output_path}")
 
-        vehicle_weapon_stats_template.stream(**j2_context, **{"weapon": v}).dump(
-            str(i_v_s_output_path)
-        )
+        with open(i_v_s_output_path, "w") as f:
+            f.write(
+                minify(
+                    vehicle_weapon_stats_template.render(**j2_context, **{"weapon": v})
+                )
+            )
 
     # Copy statics
     for static_path in Path(statics_directory).rglob("*"):
