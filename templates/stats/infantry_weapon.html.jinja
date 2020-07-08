@@ -622,24 +622,6 @@
                                                     <p>No cone of fire</p>
                                                 {% endif %}
                                             </div>
-
-                                            <div class="box">
-                                                <p class="title is-5">Can ADS</p>
-                                                {% if fire_mode.player_state_can_ads|length > 0 %}
-                                                    <table class="table is-striped">
-                                                        <tbody>
-                                                        {% for player_state, can_ads in fire_mode.player_state_can_ads|items %}
-                                                            <tr>
-                                                                <th>{{ player_state|enum_name }}</th>
-                                                                <td>{{ can_ads }}</td>
-                                                            </tr>
-                                                        {% endfor %}
-                                                        </tbody>
-                                                    </table>
-                                                {% else %}
-                                                    <p>Cannot ADS</p>
-                                                {% endif %}
-                                            </div>
                                         </div>
                                     </div>
 
@@ -1170,24 +1152,6 @@
                                                                 {% endfor %}
                                                             {% else %}
                                                                 <p>No cone of fire</p>
-                                                            {% endif %}
-                                                        </div>
-
-                                                        <div class="box">
-                                                            <p class="title is-5">Can ADS</p>
-                                                            {% if fire_mode.player_state_can_ads|length > 0 %}
-                                                                <table class="table is-striped">
-                                                                    <tbody>
-                                                                    {% for player_state, can_ads in fire_mode.player_state_can_ads|items %}
-                                                                        <tr>
-                                                                            <th>{{ player_state|enum_name }}</th>
-                                                                            <td>{{ can_ads }}</td>
-                                                                        </tr>
-                                                                    {% endfor %}
-                                                                    </tbody>
-                                                                </table>
-                                                            {% else %}
-                                                                <p>Cannot ADS</p>
                                                             {% endif %}
                                                         </div>
                                                     </div>
