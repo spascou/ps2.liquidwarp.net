@@ -106,7 +106,7 @@
 
         <div class="columns is-multiline">
             {% for fire_group in weapon.fire_groups %}
-                <div class="column">
+                <div class="column is-full">
                     <div class="box {{ loop.cycle(*fire_group_background_classes) }}">
                         <p class="title is-3 has-text-black" id="fire-group-{{ fire_group.fire_group_id }}">
                             {{ fire_group.description }}
@@ -648,7 +648,7 @@
 
                     <div class="columns is-multiline">
                         {% for fire_group in attachment.fire_groups %}
-                            <div class="column">
+                            <div class="column is-full">
                                 <div class="box {{ loop.cycle(*fire_group_background_classes) }}">
                                     <p class="title is-3 has-text-black" id="fire-group-{{ fire_group.fire_group_id }}">
                                         {{ fire_group.description }}
