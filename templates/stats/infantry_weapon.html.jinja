@@ -199,7 +199,7 @@
                                                 </table>
                                             </div>
 
-                                            {% if fire_mode.simulation_image_path %}
+                                            {% if fire_mode.simulation_image_path and (fire_mode.ammo is not none or fire_mode.heat is not none) %}
                                             <div class="box">
                                                 <p class="title is-5">Magazine dump simulation</p>
 
@@ -457,6 +457,12 @@
                                                                 <td>Semi-automatic</td>
                                                             {% endif %}
                                                         </tr>
+                                                        {% if fire_mode.ammo is not none or fire_mode.heat is not none %}
+                                                            <tr>
+                                                                <th>Shots per minute</th>
+                                                                <td>{{ fire_mode.shots_per_minute }}</td>
+                                                            </tr>
+                                                        {% endif %}
                                                         <tr>
                                                             <th>Refire time</th>
                                                             <td>{{ timing.refire_time }}ms</td>
@@ -1002,6 +1008,12 @@
                                                                             <td>Semi-automatic</td>
                                                                         {% endif %}
                                                                     </tr>
+                                                                    {% if fire_mode.ammo is not none or fire_mode.heat is not none %}
+                                                                        <tr>
+                                                                            <th>Shots per minute</th>
+                                                                            <td>{{ fire_mode.shots_per_minute }}</td>
+                                                                        </tr>
+                                                                    {% endif %}
                                                                     <tr>
                                                                         <th>Refire time</th>
                                                                         <td>{{ timing.refire_time }}ms</td>

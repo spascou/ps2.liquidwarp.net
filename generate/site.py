@@ -224,13 +224,14 @@ def clean_site(directory: str):
             os.remove(filepath)
 
 
-def update_site(
+def generate_site(
     templates_directory: str,
     pages_directory: str,
     statics_directory: str,
     data_files_directory: str,
     output_directory: str,
     census_service_id: str,
+    no_simulations: bool = False,
 ):
     print("Updating site")
 
@@ -362,7 +363,7 @@ def update_site(
 
                 if fm.ammo or fm.heat:
 
-                    i_w_sim_filename: str = f"{wp.slug}-{wp.item_id}-fg{fg.fire_group_id}-fm{fm.fire_mode_id}.png"
+                    i_w_sim_filename: str = f"{wp.slug}-{wp.item_id}-fg{fg.fire_group_id}-fm{fm.fire_mode_id}-magdump.png"
 
                     i_w_sim_path: Path = ifw_sim_path.joinpath(i_w_sim_filename)
 
@@ -370,13 +371,15 @@ def update_site(
                         ifw_sim_output_dir.joinpath(i_w_sim_filename)
                     )
 
-                    print(f"Creating {i_w_sim_output_path}")
+                    if no_simulations is False:
 
-                    c: altair.HConcatChart = fm.generate_altair_simulation(
-                        shots=fm.max_consecutive_shots, runs=100, recentering=False
-                    )
+                        print(f"Creating {i_w_sim_output_path}")
 
-                    altair_saver.save(c, str(i_w_sim_output_path))
+                        c: altair.HConcatChart = fm.generate_altair_simulation(
+                            shots=fm.max_consecutive_shots, runs=100, recentering=False
+                        )
+
+                        altair_saver.save(c, str(i_w_sim_output_path))
 
                     fm.simulation_image_path = "/" + str(i_w_sim_path)
 
