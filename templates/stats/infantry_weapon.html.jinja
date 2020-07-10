@@ -199,7 +199,7 @@
                                                 </table>
                                             </div>
 
-                                            {% if fire_mode.simulation_image_path and (fire_mode.ammo is not none or fire_mode.heat is not none) %}
+                                            {% if fire_mode.simulation_image_path %}
                                             <div class="box">
                                                 <p class="title is-5">Magazine dump simulation</p>
 
@@ -211,7 +211,6 @@
                                                 </figure>
                                             </div>
                                             {% endif %}
-
 
                                             {% if fire_mode.ammo is not none and fire_mode.ammo.ammo_per_shot > 0 %}
                                                 {% set ammo = fire_mode.ammo %}
@@ -786,7 +785,7 @@
                                                             </table>
                                                         </div>
 
-                                                        {% if fire_mode.simulation_image_path %}
+                                                        {% if fire_mode.simulation_image_path and (fire_mode.ammo is not none or fire_mode.heat is not none)%}
                                                         <div class="box">
                                                             <p class="title is-5">Magazine dump simulation</p>
 

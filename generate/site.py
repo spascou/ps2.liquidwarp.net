@@ -302,6 +302,7 @@ def generate_site(
 
     j2_context: Dict[str, Any] = {
         "DamageLocation": DamageLocation,
+        "ItemCategory": ItemCategory,
         "update_datetime": update_datetime,
         "faction_background_colors": FACTION_BACKGROUND_COLORS,
         "faction_category_infantry_weapons": faction_category_infantry_weapons,
@@ -355,33 +356,43 @@ def generate_site(
     for wp in infantry_weapons:
 
         # Generate shooting simulations
-        fg: FireGroup
-        for fg in wp.fire_groups:
 
-            fm: FireMode
-            for fm in fg.fire_modes:
+        if wp.category not in {
+            ItemCategory.EXPLOSIVE,
+            ItemCategory.GRENADE,
+            ItemCategory.KNIFE,
+            ItemCategory.ROCKET_LAUNCHER,
+        }:
 
-                if fm.ammo or fm.heat:
+            fg: FireGroup
+            for fg in wp.fire_groups:
 
-                    i_w_sim_filename: str = f"{wp.slug}-{wp.item_id}-fg{fg.fire_group_id}-fm{fm.fire_mode_id}-magdump.png"
+                fm: FireMode
+                for fm in fg.fire_modes:
 
-                    i_w_sim_path: Path = ifw_sim_path.joinpath(i_w_sim_filename)
+                    if fm.ammo or fm.heat:
 
-                    i_w_sim_output_path: Path = (
-                        ifw_sim_output_dir.joinpath(i_w_sim_filename)
-                    )
+                        i_w_sim_filename: str = f"{wp.slug}-{wp.item_id}-fg{fg.fire_group_id}-fm{fm.fire_mode_id}-magdump.png"
 
-                    if no_simulations is False:
+                        i_w_sim_path: Path = ifw_sim_path.joinpath(i_w_sim_filename)
 
-                        print(f"Creating {i_w_sim_output_path}")
-
-                        c: altair.HConcatChart = fm.generate_altair_simulation(
-                            shots=fm.max_consecutive_shots, runs=100, recentering=False
+                        i_w_sim_output_path: Path = (
+                            ifw_sim_output_dir.joinpath(i_w_sim_filename)
                         )
 
-                        altair_saver.save(c, str(i_w_sim_output_path))
+                        if no_simulations is False:
 
-                    fm.simulation_image_path = "/" + str(i_w_sim_path)
+                            print(f"Creating {i_w_sim_output_path}")
+
+                            c: altair.HConcatChart = fm.generate_altair_simulation(
+                                shots=fm.max_consecutive_shots,
+                                runs=100,
+                                recentering=False,
+                            )
+
+                            altair_saver.save(c, str(i_w_sim_output_path))
+
+                        fm.simulation_image_path = "/" + str(i_w_sim_path)
 
         i_w_s_output_path: Path = (
             infantry_weapon_stats_output_dir.joinpath(f"{wp.slug}-{wp.item_id}.html")
