@@ -1,0 +1,61 @@
+{% from "stats/fire_group_macros.html.jinja" import fire_group_stats_macro with context %}
+
+{% macro attachment_stats_macro(attachment, _loop) %}
+<div class="box">
+    <p class="title is-3" id="attachment-{{ attachment.attachment_item_id }}">
+        {{ attachment.name }}{{ " (default)" if attachment.is_default else "" }}
+    </p>
+
+    {% if attachment.description %}
+        <p class="title is-5">{{ attachment.description }}</p>
+    {% endif %}
+
+    {% if attachment.image_path and not attachment.is_default %}
+        <figure class="image">
+            <img
+                src="https://census.daybreakgames.com{{ attachment.image_path }}"
+                width="256"
+                height="128"
+                style="max-width: 100%; width: auto"
+            />
+        </figure>
+    {% endif %}
+
+    {% if attachment.effects %}
+        <p class="title is-4">Effects</p>
+
+        <div class="columns is-multiline">
+            {% for effect in attachment.effects %}
+                <div class="column is-6">
+                    <div class="box">
+                        <table class="table is-striped">
+                            <tbody>
+                                {% for attachment_effect_key, attachment_effect_value in effect|items %}
+                                    <tr>
+                                        <th>{{ attachment_effect_key }}</th>
+                                        <td>{{ attachment_effect_value }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No listed effects</p>
+    {% endif %}
+
+    {% if attachment.fire_groups %}
+        <p class="title is-4">Fire groups</p>
+
+        <div class="columns is-multiline">
+            {% for fire_group in attachment.fire_groups %}
+                {{ fire_group_stats_macro(fire_group=fire_group, _loop=loop) }}
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+
+<br />
+{%- endmacro %}

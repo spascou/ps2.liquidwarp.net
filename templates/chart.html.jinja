@@ -1,0 +1,27 @@
+{% extends "base.html.jinja" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block style %}
+{% endblock %}
+
+{% block head_script %}
+    <script src="https://ps2.liquidwarp.net/statics/js/vega.min.js"></script>
+    <script src="https://ps2.liquidwarp.net/statics/js/vega-lite.min.js"></script>
+    <script src="https://ps2.liquidwarp.net/statics/js/vega-embed.min.js"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="content has-text-centered">
+        <p class="title is-2">{{ title }}</p>
+
+        <div id="vis"></div>
+    </div>
+{% endblock %}
+
+{% block body_script %}
+    <script type="text/javascript">
+        var spec = {{ chart.to_json() }};
+        vegaEmbed("#vis", spec);
+    </script>
+{% endblock %}

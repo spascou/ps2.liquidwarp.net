@@ -3,28 +3,35 @@ from typing import List
 
 from google.cloud import storage
 
+from .constants import SITE_DIRECTORY
+
 
 def clean_bucket(bucket_name: str):
-    print("Cleaning bucket")
+
+    print(f"Cleaning {bucket_name} bucket")
 
     client: storage.Client = storage.Client()
     bucket: storage.Bucket = client.get_bucket(bucket_name)
 
     blob: storage.Blob
     for blob in bucket.list_blobs():
+
         print(f"Deleting {blob.name}")
 
         blob.delete()
 
 
-def upload_to_bucket(directory_path: str, bucket_name: str):
-    print("Uploading files to bucket")
+def upload_to_bucket(bucket_name: str):
+
+    print(f"Uploading files to {bucket_name} bucket")
+
     client: storage.Client = storage.Client()
     bucket: storage.Bucket = client.get_bucket(bucket_name)
 
-    for file_path in Path(directory_path).rglob("*"):
+    for file_path in Path(SITE_DIRECTORY).rglob("*"):
 
         if file_path.is_dir():
+
             continue
 
         file_dirs: List[str]
