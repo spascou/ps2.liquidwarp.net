@@ -289,8 +289,7 @@ def _generate_infantry_weapons_stats_page(
                         shots=fm.max_consecutive_shots,
                         runs=50,
                         recentering=False,
-                        width=400,
-                        height=400,
+                        height=600,
                     )
 
                     altair_saver.save(
