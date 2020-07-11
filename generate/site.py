@@ -287,10 +287,10 @@ def _generate_infantry_weapons_stats_page(
 
                     magdump_chart: altair.HConcatChart = fm.altair_simulate_shots(
                         shots=fm.max_consecutive_shots,
-                        runs=20,
+                        runs=50,
                         recentering=False,
-                        width=900,
-                        height=900,
+                        width=450,
+                        height=450,
                     )
 
                     altair_saver.save(

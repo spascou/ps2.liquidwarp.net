@@ -35,31 +35,33 @@ if __name__ == "__main__":
         "--generate-dynamic", action="store_true",
     )
     action_group.add_argument("--upload", action="store_true")
+    action_group.add_argument("--update", action="store_true")
+
     action_group.add_argument("--clean-local", action="store_true")
     action_group.add_argument("--clean-remote", action="store_true")
 
     args = parser.parse_args()
 
     # Run
-    if args.clean_local:
+    if args.update or args.clean_local:
 
         clean_site()
 
-    elif args.clean_remote:
+    if args.clean_remote:
 
         clean_bucket(bucket_name=BUCKET_NAME)
 
-    elif args.upload:
-
-        copy_statics()
-        upload_to_bucket(bucket_name=BUCKET_NAME)
-
-    else:
+    if (
+        args.update
+        or args.generate_all
+        or args.generate_predefined
+        or args.generate_dynamic
+    ):
 
         generate_css()
         update_all_data_files(census_service_id=CENSUS_SERVICE_ID)
 
-        if args.generate_all:
+        if args.update or args.generate_all:
 
             generate_pages()
 
@@ -72,3 +74,8 @@ if __name__ == "__main__":
             elif args.generate_dynamic:
 
                 generate_dynamic_pages()
+
+    if args.update or args.upload:
+
+        copy_statics()
+        upload_to_bucket(bucket_name=BUCKET_NAME)

@@ -54,7 +54,7 @@
                                     {% for fire_mode in fire_group.fire_modes %}
                                         <li>
                                             <a href="#fire-mode-{{ fire_mode.fire_mode_id }}" class="has-text-link">
-                                                {{ fire_mode.type|enum_name }}
+                                                {{ fire_mode.fire_mode_type|enum_name }}
                                             </a>
                                         </li>
                                     {% endfor %}
@@ -84,7 +84,7 @@
                                                     {% for fire_mode in fire_group.fire_modes %}
                                                         <li>
                                                             <a href="#fire-mode-{{ fire_mode.fire_mode_id }}" class="has-text-link">
-                                                                {{ fire_mode.type|enum_name }}
+                                                                {{ fire_mode.fire_mode_type|enum_name }}
                                                             </a>
                                                         </li>
                                                     {% endfor %}

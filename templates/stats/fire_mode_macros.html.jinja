@@ -2,7 +2,7 @@
 
 <div class="column">
     <div class="box {{ _loop.cycle(*fire_mode_background_classes) }}">
-        <p class="title is-5 has-text-black" id="fire-mode-{{ fire_mode.fire_mode_id }}">Fire mode: {{ fire_mode.type|enum_name }}</p>
+        <p class="title is-5 has-text-black" id="fire-mode-{{ fire_mode.fire_mode_id }}">Fire mode: {{ fire_mode.fire_mode_type|enum_name }}</p>
 
         <div class="box">
             <p class="title is-5">Basic information</p>
@@ -15,7 +15,7 @@
                     </tr>
                     <tr>
                         <th>Type</th>
-                        <td>{{ fire_mode.type|enum_name }}</td>
+                        <td>{{ fire_mode.fire_mode_type|enum_name }}</td>
                     </tr>
                     <tr>
                         <th>Is ADS</th>
