@@ -1,11 +1,13 @@
 from flask import Flask, send_from_directory
 
+from generate.constants import SITE_DIRECTORY
+
 app = Flask(__name__)
 
 
 @app.route("/<path:path>")
 def local(path):
-    return send_from_directory("site", path)
+    return send_from_directory(SITE_DIRECTORY, path)
 
 
 if __name__ == "__main__":
