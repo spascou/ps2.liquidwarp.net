@@ -1,3 +1,4 @@
+import itertools
 import math
 from datetime import datetime, timezone
 from multiprocessing import Pool, cpu_count
@@ -33,6 +34,8 @@ from ps2_analysis.weapons.vehicle.vehicle_weapon import VehicleWeapon
 from ps2_census.enums import ItemCategory, PlayerState
 
 from .altair_utils import (
+    SIMULATION_FIRE_MODE_COLOR,
+    SIMULATION_FIRE_MODE_SELECTION,
     SIMULATION_POINT_TYPE_COLOR,
     SIMULATION_POINT_TYPE_SELECTION,
     X,
@@ -51,12 +54,12 @@ from .constants import (
     TEMPLATES_DIRECTORY,
     VEHICLE_WEAPON_STATS_TEMPLATE_PATH,
 )
+from .enum_resolvers import fire_mode_type_resolver
 from .jinja_filters import enum_name_filter, items_filter
 
 
-def magdump_simulation_chart(
-    fire_mode: FireMode,
-    shots: int,
+def magdump_simulation_charts(
+    fire_group: FireGroup,
     runs: int = 1,
     control_time: int = 0,
     auto_burst_length: Optional[int] = None,
@@ -66,101 +69,207 @@ def magdump_simulation_chart(
     player_state: PlayerState = PlayerState.STANDING,
     width: Optional[int] = None,
     height: Optional[int] = None,
-) -> altair.HConcatChart:
+) -> Optional[Tuple[altair.HConcatChart, Dict[int, altair.HConcatChart]]]:
 
     assert (width or height) and not (width and height)
 
-    datapoints: List[dict] = []
+    datapoints: List[dict]
+    fire_modes_datapoints: Dict[int, List[dict]] = {}
 
-    simulation: Iterator[Tuple[int, Tuple[float, float], List[Tuple[float, float]]]]
-    for simulation in (
-        fire_mode.simulate_shots(
-            shots=shots,
-            control_time=control_time,
-            auto_burst_length=auto_burst_length,
-            recentering=recentering,
-            recentering_response_time=recentering_response_time,
-            recentering_inertia_factor=recentering_inertia_factor,
-            player_state=player_state,
-        )
-        for _ in range(runs)
-    ):
+    for fire_mode in fire_group.fire_modes:
 
-        t: int
-        cursor_coor: Tuple[float, float]
-        pellets_coors: List[Tuple[float, float]]
-        for t, cursor_coor, pellets_coors in simulation:
+        if fire_mode.max_consecutive_shots > 0:
 
-            cursor_x, cursor_y = cursor_coor
+            fire_mode_id: int = fire_mode.fire_mode_id
 
-            datapoints.append({"Time": t, X: cursor_x, Y: cursor_y, "Type": "cursor"})
+            datapoints = []
 
-            for pellet_x, pellet_y in pellets_coors:
-                datapoints.append(
-                    {"Time": t, X: pellet_x, Y: pellet_y, "Type": "pellet"}
+            simulation: Iterator[
+                Tuple[int, Tuple[float, float], List[Tuple[float, float]]]
+            ]
+            for simulation in (
+                fire_mode.simulate_shots(
+                    shots=fire_mode.max_consecutive_shots,
+                    control_time=control_time,
+                    auto_burst_length=auto_burst_length,
+                    recentering=recentering,
+                    recentering_response_time=recentering_response_time,
+                    recentering_inertia_factor=recentering_inertia_factor,
+                    player_state=player_state,
                 )
+                for _ in range(runs)
+            ):
 
-    min_x: float = min((d[X] for d in datapoints))
-    max_x: float = max((d[X] for d in datapoints))
-    min_y: float = min((d[Y] for d in datapoints))
-    max_y: float = max((d[Y] for d in datapoints))
+                t: int
+                cursor_coor: Tuple[float, float]
+                pellets_coors: List[Tuple[float, float]]
+                for t, cursor_coor, pellets_coors in simulation:
+
+                    cursor_x, cursor_y = cursor_coor
+
+                    datapoints.append(
+                        {
+                            "FireMode": f"{fire_mode.fire_mode_id}:{fire_mode_type_resolver[fire_mode.fire_mode_type]}",
+                            "Time": t,
+                            X: cursor_x,
+                            Y: cursor_y,
+                            "Type": "cursor",
+                        }
+                    )
+
+                    for pellet_x, pellet_y in pellets_coors:
+                        datapoints.append(
+                            {
+                                "FireMode": f"{fire_mode.fire_mode_id}:{fire_mode_type_resolver[fire_mode.fire_mode_type]}",
+                                "Time": t,
+                                X: pellet_x,
+                                Y: pellet_y,
+                                "Type": "pellet",
+                            }
+                        )
+
+            fire_modes_datapoints[fire_mode_id] = datapoints
+
+    if not fire_modes_datapoints:
+
+        return None
+
+    # Generate charts for fire group and individual fire groups
+    fire_modes_charts: Dict[int, altair.HConcatChart] = {}
+
+    # Fire modes
+    for fire_mode_id, datapoints in fire_modes_datapoints.items():
+        chart_height: int
+        chart_width: int
+
+        min_x: float = min((d[X] for d in datapoints))
+        max_x: float = max((d[X] for d in datapoints))
+        min_y: float = min((d[Y] for d in datapoints))
+        max_y: float = max((d[Y] for d in datapoints))
+
+        if height:
+            chart_height = height
+
+            if max_y != min_y:
+                chart_width = int(math.ceil((max_x - min_x) * height / (max_y - min_y)))
+            else:
+                chart_width = 0
+
+        elif width:
+            chart_width = width
+
+            if max_x != min_x:
+                chart_height = int(math.ceil((max_y - min_y) * width / (max_x - min_x)))
+            else:
+                chart_height = 0
+
+        dataset: altair.Data = altair.Data(values=datapoints)
+
+        chart: altair.Chart = (
+            altair.Chart(dataset)
+            .mark_point()
+            .encode(
+                x=altair.X(
+                    f"{X}:Q",
+                    axis=altair.Axis(title="horizontal angle (degrees)"),
+                    scale=altair.Scale(domain=(min_x, max_x), zero=False),
+                ),
+                y=altair.Y(
+                    f"{Y}:Q",
+                    axis=altair.Axis(title="vertical angle (degrees)"),
+                    scale=altair.Scale(domain=(min_y, max_y), zero=False),
+                ),
+                color=SIMULATION_POINT_TYPE_COLOR,
+                tooltip=["Time:Q", f"{X}:Q", f"{Y}:Q"],
+            )
+            .properties(width=chart_width, height=chart_height)
+            .interactive()
+        )
+
+        legend: altair.Chart = (
+            altair.Chart(dataset)
+            .mark_point()
+            .encode(
+                y=altair.Y("Type:N", axis=altair.Axis(orient="right")),
+                color=SIMULATION_POINT_TYPE_COLOR,
+            )
+            .add_selection(SIMULATION_POINT_TYPE_SELECTION)
+        )
+
+        fire_modes_charts[fire_mode_id] = altair.hconcat(chart, legend)
+
+    # Fire group
+    all_datapoints: List[dict] = list(
+        itertools.chain.from_iterable(
+            (
+                filter(lambda x: x["Type"] == "pellet", d)
+                for _, d in fire_modes_datapoints.items()
+            )
+        )
+    )
+
+    fg_chart_height: int
+    fg_chart_width: int
+
+    fg_min_x: float = min((d[X] for d in all_datapoints))
+    fg_max_x: float = max((d[X] for d in all_datapoints))
+    fg_min_y: float = min((d[Y] for d in all_datapoints))
+    fg_max_y: float = max((d[Y] for d in all_datapoints))
 
     if height:
+        fg_chart_height = height
 
-        if max_y != min_y:
-
-            width = int(math.ceil((max_x - min_x) * height / (max_y - min_y)))
-
+        if fg_max_y != fg_min_y:
+            fg_chart_width = int(
+                math.ceil((fg_max_x - fg_min_x) * height / (fg_max_y - fg_min_y))
+            )
         else:
-
-            width = 0
+            fg_chart_width = 0
 
     elif width:
+        fg_chart_width = width
 
-        if max_x != min_x:
-
-            height = int(math.ceil((max_y - min_y) * width / (max_x - min_x)))
-
+        if fg_max_x != fg_min_x:
+            fg_chart_height = int(
+                math.ceil((fg_max_y - fg_min_y) * width / (fg_max_x - fg_min_x))
+            )
         else:
+            fg_chart_height = 0
 
-            height = 0
+    fg_dataset: altair.Data = altair.Data(values=all_datapoints)
 
-    dataset: altair.Data = altair.Data(values=datapoints)
-
-    chart: altair.Chart = (
-        altair.Chart(dataset)
+    fg_chart: altair.Chart = (
+        altair.Chart(fg_dataset)
         .mark_point()
         .encode(
             x=altair.X(
                 f"{X}:Q",
                 axis=altair.Axis(title="horizontal angle (degrees)"),
-                scale=altair.Scale(domain=(min_x, max_x), zero=False),
+                scale=altair.Scale(domain=(fg_min_x, fg_max_x), zero=False),
             ),
             y=altair.Y(
                 f"{Y}:Q",
                 axis=altair.Axis(title="vertical angle (degrees)"),
-                scale=altair.Scale(domain=(min_y, max_y), zero=False),
+                scale=altair.Scale(domain=(fg_min_y, fg_max_y), zero=False),
             ),
-            color=SIMULATION_POINT_TYPE_COLOR,
+            color=SIMULATION_FIRE_MODE_COLOR,
             tooltip=["Time:Q", f"{X}:Q", f"{Y}:Q"],
         )
-        .properties(width=width, height=height)
+        .properties(width=fg_chart_width, height=fg_chart_height)
         .interactive()
     )
 
-    legend: altair.Chart = (
-        altair.Chart(dataset)
+    fg_legend: altair.Chart = (
+        altair.Chart(fg_dataset)
         .mark_point()
         .encode(
-            y=altair.Y("Type:N", axis=altair.Axis(orient="right")),
-            color=SIMULATION_POINT_TYPE_COLOR,
+            y=altair.Y("FireMode:N", axis=altair.Axis(orient="right")),
+            color=SIMULATION_FIRE_MODE_COLOR,
         )
-        .add_selection(SIMULATION_POINT_TYPE_SELECTION)
+        .add_selection(SIMULATION_FIRE_MODE_SELECTION)
     )
 
-    result: altair.HConcatChart = altair.hconcat(chart, legend)
-
-    return result
+    return (altair.hconcat(fg_chart, fg_legend), fire_modes_charts)
 
 
 def generate_dynamic_pages():
@@ -242,52 +351,98 @@ def _generate_infantry_weapons_stats_page(
         fg: FireGroup
         for fg in infantry_weapon.fire_groups:
 
-            fm: FireMode
-            for fm in fg.fire_modes:
+            print(f"Simulating {infantry_weapon.slug} magdump")
 
-                if fm.max_consecutive_shots > 0:
+            generated_charts: Optional[
+                Tuple[altair.HConcatChart, Dict[int, altair.HConcatChart]]
+            ] = magdump_simulation_charts(
+                fire_group=fg, runs=50, recentering=False, height=600,
+            )
 
-                    magdump_sim_base_filename: str = f"{infantry_weapon.slug}-{infantry_weapon.item_id}-fg{fg.fire_group_id}-fm{fm.fire_mode_id}-magdump"
+            if generated_charts is not None:
 
-                    magdump_sim_output_path: Path = (
-                        sim_output_dir.joinpath(magdump_sim_base_filename)
-                    )
+                fg_magdump_chart: altair.HConcatChart
+                fm_magdump_charts: Dict[int, altair.HConcatChart]
+                fg_magdump_chart, fm_magdump_charts = generated_charts
 
-                    print(f"Simulating {magdump_sim_output_path}")
+                # Fire group
+                fg_magdump_sim_base_filename: str = f"{infantry_weapon.slug}-{infantry_weapon.item_id}-fg{fg.fire_group_id}-magdump"
 
-                    magdump_chart: altair.HConcatChart = magdump_simulation_chart(
-                        fire_mode=fm,
-                        shots=fm.max_consecutive_shots,
-                        runs=50,
-                        recentering=False,
-                        height=600,
-                    )
+                fg_magdump_sim_output_path: Path = (
+                    sim_output_dir.joinpath(fg_magdump_sim_base_filename)
+                )
 
-                    altair_saver.save(
-                        magdump_chart, ".".join((str(magdump_sim_output_path), "png"))
-                    )
+                altair_saver.save(
+                    fg_magdump_chart,
+                    ".".join((str(fg_magdump_sim_output_path), "png")),
+                )
 
-                    with open(
-                        ".".join((str(magdump_sim_output_path), "html")), "w"
-                    ) as f:
-                        f.write(
-                            minify(
-                                chart_template.render(
-                                    **j2_context,
-                                    **{
-                                        "title": f"{infantry_weapon.name} magazine dump simulation",
-                                        "chart": magdump_chart,
-                                        "update_datetime": datetime.now(timezone.utc),
-                                    },
-                                )
+                with open(
+                    ".".join((str(fg_magdump_sim_output_path), "html")), "w"
+                ) as f:
+                    f.write(
+                        minify(
+                            chart_template.render(
+                                **j2_context,
+                                **{
+                                    "title": f"{infantry_weapon.name} {fg.description} fire group magazine dump simulation",
+                                    "chart": fg_magdump_chart,
+                                    "update_datetime": datetime.now(timezone.utc),
+                                },
                             )
                         )
-
-                    magdump_sim_path: Path = sim_path.joinpath(
-                        magdump_sim_base_filename
                     )
 
-                    fm.magdump_simulation_base_path = str(magdump_sim_path)
+                fg_magdump_sim_path: Path = sim_path.joinpath(
+                    fg_magdump_sim_base_filename
+                )
+
+                fg.magdump_simulation_base_path = str(fg_magdump_sim_path)
+
+                # Fire modes
+                fm: FireMode
+                for fm in fg.fire_modes:
+
+                    if fm.fire_mode_id in fm_magdump_charts:
+
+                        fm_magdump_chart: altair.HConcatChart = fm_magdump_charts[
+                            fm.fire_mode_id
+                        ]
+
+                        fm_magdump_sim_base_filename: str = f"{infantry_weapon.slug}-{infantry_weapon.item_id}-fg{fg.fire_group_id}-fm{fm.fire_mode_id}-magdump"
+
+                        fm_magdump_sim_output_path: Path = (
+                            sim_output_dir.joinpath(fm_magdump_sim_base_filename)
+                        )
+
+                        altair_saver.save(
+                            fm_magdump_chart,
+                            ".".join((str(fm_magdump_sim_output_path), "png")),
+                        )
+
+                        with open(
+                            ".".join((str(fm_magdump_sim_output_path), "html")), "w"
+                        ) as f:
+                            f.write(
+                                minify(
+                                    chart_template.render(
+                                        **j2_context,
+                                        **{
+                                            "title": f"{infantry_weapon.name} {fg.description} fire group {fm.fire_mode_type.name} fire mode magazine dump simulation",
+                                            "chart": fm_magdump_chart,
+                                            "update_datetime": datetime.now(
+                                                timezone.utc
+                                            ),
+                                        },
+                                    )
+                                )
+                            )
+
+                        fm_magdump_sim_path: Path = sim_path.joinpath(
+                            fm_magdump_sim_base_filename
+                        )
+
+                        fm.magdump_simulation_base_path = str(fm_magdump_sim_path)
 
     output_path: Path = (
         infantry_weapon_stats_output_dir.joinpath(

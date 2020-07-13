@@ -29,6 +29,8 @@ if __name__ == "__main__":
     action_group.add_argument("--generate-all", action="store_true")
     action_group.add_argument("--upload", action="store_true")
     action_group.add_argument("--update", action="store_true")
+    action_group.add_argument("--copy-statics", action="store_true")
+    action_group.add_argument("--generate-css", action="store_true")
 
     action_group.add_argument("--clean-local", action="store_true")
     action_group.add_argument("--clean-remote", action="store_true")
@@ -40,17 +42,23 @@ if __name__ == "__main__":
 
         clean_site()
 
+    if args.update or args.generate_css:
+
+        generate_css()
+
+    if args.update or args.generate_all:
+
+        update_all_data_files(census_service_id=CENSUS_SERVICE_ID)
+        generate_pages()
+
+    if args.update or args.copy_statics:
+
+        copy_statics()
+
     if args.clean_remote:
 
         clean_bucket(bucket_name=BUCKET_NAME)
 
-    if args.update or args.generate_all:
-
-        generate_css()
-        update_all_data_files(census_service_id=CENSUS_SERVICE_ID)
-        generate_pages()
-
     if args.update or args.upload:
 
-        copy_statics()
         upload_to_bucket(bucket_name=BUCKET_NAME)

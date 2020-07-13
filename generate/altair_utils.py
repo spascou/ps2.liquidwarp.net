@@ -7,7 +7,7 @@ from ps2_census.enums import Faction
 X: str = "x"
 Y: str = "y"
 
-# Faction
+# Faction color
 _FACTION_COLOR_DOMAIN: List[int] = [
     Faction.TERRAN_REPUBLIC.name,
     Faction.VANU_SOVEREIGNTY.name,
@@ -27,7 +27,7 @@ FACTION_COLOR = altair.condition(
     altair.value("lightgray"),
 )
 
-# Simulation point type
+# Simulation point type color
 _SIMULATION_POINT_TYPE_COLOR_DOMAIN: List[str] = ["cursor", "pellet"]
 _SIMULATION_POINT_TYPE_COLOR_RANGE: List[str] = ["red", "green"]
 
@@ -42,6 +42,14 @@ SIMULATION_POINT_TYPE_COLOR = altair.condition(
         ),
         legend=None,
     ),
+    altair.value("lightgray"),
+)
+
+# Simulation fire mode color
+SIMULATION_FIRE_MODE_SELECTION = altair.selection_multi(fields=["FireMode"])
+SIMULATION_FIRE_MODE_COLOR = altair.condition(
+    SIMULATION_FIRE_MODE_SELECTION,
+    altair.Color("FireMode:N", scale=altair.Scale(scheme="dark2"), legend=None),
     altair.value("lightgray"),
 )
 

@@ -1,3 +1,5 @@
+import webbrowser
+
 from flask import Flask, send_from_directory
 
 from generate.constants import SITE_DIRECTORY
@@ -20,5 +22,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     port: int = args.port
+
+    url: str = f"http://127.0.0.1:{port}/index.html"
+
+    webbrowser.open_new_tab(url)
 
     app.run(host="127.0.0.1", port=port)

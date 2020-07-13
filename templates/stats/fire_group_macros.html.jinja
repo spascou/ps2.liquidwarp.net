@@ -30,6 +30,21 @@
                 </table>
             </div>
 
+            {% if with_magdump_simulation and fire_group.magdump_simulation_base_path %}
+                <div class="box">
+                    <p class="title is-5">Magazine dump simulation</p>
+
+                    <figure class="image">
+                        <a href="/{{ fire_group.magdump_simulation_base_path }}.html">
+                            <img
+                                src="/{{ fire_group.magdump_simulation_base_path }}.png"
+                                style="max-width: 100%; width: auto"
+                            />
+                        </a>
+                    </figure>
+                </div>
+            {% endif %}
+
             <div class="content">
                 <p class="title is-4 has-text-black">Fire modes</p>
 
