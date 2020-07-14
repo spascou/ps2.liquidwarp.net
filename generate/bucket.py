@@ -21,7 +21,7 @@ def clean_bucket(bucket_name: str):
         blob.delete()
 
 
-def upload_to_bucket(bucket_name: str):
+def upload_to_bucket(bucket_name: str, prefix: str = ""):
 
     print(f"Uploading files to {bucket_name} bucket")
 
@@ -31,6 +31,10 @@ def upload_to_bucket(bucket_name: str):
     for file_path in Path(SITE_DIRECTORY).rglob("*"):
 
         if file_path.is_dir():
+
+            continue
+
+        elif not str(file_path).startswith(str(Path(SITE_DIRECTORY).joinpath(prefix))):
 
             continue
 

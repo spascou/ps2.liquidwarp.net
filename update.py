@@ -38,6 +38,7 @@ if __name__ == "__main__":
 
     # Other
     parser.add_argument("--no-simulations", action="store_true")
+    parser.add_argument("--upload-prefix", type=str, default="")
 
     # Parse
     args = parser.parse_args()
@@ -66,4 +67,4 @@ if __name__ == "__main__":
 
     if args.update or args.upload:
 
-        upload_to_bucket(bucket_name=BUCKET_NAME)
+        upload_to_bucket(bucket_name=BUCKET_NAME, prefix=args.upload_prefix)
