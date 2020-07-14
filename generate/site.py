@@ -62,10 +62,10 @@ def generate_css():
     subprocess.check_call("npm run css-build", shell=True)
 
 
-def generate_pages():
+def generate_pages(update_simulations: bool = True):
 
-    generate_predefined_pages()
-    generate_dynamic_pages()
+    generate_predefined_pages(update_simulations=update_simulations)
+    generate_dynamic_pages(update_simulations=update_simulations)
 
 
 def copy_statics():

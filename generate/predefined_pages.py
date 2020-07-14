@@ -23,7 +23,7 @@ from .constants import (
 from .jinja_filters import enum_name_filter, items_filter
 
 
-def generate_predefined_pages():
+def generate_predefined_pages(update_simulations: bool = True):
 
     infantry_weapons: List[InfantryWeapon] = generate_all_infantry_weapons(
         data_files_directory=DATA_FILES_DIRECTORY, no_children=True

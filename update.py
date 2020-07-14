@@ -24,17 +24,22 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
 
-    # Main action
+    # Main
     action_group = parser.add_mutually_exclusive_group(required=True)
-    action_group.add_argument("--generate-all", action="store_true")
-    action_group.add_argument("--upload", action="store_true")
     action_group.add_argument("--update", action="store_true")
+    action_group.add_argument("--upload", action="store_true")
+
+    action_group.add_argument("--generate-all", action="store_true")
     action_group.add_argument("--copy-statics", action="store_true")
     action_group.add_argument("--generate-css", action="store_true")
 
     action_group.add_argument("--clean-local", action="store_true")
     action_group.add_argument("--clean-remote", action="store_true")
 
+    # Other
+    parser.add_argument("--no-simulations", action="store_true")
+
+    # Parse
     args = parser.parse_args()
 
     # Run
@@ -49,7 +54,7 @@ if __name__ == "__main__":
     if args.update or args.generate_all:
 
         update_all_data_files(census_service_id=CENSUS_SERVICE_ID)
-        generate_pages()
+        generate_pages(update_simulations=not args.no_simulations)
 
     if args.update or args.copy_statics:
 

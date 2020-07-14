@@ -432,6 +432,14 @@
                             {% endif %}
                         </td>
                     </tr>
+                    {% if recoil.max_total_magnitude %}
+                        <tr>
+                            <th>Max total magnitude</th>
+                            <td>
+                                {{ recoil.max_total_magnitude }}°
+                            </td>
+                        </tr>
+                    {% endif %}
                     <tr>
                         <th>Horizontal tolerance / max horizontal deviation</th>
                         <td>

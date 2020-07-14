@@ -69,7 +69,7 @@ def magdump_simulation_charts(
     player_state: PlayerState = PlayerState.STANDING,
     width: Optional[int] = None,
     height: Optional[int] = None,
-) -> Optional[Tuple[altair.HConcatChart, Dict[int, altair.HConcatChart]]]:
+) -> Tuple[Optional[altair.HConcatChart], Dict[int, altair.HConcatChart]]:
 
     assert (width or height) and not (width and height)
 
@@ -132,7 +132,7 @@ def magdump_simulation_charts(
 
     if not fire_modes_datapoints:
 
-        return None
+        return (None, {})
 
     # Generate charts for fire group and individual fire groups
     fire_modes_charts: Dict[int, altair.HConcatChart] = {}
@@ -272,13 +272,13 @@ def magdump_simulation_charts(
     return (altair.hconcat(fg_chart, fg_legend), fire_modes_charts)
 
 
-def generate_dynamic_pages():
+def generate_dynamic_pages(update_simulations: bool = True):
 
-    generate_infantry_weapons_stats_pages()
-    generate_vehicle_weapons_stats_pages()
+    generate_infantry_weapons_stats_pages(update_simulations=update_simulations)
+    generate_vehicle_weapons_stats_pages(update_simulations=update_simulations)
 
 
-def generate_infantry_weapons_stats_pages():
+def generate_infantry_weapons_stats_pages(update_simulations: bool = True):
 
     fire_groups_data: List[dict] = list(
         load_fire_groups_data_files(directory=DATA_FILES_DIRECTORY)
@@ -293,16 +293,21 @@ def generate_infantry_weapons_stats_pages():
         load_infantry_weapons_data_files(directory=DATA_FILES_DIRECTORY),
     )
 
-    pool: Pool = Pool(cpu_count())
+    pool = Pool(cpu_count())
 
     pool.starmap(
         _generate_infantry_weapons_stats_page,
-        ((ifwd, fire_groups_data_id_idx) for ifwd in infantry_weapons_data),
+        (
+            (ifwd, fire_groups_data_id_idx, update_simulations)
+            for ifwd in infantry_weapons_data
+        ),
     )
 
 
 def _generate_infantry_weapons_stats_page(
-    infantry_weapon_data, fire_groups_data_id_idx
+    infantry_weapon_data: dict,
+    fire_groups_data_id_idx: Dict[int, dict],
+    update_simulations: bool = True,
 ):
 
     infantry_weapon: InfantryWeapon = parse_infantry_weapon_data(
@@ -348,101 +353,128 @@ def _generate_infantry_weapons_stats_page(
         ItemCategory.ROCKET_LAUNCHER,
     }:
 
+        fm: FireMode
+
         fg: FireGroup
         for fg in infantry_weapon.fire_groups:
 
-            print(f"Simulating {infantry_weapon.slug} magdump")
-
-            generated_charts: Optional[
-                Tuple[altair.HConcatChart, Dict[int, altair.HConcatChart]]
-            ] = magdump_simulation_charts(
-                fire_group=fg, runs=50, recentering=False, height=600,
+            fg_magdump_sim_base_filename: str = f"{infantry_weapon.slug}-{infantry_weapon.item_id}-fg{fg.fire_group_id}-magdump"
+            fg_magdump_sim_path: Path = sim_path.joinpath(fg_magdump_sim_base_filename)
+            fg_magdump_sim_output_path: Path = (
+                sim_output_dir.joinpath(fg_magdump_sim_base_filename)
             )
 
-            if generated_charts is not None:
+            fm_magdump_sim_base_filename: str
+            fm_magdump_sim_path: Path
+            fm_magdump_sim_output_path: Path
 
-                fg_magdump_chart: altair.HConcatChart
-                fm_magdump_charts: Dict[int, altair.HConcatChart]
-                fg_magdump_chart, fm_magdump_charts = generated_charts
+            if update_simulations is False:
 
                 # Fire group
-                fg_magdump_sim_base_filename: str = f"{infantry_weapon.slug}-{infantry_weapon.item_id}-fg{fg.fire_group_id}-magdump"
+                if (
+                    fg_magdump_sim_output_path.with_suffix(".html").is_file()
+                    and fg_magdump_sim_output_path.with_suffix(".png").is_file()
+                ):
 
-                fg_magdump_sim_output_path: Path = (
-                    sim_output_dir.joinpath(fg_magdump_sim_base_filename)
-                )
-
-                altair_saver.save(
-                    fg_magdump_chart,
-                    ".".join((str(fg_magdump_sim_output_path), "png")),
-                )
-
-                with open(
-                    ".".join((str(fg_magdump_sim_output_path), "html")), "w"
-                ) as f:
-                    f.write(
-                        minify(
-                            chart_template.render(
-                                **j2_context,
-                                **{
-                                    "title": f"{infantry_weapon.name} {fg.description} fire group magazine dump simulation",
-                                    "chart": fg_magdump_chart,
-                                    "update_datetime": datetime.now(timezone.utc),
-                                },
-                            )
-                        )
-                    )
-
-                fg_magdump_sim_path: Path = sim_path.joinpath(
-                    fg_magdump_sim_base_filename
-                )
-
-                fg.magdump_simulation_base_path = str(fg_magdump_sim_path)
+                    fg.magdump_simulation_base_path = str(fg_magdump_sim_path)
 
                 # Fire modes
-                fm: FireMode
                 for fm in fg.fire_modes:
 
-                    if fm.fire_mode_id in fm_magdump_charts:
+                    fm_magdump_sim_base_filename = f"{infantry_weapon.slug}-{infantry_weapon.item_id}-fg{fg.fire_group_id}-fm{fm.fire_mode_id}-magdump"
+                    fm_magdump_sim_path = sim_path.joinpath(
+                        fm_magdump_sim_base_filename
+                    )
+                    fm_magdump_sim_output_path = sim_output_dir.joinpath(
+                        fm_magdump_sim_base_filename
+                    )
 
-                        fm_magdump_chart: altair.HConcatChart = fm_magdump_charts[
-                            fm.fire_mode_id
-                        ]
-
-                        fm_magdump_sim_base_filename: str = f"{infantry_weapon.slug}-{infantry_weapon.item_id}-fg{fg.fire_group_id}-fm{fm.fire_mode_id}-magdump"
-
-                        fm_magdump_sim_output_path: Path = (
-                            sim_output_dir.joinpath(fm_magdump_sim_base_filename)
-                        )
-
-                        altair_saver.save(
-                            fm_magdump_chart,
-                            ".".join((str(fm_magdump_sim_output_path), "png")),
-                        )
-
-                        with open(
-                            ".".join((str(fm_magdump_sim_output_path), "html")), "w"
-                        ) as f:
-                            f.write(
-                                minify(
-                                    chart_template.render(
-                                        **j2_context,
-                                        **{
-                                            "title": f"{infantry_weapon.name} {fg.description} fire group {fm.fire_mode_type.name} fire mode magazine dump simulation",
-                                            "chart": fm_magdump_chart,
-                                            "update_datetime": datetime.now(
-                                                timezone.utc
-                                            ),
-                                        },
-                                    )
-                                )
-                            )
-
-                        fm_magdump_sim_path: Path = sim_path.joinpath(
-                            fm_magdump_sim_base_filename
-                        )
+                    if (
+                        fg_magdump_sim_output_path.with_suffix(".html").is_file()
+                        and fg_magdump_sim_output_path.with_suffix(".png").is_file()
+                    ):
 
                         fm.magdump_simulation_base_path = str(fm_magdump_sim_path)
+
+            else:
+
+                print(f"Simulating {infantry_weapon.slug} magdump")
+
+                fg_magdump_chart: Optional[altair.HConcatChart]
+                fm_magdump_charts: Dict[int, altair.HConcatChart]
+                fg_magdump_chart, fm_magdump_charts = magdump_simulation_charts(
+                    fire_group=fg, runs=50, recentering=False, height=600,
+                )
+
+                # Fire group
+                if fg_magdump_chart:
+
+                    altair_saver.save(
+                        fg_magdump_chart,
+                        ".".join((str(fg_magdump_sim_output_path), "png")),
+                    )
+
+                    with open(
+                        ".".join((str(fg_magdump_sim_output_path), "html")), "w"
+                    ) as f:
+                        f.write(
+                            minify(
+                                chart_template.render(
+                                    **j2_context,
+                                    **{
+                                        "title": f"{infantry_weapon.name} {fg.description} fire group magazine dump simulation",
+                                        "chart": fg_magdump_chart,
+                                        "update_datetime": datetime.now(timezone.utc),
+                                    },
+                                )
+                            )
+                        )
+
+                    fg.magdump_simulation_base_path = str(fg_magdump_sim_path)
+
+                # Fire modes
+                if fm_magdump_charts:
+
+                    for fm in fg.fire_modes:
+
+                        if fm.fire_mode_id in fm_magdump_charts:
+
+                            fm_magdump_chart: altair.HConcatChart = fm_magdump_charts[
+                                fm.fire_mode_id
+                            ]
+
+                            fm_magdump_sim_base_filename = f"{infantry_weapon.slug}-{infantry_weapon.item_id}-fg{fg.fire_group_id}-fm{fm.fire_mode_id}-magdump"
+                            fm_magdump_sim_path = sim_path.joinpath(
+                                fm_magdump_sim_base_filename
+                            )
+                            fm_magdump_sim_output_path = sim_output_dir.joinpath(
+                                fm_magdump_sim_base_filename
+                            )
+
+                            altair_saver.save(
+                                fm_magdump_chart,
+                                ".".join((str(fm_magdump_sim_output_path), "png")),
+                            )
+
+                            with open(
+                                ".".join((str(fm_magdump_sim_output_path), "html")), "w"
+                            ) as f:
+                                f.write(
+                                    minify(
+                                        chart_template.render(
+                                            **j2_context,
+                                            **{
+                                                "title": f"{infantry_weapon.name} {fg.description} fire group {fm.fire_mode_type.name} fire mode magazine dump simulation",
+                                                "chart": fm_magdump_chart,
+                                                "update_datetime": datetime.now(
+                                                    timezone.utc
+                                                ),
+                                            },
+                                        )
+                                    )
+                                )
+
+                            fm.magdump_simulation_base_path = str(fm_magdump_sim_path)
 
     output_path: Path = (
         infantry_weapon_stats_output_dir.joinpath(
@@ -466,7 +498,7 @@ def _generate_infantry_weapons_stats_page(
         )
 
 
-def generate_vehicle_weapons_stats_pages():
+def generate_vehicle_weapons_stats_pages(update_simulations: bool = True):
 
     fire_groups_data: List[dict] = list(
         load_fire_groups_data_files(directory=DATA_FILES_DIRECTORY)
@@ -481,15 +513,22 @@ def generate_vehicle_weapons_stats_pages():
         load_vehicle_weapons_data_files(directory=DATA_FILES_DIRECTORY),
     )
 
-    pool: Pool = Pool(cpu_count())
+    pool = Pool(cpu_count())
 
     pool.starmap(
         _generate_vehicle_weapons_stats_page,
-        ((vhwd, fire_groups_data_id_idx) for vhwd in vehicle_weapons_data),
+        (
+            (vhwd, fire_groups_data_id_idx, update_simulations)
+            for vhwd in vehicle_weapons_data
+        ),
     )
 
 
-def _generate_vehicle_weapons_stats_page(vehicle_weapon_data, fire_groups_data_id_idx):
+def _generate_vehicle_weapons_stats_page(
+    vehicle_weapon_data: dict,
+    fire_groups_data_id_idx: Dict[int, dict],
+    update_simulations: bool = True,
+):
 
     vehicle_weapon: VehicleWeapon = parse_vehicle_weapon_data(
         data=vehicle_weapon_data, fire_groups_data_id_idx=fire_groups_data_id_idx,

@@ -1,4 +1,5 @@
 import webbrowser
+from threading import Timer
 
 from flask import Flask, send_from_directory
 
@@ -12,6 +13,11 @@ def local(path):
     return send_from_directory(SITE_DIRECTORY, path)
 
 
+def open_browser():
+    url: str = f"http://127.0.0.1:{port}/index.html"
+    webbrowser.open_new_tab(url)
+
+
 if __name__ == "__main__":
     import argparse
 
@@ -23,8 +29,6 @@ if __name__ == "__main__":
 
     port: int = args.port
 
-    url: str = f"http://127.0.0.1:{port}/index.html"
-
-    webbrowser.open_new_tab(url)
+    Timer(1, open_browser).start()
 
     app.run(host="127.0.0.1", port=port)
