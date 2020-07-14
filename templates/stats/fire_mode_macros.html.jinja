@@ -2,7 +2,7 @@
 
 <div class="column">
     <div class="box {{ _loop.cycle(*fire_mode_background_classes) }}">
-        <p class="title is-5 has-text-black" id="fire-mode-{{ fire_mode.fire_mode_id }}">Fire mode: {{ fire_mode.fire_mode_type|enum_name }}</p>
+        <p class="title is-5 has-text-black" id="fire-mode-{{ fire_mode.fire_mode_id }}">{{ fire_mode.fire_mode_type|enum_name }} {{ "ADS" if fire_mode.is_ads else "Hipfire" }}</p>
 
         <div class="box">
             <p class="title is-5">Basic information</p>
@@ -18,32 +18,42 @@
                         <td>{{ fire_mode.fire_mode_type|enum_name }}</td>
                     </tr>
                     <tr>
-                        <th>Is ADS</th>
+                        <th>
+                            Is ADS
+                        </th>
                         <td>{{ fire_mode.is_ads }}</td>
                     </tr>
                     <tr>
-                        <th>Detect range</th>
+                        <th>
+                            <span class="has-tooltip" data-tooltip="Range under which shooting creates a minimap dot for ennemies">
+                                Detect range
+                            </span>
+                        </th>
                         <td>{{ fire_mode.detect_range }}m</td>
                     </tr>
                     <tr>
-                        <th>Move / turn multiplier</th>
+                        <th>
+                            <span class="has-tooltip" data-tooltip="Movement and turn speed multipliers">
+                                Move / turn multiplier
+                            </span>
+                        </th>
                         <td>{{ fire_mode.move_multiplier }}x / {{ fire_mode.turn_multiplier }}x</td>
                     </tr>
                     <tr>
-                        <th>Zoom</th>
+                        <th>
+                            <span class="has-tooltip" data-tooltip="Default zoom without any optics attachments">
+                                Zoom
+                            </span>
+                        </th>
                         <td>{{ fire_mode.zoom }}x</td>
                     </tr>
                     <tr>
-                        <th>Max consecutive shots</th>
+                        <th>
+                            <span class="has-tooltip" data-tooltip="Maximum number of consecutive shots before reloading or waiting for heat to dissipate">
+                                Max consecutive shots
+                            </span>
+                        </th>
                         <td>{{ fire_mode.max_consecutive_shots }}</td>
-                    </tr>
-                    <tr>
-                        <th>Long reload time</th>
-                        <td>{{ fire_mode.reload_time }}ms</td>
-                    </tr>
-                    <tr>
-                        <th>Shots per minute</th>
-                        <td>{{ fire_mode.shots_per_minute }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -51,8 +61,11 @@
 
         {% if with_stk %}
             <div class="box">
-                <p class="title is-5">Shots to kill</p>
-
+                <p class="title is-5">
+                    <span class="has-tooltip" data-tooltip="Minimum number of shots needed to kill">
+                        Shots to kill
+                    </span>
+                </p>
                 {% for r, s in fire_mode.shots_to_kill_ranges(location=DamageLocation.HEAD) %}
                     {{ s }} headshots from {{ r }}m <br />
                 {% endfor %}
@@ -65,14 +78,21 @@
 
         {% if with_magdump_simulation and fire_mode.magdump_simulation_base_path %}
             <div class="box">
-                <p class="title is-5">Magazine dump simulation</p>
+                <p class="title is-5">
+                    <span class="has-tooltip" data-tooltip="Simulation of multiple whole magazine dumps without any control">
+                        Magazine dump simulation
+                    </span>
+                </p>
 
                 <figure class="image">
                     <a href="/{{ fire_mode.magdump_simulation_base_path }}.html">
-                        <img
-                            src="/{{ fire_mode.magdump_simulation_base_path }}.png"
-                            style="max-width: 100%; width: auto"
-                        />
+                        <span class="has-tooltip", data-tooltip="Click to view interactive chart!">
+                            <img
+                                src="/{{ fire_mode.magdump_simulation_base_path }}.png"
+                                target="_blank"
+                                style="max-width: 100%; width: auto"
+                            />
+                        </span>
                     </a>
                 </figure>
             </div>
@@ -95,7 +115,11 @@
                             <td>{{ ammo.ammo_per_shot }} / {{ ammo.shots_per_clip }}</td>
                         </tr>
                         <tr>
-                            <th>Short / long reload time</th>
+                            <th>
+                                <span class="has-tooltip" data-tooltip="Short reload on partially-empty magazine, long reload on completely empty magazine">
+                                    Short / long reload time
+                                </span>
+                            </th>
                             <td>{{ ammo.short_reload_time }}ms / {{ ammo.long_reload_time }}ms</td>
                         </tr>
                     </tbody>
@@ -112,12 +136,22 @@
                 <table class="table is-striped">
                     <tbody>
                         <tr>
-                            <th>Shots to overheat / total capacity</th>
-                            <td>{{ heat.shots_to_overheat }} / {{ heat.total_capacity }}</td>
+                            <th>
+                                <span class="has-tooltip", data-tooltip="Maximum number of consecutive shots before overheating">
+                                    Shots before overheat
+                                </span>
+                                / total capacity
+                            </th>
+                            <td>{{ heat.shots_before_overheat }} / {{ heat.total_capacity }}</td>
                         </tr>
                         <tr>
-                            <th>Heat per shot / shots before overheat </th>
-                            <td>{{ heat.heat_per_shot }} / {{ heat.shots_before_overheat }}</td>
+                            <th>
+                                Heat per shot /
+                                <span class="has-tooltip", data-tooltip="Maximum number of consecutive shots up to overheating">
+                                    shots to overheat
+                                </span>
+                            </th>
+                            <td>{{ heat.heat_per_shot }} / {{ heat.shots_to_overheat }}</td>
                         </tr>
                         {% if heat.recovery_rate %}
                             <tr>
@@ -136,7 +170,11 @@
             {% set direct = fire_mode.direct_damage_profile %}
 
             <div class="box">
-                <p class="title is-5">Direct damage</p>
+                <p class="title is-5">
+                    <span class="has-tooltip", data-tooltip="Damage caused directly on pellet impact location">
+                        Direct damage
+                    </span>
+                </p>
 
                 <table class="table is-striped">
                     <tbody>
@@ -177,7 +215,11 @@
                         {% endif %}
                         {% if direct.location_multiplier %}
                             <tr>
-                                <th>Location multipliers</th>
+                                <th>
+                                    <span class="has-tooltip", data-tooltip="Damage multipliers on the three locations: head, torso and legs, defaulting to 1.0">
+                                        Location multipliers
+                                    </span>
+                                </th>
                                 <td>
                                     {% for damage_location, damage_multiplier in direct.location_multiplier|items %}
                                         {{ damage_multiplier }}x on {{ damage_location|enum_name }}<br />
@@ -189,7 +231,11 @@
                 </table>
 
                 {% if direct.effect %}
-                    <p class="title is-5">Direct damage effect</p>
+                    <p class="title is-5">
+                        <span class="has-tooltip", data-tooltip="Often repeats the damage characteristics above, but sometimes contains other effects">
+                            Direct damage effect
+                        </span>
+                    </p>
 
                     <table class="table is-striped">
                         <tbody>
@@ -206,8 +252,12 @@
         {% endif %}
 
         {% if fire_mode.indirect_damage_profile %}
-        <div class="box">
-            <p class="title is-5">Indirect damage</p>
+            <div class="box">
+                <p class="title is-5">
+                    <span class="has-tooltip", data-tooltip="Damage caused indirectly around the pellet impact location">
+                        Indirect damage
+                    </span>
+                </p>
 
                 {% set indirect = fire_mode.indirect_damage_profile %}
                 <table class="table is-striped">
@@ -218,13 +268,17 @@
                                 {{ indirect.damage_per_shot(indirect.max_damage_range) }}
                                 at radius {{ indirect.max_damage_range }}m,<br />
                                 {{ indirect.damage_per_shot(indirect.min_damage_range) }}
-                                at radius {{ indirect.min_damage_range }}m<br />
+                                at radius {{ indirect.min_damage_range }}m,<br />
                                 0 beyond
                             </td>
                         </tr>
                         {% if with_stk %}
                             <tr>
-                                <th>Shots to kill</th>
+                                <th>
+                                    <span class="has-tooltip" data-tooltip="Minimum number of shots needed to kill assuming they all hit">
+                                        Shots to kill (from indirect damage only)
+                                    </span>
+                                </th>
                                 <td>
                                     {% for r, s in indirect.shots_to_kill_ranges(location=DamageLocation.TORSO) %}
                                         {{ s }} shots from {{ r }}m<br />
@@ -236,7 +290,9 @@
                 </table>
 
                 {% if indirect.effect %}
-                    <p class="title is-5">Indirect damage effect</p>
+                    <span class="has-tooltip", data-tooltip="Often repeats the damage characteristics above, but sometimes contains other effects">
+                        <p class="title is-5">Indirect damage effect</p>
+                    </span>
 
                     <table class="table is-striped">
                         <tbody>
@@ -302,10 +358,110 @@
                             <tr>
                                 <th>Turn rate</th>
                                 <td>
-                                    {{ projectile.turn_rate }}
+                                    {{ projectile.turn_rate }}°/s
                                 </td>
                             </tr>
                         {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+
+        {% if fire_mode.lock_on %}
+            {% set lock_on = fire_mode.lock_on %}
+
+            <div class="box">
+                <p class="title is-5">Lock-on</p>
+
+                <table class="table is-striped">
+                    <tbody>
+                        <tr>
+                            <th>Required</th>
+                            <td>
+                                {{ lock_on.required }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Maintain</th>
+                            <td>
+                                {{ lock_on.maintain }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Seek in flight</th>
+                            <td>
+                                {{ lock_on.seek_in_flight }}
+                            </td>
+                        </tr>
+                        <!-- {% if lock_on.acquire_time or lock_on.acquire_close_time or lock_on.acquire_far_time %} -->
+                        <!--     <tr> -->
+                        <!--         <th>Acquire time</th> -->
+                        <!--         <td> -->
+                        <!--             {% if lock_on.acquire_time %} -->
+                        <!--                 {{ lock_on.acquire_time }}ms -->
+                        <!--             {% elif lock_on.acquire_close_time or lock_on.acquire_far_time %} -->
+                        <!--                 {{ lock_on.acquire_close_time }}ms @ {{ lock_on.range_close }}m / -->
+                        <!--                 {{ lock_on.acquire_far_time }}ms @ {{ lock_on.range_far }}m -->
+                        <!--             {% endif %} -->
+                        <!--         </td> -->
+                        <!--     </tr> -->
+                        <!-- {% endif %} -->
+                        <!-- {% if lock_on.range %} -->
+                        <!--     <tr> -->
+                        <!--         <th>Range</th> -->
+                        <!--         <td> -->
+                        <!--             {{ lock_on.range }}m -->
+                        <!--         </td> -->
+                        <!--     </tr> -->
+                        <!-- {% endif %} -->
+                        {% if lock_on.turn_rate %}
+                            <tr>
+                                <th>Turn rate</th>
+                                <td>
+                                    {{ lock_on.turn_rate }}°/s
+                                </td>
+                            </tr>
+                        {% endif %}
+                        <!-- {% if lock_on.acceleration %} -->
+                        <!--     <tr> -->
+                        <!--         <th>Acceleration</th> -->
+                        <!--         <td> -->
+                        <!--             {{ lock_on.acceleration }} -->
+                        <!--         </td> -->
+                        <!--     </tr> -->
+                        <!-- {% endif %} -->
+                        {% if lock_on.life_time %}
+                            <tr>
+                                <th>Life time</th>
+                                <td>
+                                    {{ lock_on.life_time }}ms
+                                </td>
+                            </tr>
+                        {% endif %}
+                        <!-- {% if lock_on.angle %} -->
+                        <!--     <tr> -->
+                        <!--         <th>Angle</th> -->
+                        <!--         <td> -->
+                        <!--             {{ lock_on.angle }}° -->
+                        <!--         </td> -->
+                        <!--     </tr> -->
+                        <!-- {% endif %} -->
+                        <!-- {% if lock_on.lose_angle %} -->
+                        <!--     <tr> -->
+                        <!--         <th>Lose angle</th> -->
+                        <!--         <td> -->
+                        <!--             {{ lock_on.lose_angle }}° -->
+                        <!--         </td> -->
+                        <!--     </tr> -->
+                        <!-- {% endif %} -->
+                        <!-- {% if lock_on.lose_time %} -->
+                        <!--     <tr> -->
+                        <!--         <th>Lose time</th> -->
+                        <!--         <td> -->
+                        <!--             {{ lock_on.lose_time }}ms -->
+                        <!--         </td> -->
+                        <!--     </tr> -->
+                        <!-- {% endif %} -->
                     </tbody>
                 </table>
             </div>
@@ -332,8 +488,12 @@
                     </tr>
                     {% if fire_mode.ammo or fire_mode.heat %}
                         <tr>
-                            <th>Shots per minute</th>
-                            <td>{{ fire_mode.shots_per_minute }}</td>
+                            <th>
+                                <span class="has-tooltip" data-tooltip="Theoretical rate of fire without reloads">
+                                    Shots per minute
+                                </span>
+                            </th>
+                            <td>{{ timing.shots_per_minute }} RPM</td>
                         </tr>
                     {% endif %}
                     <tr>
@@ -496,7 +656,7 @@
                                 {% if cone_of_fire.grow_rate %}
                                     <tr>
                                         <th>Grow rate</th>
-                                        <td>{{ cone_of_fire.grow_rate }}</td>
+                                        <td>{{ cone_of_fire.grow_rate }}°/s</td>
                                     </tr>
                                 {% endif %}
                                 <tr>

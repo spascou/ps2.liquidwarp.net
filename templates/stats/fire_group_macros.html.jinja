@@ -17,7 +17,11 @@
                             <td>{{ fire_group.fire_group_id }}</td>
                         </tr>
                         <tr>
-                            <th>Transition time</th>
+                            <th>
+                                <span class="has-tooltip" data-tooltip="Duration to transition to this fire group">
+                                    Transition time
+                                </span>
+                            </th>
                             <td>
                                 {% if fire_group.transition_time > 0 %}
                                     {{ fire_group.transition_time }}ms
@@ -32,14 +36,21 @@
 
             {% if with_magdump_simulation and fire_group.magdump_simulation_base_path %}
                 <div class="box">
-                    <p class="title is-5">Magazine dump simulation</p>
+                    <p class="title is-5">
+                        <span class="has-tooltip" data-tooltip="Simulation of multiple whole magazine dumps without any control">
+                            Magazine dump simulation
+                        </span>
+                    </p>
 
                     <figure class="image">
                         <a href="/{{ fire_group.magdump_simulation_base_path }}.html">
-                            <img
-                                src="/{{ fire_group.magdump_simulation_base_path }}.png"
-                                style="max-width: 100%; width: auto"
-                            />
+                            <span class="has-tooltip", data-tooltip="Click to view interactive chart!">
+                                <img
+                                    src="/{{ fire_group.magdump_simulation_base_path }}.png"
+                                    target="_blank"
+                                    style="max-width: 100%; width: auto"
+                                />
+                            </span>
                         </a>
                     </figure>
                 </div>

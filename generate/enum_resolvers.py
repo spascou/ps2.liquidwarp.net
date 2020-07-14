@@ -19,8 +19,8 @@ faction_resolver: Dict[Faction, str] = {
     Faction.NS_OPERATIVES: "NS Operatives",
 }
 fire_mode_type_resolver: Dict[FireModeType, str] = {
-    FireModeType.PROJECTILE: "Hip fire",
-    FireModeType.IRON_SIGHT: "ADS",
+    FireModeType.PROJECTILE: "Projectile",
+    FireModeType.IRON_SIGHT: "Iron sight",
     FireModeType.MELEE: "Melee",
     FireModeType.TRIGGER_ITEM_ABILITY: "Item ability",
     FireModeType.THROWN: "Throw",
@@ -93,7 +93,7 @@ projectile_flight_type_resolver: Dict[ProjectileFlightType, str] = {
 }
 damage_location_resolver: Dict[DamageLocation, str] = {
     DamageLocation.HEAD: "Head",
-    DamageLocation.TORSO: "Body",
+    DamageLocation.TORSO: "Torso",
     DamageLocation.LEGS: "Legs",
 }
 player_state_resolver: Dict[PlayerState, str] = {

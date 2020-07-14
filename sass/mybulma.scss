@@ -3,3 +3,9 @@
 @import "../node_modules/bulma/bulma.sass";
 @import "../node_modules/bulmaswatch/darkly/_overrides.scss";
 @import "../node_modules/@creativebulma/bulma-tooltip/src/sass/index.sass";
+
+.has-tooltip {
+    @extend .has-tooltip-multiline;
+    @extend .has-tooltip-primary;
+    @extend .has-tooltip-arrow;
+}

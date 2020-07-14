@@ -109,7 +109,7 @@ def magdump_simulation_charts(
 
                     datapoints.append(
                         {
-                            "FireMode": f"{fire_mode.fire_mode_id}:{fire_mode_type_resolver[fire_mode.fire_mode_type]}",
+                            "FireMode": f"{fire_mode_type_resolver[fire_mode.fire_mode_type]} {'ADS' if fire_mode.is_ads else 'Hipfire'} ({fire_mode.fire_mode_id})",
                             "Time": t,
                             X: cursor_x,
                             Y: cursor_y,
@@ -120,7 +120,7 @@ def magdump_simulation_charts(
                     for pellet_x, pellet_y in pellets_coors:
                         datapoints.append(
                             {
-                                "FireMode": f"{fire_mode.fire_mode_id}:{fire_mode_type_resolver[fire_mode.fire_mode_type]}",
+                                "FireMode": f"{fire_mode_type_resolver[fire_mode.fire_mode_type]} {'ADS' if fire_mode.is_ads else 'Hipfire'} ({fire_mode.fire_mode_id})",
                                 "Time": t,
                                 X: pellet_x,
                                 Y: pellet_y,
@@ -464,7 +464,7 @@ def _generate_infantry_weapons_stats_page(
                                         chart_template.render(
                                             **j2_context,
                                             **{
-                                                "title": f"{infantry_weapon.name} {fg.description} fire group {fm.fire_mode_type.name} fire mode magazine dump simulation",
+                                                "title": f"{infantry_weapon.name} {fg.description} {fire_mode_type_resolver[fm.fire_mode_type]} {'ADS' if fm.is_ads else 'Hipfire'} magazine dump simulation",
                                                 "chart": fm_magdump_chart,
                                                 "update_datetime": datetime.now(
                                                     timezone.utc
