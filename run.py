@@ -6,6 +6,7 @@ from flask import Flask, send_from_directory
 from generate.constants import SITE_DIRECTORY
 
 app = Flask(__name__)
+app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 0
 
 
 @app.route("/<path:path>")
