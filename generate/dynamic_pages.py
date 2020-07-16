@@ -326,7 +326,7 @@ def _generate_infantry_weapons_stats_page(
         "faction_background_colors": FACTION_BACKGROUND_COLORS,
         "fire_group_background_classes": FIRE_GROUP_BACKGROUND_CLASSES,
         "fire_mode_background_classes": FIRE_MODE_BACKGROUND_CLASSES,
-        "with_stk": True,
+        "with_stk_simulation": True,
         "with_magdump_simulation": True,
     }
 

@@ -59,18 +59,18 @@
             </table>
         </div>
 
-        {% if with_stk %}
+        {% if with_stk_simulation %}
             <div class="box">
                 <p class="title is-5">
                     <span class="has-tooltip" data-tooltip="Minimum number of shots needed to kill">
                         Shots to kill
                     </span>
                 </p>
-                {% for r, s in fire_mode.shots_to_kill_ranges(location=DamageLocation.HEAD) %}
+                {% for r, s in fire_mode.shots_to_kill_ranges(damage_location=DamageLocation.HEAD) %}
                     {{ s }} headshots from {{ r }}m <br />
                 {% endfor %}
                 <br />
-                {% for r, s in fire_mode.shots_to_kill_ranges(location=DamageLocation.TORSO) %}
+                {% for r, s in fire_mode.shots_to_kill_ranges(damage_location=DamageLocation.TORSO) %}
                     {{ s }} bodyshots from {{ r }}m <br />
                 {% endfor %}
             </div>
@@ -211,6 +211,16 @@
                                 </td>
                             </tr>
                         {% endif %}
+                        <tr>
+                            <th>
+                                <span class="has-tooltip", data-tooltip="Damage type used for resistances">
+                                    Resist type
+                                </span>
+                            </th>
+                            <td>
+                                {{ direct.resist_type|enum_name }}
+                            </td>
+                        </tr>
                         {% if direct.location_multiplier %}
                             <tr>
                                 <th>
@@ -228,24 +238,22 @@
                     </tbody>
                 </table>
 
-                {% if direct.effect %}
-                    <p class="title is-5">
-                        <span class="has-tooltip", data-tooltip="Often repeats the damage characteristics above, but sometimes contains other effects">
-                            Direct damage effect
-                        </span>
-                    </p>
+                <p class="title is-5">
+                    <span class="has-tooltip", data-tooltip="Often repeats the damage characteristics above, but sometimes contains other effects">
+                        Direct damage effect
+                    </span>
+                </p>
 
-                    <table class="table is-striped">
-                        <tbody>
-                            {% for direct_effect_key, direct_effect_value in direct.effect|items %}
-                                <tr>
-                                    <th>{{ direct_effect_key }}</th>
-                                    <td>{{ direct_effect_value|enum_name }}</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                {% endif %}
+                <table class="table is-striped">
+                    <tbody>
+                        {% for direct_effect_key, direct_effect_value in direct.effect|items %}
+                            <tr>
+                                <th>{{ direct_effect_key }}</th>
+                                <td>{{ direct_effect_value|enum_name }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         {% endif %}
 
@@ -270,7 +278,17 @@
                                 0 beyond
                             </td>
                         </tr>
-                        {% if with_stk %}
+                        <tr>
+                            <th>
+                                <span class="has-tooltip", data-tooltip="Damage type used for resistances">
+                                    Resist type
+                                </span>
+                            </th>
+                            <td>
+                                {{ indirect.resist_type|enum_name }}
+                            </td>
+                        </tr>
+                        {% if with_stk_simulation %}
                             <tr>
                                 <th>
                                     <span class="has-tooltip" data-tooltip="Minimum number of shots needed to kill assuming they all hit">
@@ -278,7 +296,7 @@
                                     </span>
                                 </th>
                                 <td>
-                                    {% for r, s in indirect.shots_to_kill_ranges(location=DamageLocation.TORSO) %}
+                                    {% for r, s in indirect.shots_to_kill_ranges(damage_location=DamageLocation.TORSO) %}
                                         {{ s }} shots from {{ r }}m<br />
                                     {% endfor %}
                                 </td>
@@ -287,22 +305,20 @@
                     </tbody>
                 </table>
 
-                {% if indirect.effect %}
-                    <span class="has-tooltip", data-tooltip="Often repeats the damage characteristics above, but sometimes contains other effects">
-                        <p class="title is-5">Indirect damage effect</p>
-                    </span>
+                <span class="has-tooltip", data-tooltip="Often repeats the damage characteristics above, but sometimes contains other effects">
+                    <p class="title is-5">Indirect damage effect</p>
+                </span>
 
-                    <table class="table is-striped">
-                        <tbody>
-                            {% for indirect_effect_key, indirect_effect_value in indirect.effect|items %}
-                                <tr>
-                                    <th>{{ indirect_effect_key }}</th>
-                                    <td>{{ indirect_effect_value|enum_name }}</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                {% endif %}
+                <table class="table is-striped">
+                    <tbody>
+                        {% for indirect_effect_key, indirect_effect_value in indirect.effect|items %}
+                            <tr>
+                                <th>{{ indirect_effect_key }}</th>
+                                <td>{{ indirect_effect_value|enum_name }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         {% endif %}
 
