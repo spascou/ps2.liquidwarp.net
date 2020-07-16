@@ -1,0 +1,56 @@
+{% macro projectile_macro(projectile) %}
+    <div class="box">
+        <p class="title is-5">Projectile</p>
+
+        <table class="table is-striped">
+            <tbody>
+                <tr>
+                    <th>Speed</th>
+                    <td>{{ projectile.speed }}m/s</td>
+                </tr>
+                <tr>
+                    <th>Life time / max range</th>
+                    <td>{{ projectile.life_time }}ms / {{ projectile.max_range }}m</td>
+                </tr>
+                <tr>
+                    <th>Flight type</th>
+                    <td>{{ projectile.flight_type|enum_name }}</td>
+                </tr>
+                <tr>
+                    <th>Gravity</th>
+                    <td>
+                        {% if projectile.gravity %}
+                            {{ projectile.gravity }}
+                        {% else %}
+                            No gravity
+                        {% endif %}
+                    </td>
+                </tr>
+                {% if projectile.drag %}
+                <tr>
+                    <th>Drag</th>
+                    <td>
+                        {{ projectile.drag }}
+                    </td>
+                </tr>
+                {% endif %}
+                {% if projectile.acceleration or projectile.max_speed %}
+                    <tr>
+                        <th>Acceleration / max speed</th>
+                        <td>
+                            {{ projectile.acceleration }} / {{ projectile.max_speed }}m/s
+                        </td>
+                    </tr>
+                {% endif %}
+                {% if projectile.turn_rate %}
+                    <tr>
+                        <th>Turn rate</th>
+                        <td>
+                            {{ projectile.turn_rate }}°/s
+                        </td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+{%- endmacro %}

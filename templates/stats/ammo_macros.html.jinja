@@ -1,0 +1,26 @@
+{% macro ammo_macro(ammo) %}
+    <div class="box">
+        <p class="title is-5">Ammo</p>
+
+        <table class="table is-striped">
+            <tbody>
+                <tr>
+                    <th>Clip size / total capacity</th>
+                    <td>{{ ammo.clip_size }} / {{ ammo.total_capacity }}</td>
+                </tr>
+                <tr>
+                    <th>Ammo per shot / shots per clip</th>
+                    <td>{{ ammo.ammo_per_shot }} / {{ ammo.shots_per_clip }}</td>
+                </tr>
+                <tr>
+                    <th>
+                        <span class="has-tooltip" data-tooltip="Short reload on partially-empty magazine, long reload on completely empty magazine">
+                            Short / long reload time
+                        </span>
+                    </th>
+                    <td>{{ ammo.short_reload_time }}ms / {{ ammo.long_reload_time }}ms</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+{%- endmacro %}

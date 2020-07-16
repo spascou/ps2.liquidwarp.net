@@ -58,7 +58,7 @@ from .enum_resolvers import fire_mode_type_resolver
 from .jinja_filters import enum_name_filter, items_filter
 
 
-def magdump_simulation_charts(
+def generate_magdump_simulation(
     fire_group: FireGroup,
     runs: int = 1,
     control_time: int = 0,
@@ -322,7 +322,6 @@ def _generate_infantry_weapons_stats_page(
 
     j2_context: Dict[str, Any] = {
         "DamageLocation": DamageLocation,
-        "ItemCategory": ItemCategory,
         "faction_background_colors": FACTION_BACKGROUND_COLORS,
         "fire_group_background_classes": FIRE_GROUP_BACKGROUND_CLASSES,
         "fire_mode_background_classes": FIRE_MODE_BACKGROUND_CLASSES,
@@ -402,7 +401,7 @@ def _generate_infantry_weapons_stats_page(
 
                 fg_magdump_chart: Optional[altair.HConcatChart]
                 fm_magdump_charts: Dict[int, altair.HConcatChart]
-                fg_magdump_chart, fm_magdump_charts = magdump_simulation_charts(
+                fg_magdump_chart, fm_magdump_charts = generate_magdump_simulation(
                     fire_group=fg, runs=50, recentering=False, height=600,
                 )
 
@@ -542,7 +541,6 @@ def _generate_vehicle_weapons_stats_page(
 
     j2_context: Dict[str, Any] = {
         "DamageLocation": DamageLocation,
-        "ItemCategory": ItemCategory,
         "faction_background_colors": FACTION_BACKGROUND_COLORS,
         "fire_group_background_classes": FIRE_GROUP_BACKGROUND_CLASSES,
         "fire_mode_background_classes": FIRE_MODE_BACKGROUND_CLASSES,

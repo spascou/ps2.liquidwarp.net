@@ -1,7 +1,7 @@
 {% extends "base.html.jinja" %}
 
-{% from "stats/fire_group_macros.html.jinja" import fire_group_stats_macro with context %}
-{% from "stats/attachment_macros.html.jinja" import attachment_stats_macro with context %}
+{% from "stats/fire_group_macros.html.jinja" import fire_group_macro with context %}
+{% from "stats/attachment_macros.html.jinja" import attachment_macro with context %}
 
 {% block title %}{{ weapon.name }} stats{% endblock %}
 
@@ -152,7 +152,7 @@
 
             <div class="columns is-multiline">
                 {% for fire_group in weapon.fire_groups %}
-                    {{ fire_group_stats_macro(fire_group=fire_group, _loop=loop) }}
+                    {{ fire_group_macro(fire_group=fire_group, _loop=loop) }}
                 {% endfor %}
             </div>
         </div>
@@ -163,7 +163,7 @@
             <p class="title is-2" id="attachments">Attachments</p>
 
             {% for attachment in weapon.attachments %}
-                {{ attachment_stats_macro(attachment=attachment, _loop=loop) }}
+                {{ attachment_macro(attachment=attachment, _loop=loop) }}
             {% endfor %}
         </div>
     {% endif %}

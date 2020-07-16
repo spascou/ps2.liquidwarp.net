@@ -1,0 +1,90 @@
+{% macro direct_damage_profile_macro(direct) %}
+    <div class="box">
+        <p class="title is-5">
+            <span class="has-tooltip", data-tooltip="Damage caused directly on pellet impact location">
+                Direct damage
+            </span>
+        </p>
+
+        <table class="table is-striped">
+            <tbody>
+                {% if direct.pellets_count > 1 %}
+                    <tr>
+                        <th>Pellets count @ damage</th>
+                        <td>
+                            {% if direct.damage_range_delta == 0 and direct.damage_delta == 0 %}
+                                {{ direct.pellets_count }} @ {{ direct.max_damage }}
+                            {% else %}
+                                {{ direct.pellets_count }} @<br />
+                                {{ direct.max_damage }} before {{ direct.max_damage_range }}m,<br />
+                                {{ direct.min_damage }} after {{ direct.min_damage_range }}m
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Damage per shot</th>
+                        <td>
+                            {{ direct.damage_per_shot(direct.max_damage_range) }}
+                            before {{ direct.max_damage_range }}m,<br />
+                            {{ direct.damage_per_shot(direct.min_damage_range) }}
+                            after {{ direct.min_damage_range }}m
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <th>Damage</th>
+                        <td>
+                            {% if direct.damage_range_delta == 0 and direct.damage_delta == 0%}
+                                {{ direct.max_damage }}
+                            {% else %}
+                                {{ direct.max_damage }} before {{ direct.max_damage_range }}m,<br />
+                                {{ direct.min_damage }} after {{ direct.min_damage_range }}m
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <th>
+                        <span class="has-tooltip", data-tooltip="Damage type used for resistances">
+                            Resist type
+                        </span>
+                    </th>
+                    <td>
+                        {{ direct.resist_type|enum_name }}
+                    </td>
+                </tr>
+                {% if direct.location_multiplier %}
+                    <tr>
+                        <th>
+                            <span class="has-tooltip", data-tooltip="Damage multipliers on the three locations: head, torso and legs, defaulting to 1.0">
+                                Location multipliers
+                            </span>
+                        </th>
+                        <td>
+                            {% for damage_location, damage_multiplier in direct.location_multiplier|items %}
+                                {{ damage_multiplier }}x on {{ damage_location|enum_name }}<br />
+                            {% endfor %}
+                        </td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+
+        <p class="title is-5">
+            <span class="has-tooltip", data-tooltip="Often repeats the damage characteristics above, but sometimes contains other effects">
+                Direct damage effect
+            </span>
+        </p>
+
+        <table class="table is-striped">
+            <tbody>
+                {% for direct_effect_key, direct_effect_value in direct.effect|items %}
+                    <tr>
+                        <th>{{ direct_effect_key }}</th>
+                        <td>{{ direct_effect_value|enum_name }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{%- endmacro %}

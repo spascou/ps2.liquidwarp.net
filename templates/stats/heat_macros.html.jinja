@@ -1,0 +1,36 @@
+{% macro heat_macro(heat) %}
+    <div class="box">
+        <p class="title is-5">Heat</p>
+
+        <table class="table is-striped">
+            <tbody>
+                <tr>
+                    <th>
+                        <span class="has-tooltip", data-tooltip="Maximum number of consecutive shots before overheating">
+                            Shots before overheat
+                        </span>
+                        / total capacity
+                    </th>
+                    <td>{{ heat.shots_before_overheat }} / {{ heat.total_capacity }}</td>
+                </tr>
+                <tr>
+                    <th>
+                        Heat per shot /
+                        <span class="has-tooltip", data-tooltip="Maximum number of consecutive shots up to overheating">
+                            shots to overheat
+                        </span>
+                    </th>
+                    <td>{{ heat.heat_per_shot }} / {{ heat.shots_to_overheat }}</td>
+                </tr>
+                {% if heat.recovery_rate %}
+                    <tr>
+                        <th>Without / with overheat recovery time</th>
+                        <td>
+                            {{ heat.full_recovery_time }}ms / {{ heat.overheat_recovery_time }}ms
+                        </td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+{%- endmacro %}

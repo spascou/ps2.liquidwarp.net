@@ -1,0 +1,56 @@
+{% macro cone_of_fire_macro(player_state, cone_of_fire) %}
+    <div class="box">
+        <p class="title is-5">{{ player_state|enum_name }}</p>
+
+        <table class="table is-striped">
+            <tbody>
+                <tr>
+                    <th>Min / max spread</th>
+                    <td>
+                        {% if cone_of_fire.min_angle or cone_of_fire.max_angle %}
+                            {{ cone_of_fire.min_angle }}° / {{ cone_of_fire.max_angle }}°
+                        {% else %}
+                            No spread
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Bloom</th>
+                    <td>
+                        {% if cone_of_fire.bloom %}
+                            {{ cone_of_fire.bloom }}°
+                        {% else %}
+                            No bloom
+                        {% endif %}
+                    </td>
+                </tr>
+                {% if cone_of_fire.grow_rate %}
+                    <tr>
+                        <th>Grow rate</th>
+                        <td>{{ cone_of_fire.grow_rate }}°/s</td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <th>Recovery</th>
+                    <td>
+                        {% if cone_of_fire.recovery_rate %}
+                            {{ cone_of_fire.recovery_rate }}°/s after {{ cone_of_fire.recovery_delay }}ms
+                        {% else %}
+                            No recovery
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Standing / moving multipliers</th>
+                    <td>{{ cone_of_fire.multiplier }}x / {{ cone_of_fire.moving_multiplier }}x</td>
+                </tr>
+                {% if cone_of_fire.pellet_spread %}
+                    <tr>
+                        <th>Pellet spread</th>
+                        <td>{{ cone_of_fire.pellet_spread }}°</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+{%- endmacro %}

@@ -1,6 +1,9 @@
-{% from "stats/fire_mode_macros.html.jinja" import fire_mode_stats_macro with context %}
+{% from "stats/fire_mode_macros.html.jinja" import fire_mode_macro with context %}
 
-{% macro fire_group_stats_macro(fire_group, _loop) %}
+{% macro fire_group_macro(
+    fire_group,
+    _loop
+) %}
     <div class="column is-full">
         <div class="box {{ _loop.cycle(*fire_group_background_classes) }}">
             <p class="title is-3 has-text-black" id="fire-group-{{ fire_group.fire_group_id }}">
@@ -59,12 +62,10 @@
 
                 <div class="columns is-multiline">
                     {% for fire_mode in fire_group.fire_modes %}
-                        {{ fire_mode_stats_macro(fire_mode, _loop = loop) }}
+                        {{ fire_mode_macro(fire_mode, _loop = loop) }}
                     {% endfor %}
                 </div>
             </div>
         </div>
     </div>
-
-    <br />
 {%- endmacro %}

@@ -1,0 +1,90 @@
+{% macro recoil_macro(recoil) %}
+    <div class="box">
+        <p class="title is-5">Recoil</p>
+
+        <table class="table is-striped">
+            <tbody>
+                <tr>
+                    <th>Min / max rotation</th>
+                    <td>
+                        {% if recoil.min_angle or recoil.max_angle %}
+                            {{ recoil.min_angle }}° / {{ recoil.max_angle }}°
+                        {% else %}
+                            No rotation
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Min / max vertical</th>
+                    <td>
+                        {% if recoil.min_vertical or recoil.max_vertical %}
+                            {{ recoil.min_vertical }}° / {{ recoil.max_vertical }}°
+                        {% else %}
+                            No vertical recoil
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Standing / crouched vertical increase</th>
+                    <td>
+                        {% if recoil.vertical_increase or recoil.crouched_vertical_increase %}
+                            {{ recoil.vertical_increase }}° / {{ recoil.crouched_vertical_increase }}°
+                        {% else %}
+                            No vertical increase
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>First shot vertical multiplier</th>
+                    <td>{{ recoil.first_shot_multiplier }}x</td>
+                </tr>
+                <tr>
+                    <th>Min / max horizontal</th>
+                    <td>
+                        {% if recoil.min_horizontal or recoil.max_horizontal %}
+                            {{ recoil.min_horizontal }}° / {{ recoil.max_horizontal }}°
+                        {% else %}
+                            No horizontal recoil
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Min / max horizontal increase</th>
+                    <td>
+                        {% if recoil.min_horizontal_increase or recoil.max_horizontal_increase %}
+                            {{ recoil.min_horizontal_increase }}° / {{ recoil.max_horizontal_increase }}°
+                        {% else %}
+                            No horizontal increase
+                        {% endif %}
+                    </td>
+                </tr>
+                {% if recoil.max_total_magnitude %}
+                    <tr>
+                        <th>Max total magnitude</th>
+                        <td>
+                            {{ recoil.max_total_magnitude }}°
+                        </td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <th>Horizontal tolerance / max horizontal deviation</th>
+                    <td>
+                    {% if recoil.horizontal_tolerance %}
+                        {{ recoil.horizontal_tolerance }}° / {{ recoil.max_horizontal_deviation }}°
+                    {% else %}
+                        No horizontal tolerance / ∞°
+                    {% endif %}
+                    </td>
+                </tr>
+                {% if recoil.recovery_rate %}
+                    <tr>
+                        <th>Recovery</th>
+                        <td>
+                            {{ recoil.recovery_rate }}°/s after {{ recoil.recovery_delay }}ms
+                        </td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+{%- endmacro %}

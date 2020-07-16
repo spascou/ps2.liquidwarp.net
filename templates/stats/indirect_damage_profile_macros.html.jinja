@@ -1,0 +1,49 @@
+{% macro indirect_damage_profile_macro(indirect) %}
+    <div class="box">
+        <p class="title is-5">
+            <span class="has-tooltip", data-tooltip="Damage caused indirectly around the pellet impact location">
+                Indirect damage
+            </span>
+        </p>
+
+        <table class="table is-striped">
+            <tbody>
+                <tr>
+                    <th>Damage per shot</th>
+                    <td>
+                        {{ indirect.damage_per_shot(indirect.max_damage_range) }}
+                        at radius {{ indirect.max_damage_range }}m,<br />
+                        {{ indirect.damage_per_shot(indirect.min_damage_range) }}
+                        at radius {{ indirect.min_damage_range }}m,<br />
+                        0 beyond
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <span class="has-tooltip", data-tooltip="Damage type used for resistances">
+                            Resist type
+                        </span>
+                    </th>
+                    <td>
+                        {{ indirect.resist_type|enum_name }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <span class="has-tooltip", data-tooltip="Often repeats the damage characteristics above, but sometimes contains other effects">
+            <p class="title is-5">Indirect damage effect</p>
+        </span>
+
+        <table class="table is-striped">
+            <tbody>
+                {% for indirect_effect_key, indirect_effect_value in indirect.effect|items %}
+                    <tr>
+                        <th>{{ indirect_effect_key }}</th>
+                        <td>{{ indirect_effect_value|enum_name }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{%- endmacro %}
