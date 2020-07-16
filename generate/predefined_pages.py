@@ -20,7 +20,7 @@ from .constants import (
     TEMPLATE_EXTENSION,
     TEMPLATES_DIRECTORY,
 )
-from .jinja_filters import enum_name_filter, items_filter
+from .jinja_filters import debug_filter, enum_name_filter, items_filter
 
 
 def generate_predefined_pages(update_simulations: bool = True):
@@ -66,6 +66,7 @@ def generate_predefined_pages(update_simulations: bool = True):
     )
     j2_env.filters["items"] = items_filter
     j2_env.filters["enum_name"] = enum_name_filter
+    j2_env.filters["debug"] = debug_filter
 
     j2_context: Dict[str, Any] = {
         "DamageLocation": DamageLocation,

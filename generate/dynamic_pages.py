@@ -44,7 +44,6 @@ from .altair_utils import (
 from .constants import (
     CHART_TEMPLATE_PATH,
     DATA_FILES_DIRECTORY,
-    FACTION_BACKGROUND_COLORS,
     FIRE_GROUP_BACKGROUND_CLASSES,
     FIRE_MODE_BACKGROUND_CLASSES,
     INFANTRY_WEAPON_STATS_TEMPLATE_PATH,
@@ -55,7 +54,7 @@ from .constants import (
     VEHICLE_WEAPON_STATS_TEMPLATE_PATH,
 )
 from .enum_resolvers import fire_mode_type_resolver
-from .jinja_filters import enum_name_filter, items_filter
+from .jinja_filters import debug_filter, enum_name_filter, items_filter
 
 
 def generate_magdump_simulation(
@@ -319,13 +318,12 @@ def _generate_infantry_weapons_stats_page(
     )
     j2_env.filters["items"] = items_filter
     j2_env.filters["enum_name"] = enum_name_filter
+    j2_env.filters["debug"] = debug_filter
 
     j2_context: Dict[str, Any] = {
         "DamageLocation": DamageLocation,
-        "faction_background_colors": FACTION_BACKGROUND_COLORS,
         "fire_group_background_classes": FIRE_GROUP_BACKGROUND_CLASSES,
         "fire_mode_background_classes": FIRE_MODE_BACKGROUND_CLASSES,
-        "with_stk_simulation": True,
         "with_magdump_simulation": True,
     }
 
@@ -541,9 +539,9 @@ def _generate_vehicle_weapons_stats_page(
 
     j2_context: Dict[str, Any] = {
         "DamageLocation": DamageLocation,
-        "faction_background_colors": FACTION_BACKGROUND_COLORS,
         "fire_group_background_classes": FIRE_GROUP_BACKGROUND_CLASSES,
         "fire_mode_background_classes": FIRE_MODE_BACKGROUND_CLASSES,
+        "with_magdump_simulation": False,
     }
 
     vehicle_weapon_stats_template: Template = j2_env.get_template(

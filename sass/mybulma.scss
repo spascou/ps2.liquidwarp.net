@@ -9,3 +9,9 @@
     @extend .has-tooltip-primary;
     @extend .has-tooltip-arrow;
 }
+
+.is-table {
+    @extend .table;
+    @extend .is-striped;
+    @extend .is-hoverable;
+}

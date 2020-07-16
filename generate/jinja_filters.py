@@ -24,6 +24,12 @@ from .enum_resolvers import (
 )
 
 
+def debug_filter(msg: str) -> str:
+    print(msg)
+
+    return ""
+
+
 def items_filter(d: dict) -> List[Tuple[Any, Any]]:
 
     return list(d.items())

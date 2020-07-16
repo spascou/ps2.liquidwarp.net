@@ -2,11 +2,11 @@
     <div class="box">
         <p class="title is-5">Timing</p>
 
-        <table class="table is-striped">
+        <table class="is-table">
             <tbody>
                 <tr>
                     <th>Type</th>
-                    {% if timing.is_automatic %}
+                    {% if timing.is_automatic is true %}
                         <td>Automatic</td>
                     {% elif timing.burst_length and timing.burst_refire_time %}
                         <td>{{ timing.burst_length }}x burst with {{ timing.burst_refire_time }}ms refire</td>
@@ -58,4 +58,4 @@
             </tbody>
         </table>
     </div>
-{%- endmacro %}
+{% endmacro %}

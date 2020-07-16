@@ -6,7 +6,7 @@
             </span>
         </p>
 
-        <table class="table is-striped">
+        <table class="is-table">
             <tbody>
                 <tr>
                     <th>Damage per shot</th>
@@ -35,7 +35,7 @@
             <p class="title is-5">Indirect damage effect</p>
         </span>
 
-        <table class="table is-striped">
+        <table class="is-table">
             <tbody>
                 {% for indirect_effect_key, indirect_effect_value in indirect.effect|items %}
                     <tr>
@@ -46,4 +46,4 @@
             </tbody>
         </table>
     </div>
-{%- endmacro %}
+{% endmacro %}

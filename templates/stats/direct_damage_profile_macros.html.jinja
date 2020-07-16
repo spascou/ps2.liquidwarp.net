@@ -6,7 +6,7 @@
             </span>
         </p>
 
-        <table class="table is-striped">
+        <table class="is-table">
             <tbody>
                 {% if direct.pellets_count > 1 %}
                     <tr>
@@ -76,7 +76,7 @@
             </span>
         </p>
 
-        <table class="table is-striped">
+        <table class="is-table">
             <tbody>
                 {% for direct_effect_key, direct_effect_value in direct.effect|items %}
                     <tr>
@@ -87,4 +87,4 @@
             </tbody>
         </table>
     </div>
-{%- endmacro %}
+{% endmacro %}

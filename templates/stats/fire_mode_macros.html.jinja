@@ -1,16 +1,18 @@
-{% from "stats/ammo_macros.html.jinja" import ammo_macro with context %}
-{% from "stats/heat_macros.html.jinja" import heat_macro with context %}
-{% from "stats/direct_damage_profile_macros.html.jinja" import direct_damage_profile_macro with context %}
-{% from "stats/indirect_damage_profile_macros.html.jinja" import indirect_damage_profile_macro with context %}
-{% from "stats/projectile_macros.html.jinja" import projectile_macro with context %}
-{% from "stats/lock_on_macros.html.jinja" import lock_on_macro with context %}
-{% from "stats/fire_timing_macros.html.jinja" import fire_timing_macro with context %}
-{% from "stats/recoil_macros.html.jinja" import recoil_macro with context %}
-{% from "stats/cone_of_fire_macros.html.jinja" import cone_of_fire_macro with context %}
+{% from "stats/ammo_macros.html.jinja" import ammo_macro %}
+{% from "stats/heat_macros.html.jinja" import heat_macro %}
+{% from "stats/direct_damage_profile_macros.html.jinja" import direct_damage_profile_macro %}
+{% from "stats/indirect_damage_profile_macros.html.jinja" import indirect_damage_profile_macro %}
+{% from "stats/projectile_macros.html.jinja" import projectile_macro %}
+{% from "stats/lock_on_macros.html.jinja" import lock_on_macro %}
+{% from "stats/fire_timing_macros.html.jinja" import fire_timing_macro %}
+{% from "stats/recoil_macros.html.jinja" import recoil_macro %}
+{% from "stats/cone_of_fire_macros.html.jinja" import cone_of_fire_macro %}
 
 {% macro fire_mode_macro(
     fire_mode,
+    fire_mode_background_classes,
     _loop,
+    with_magdump_simulation=true,
     with_ammo=true,
     with_heat=true,
     with_direct_damage_profile=true,
@@ -23,12 +25,12 @@
 ) %}
     <div class="column">
         <div class="box {{ _loop.cycle(*fire_mode_background_classes) }}">
-            <p class="title is-5 has-text-black" id="fire-mode-{{ fire_mode.fire_mode_id }}">{{ fire_mode.fire_mode_type|enum_name }} {{ "ADS" if fire_mode.is_ads else "Hipfire" }}</p>
+            <p class="title is-5 has-text-black" id="fire-mode-{{ fire_mode.fire_mode_id }}">{{ fire_mode.fire_mode_type|enum_name }} {{ "ADS" if fire_mode.is_ads is true else "Hipfire" }}</p>
 
             <div class="box">
                 <p class="title is-5">Basic information</p>
 
-                <table class="table is-striped">
+                <table class="is-table">
                     <tbody>
                         <tr>
                             <th>ID</th>
@@ -80,7 +82,7 @@
                 </table>
             </div>
 
-            {% if with_magdump_simulation and fire_mode.magdump_simulation_base_path %}
+            {% if with_magdump_simulation is true and fire_mode.magdump_simulation_base_path %}
                 <div class="box">
                     <p class="title is-5">
                         <span class="has-tooltip" data-tooltip="Simulation of multiple whole magazine dumps without any control">
@@ -100,39 +102,39 @@
                 </div>
             {% endif %}
 
-            {% if with_ammo and fire_mode.ammo and fire_mode.ammo.ammo_per_shot > 0 %}
+            {% if with_ammo is true and fire_mode.ammo and fire_mode.ammo.ammo_per_shot > 0 %}
                 {{ ammo_macro(ammo=fire_mode.ammo) }}
             {% endif %}
 
-            {% if with_heat and fire_mode.heat and fire_mode.heat.heat_per_shot > 0 %}
+            {% if with_heat is true and fire_mode.heat and fire_mode.heat.heat_per_shot > 0 %}
                 {{ heat_macro(heat=fire_mode.heat) }}
             {% endif %}
 
-            {% if with_direct_damage_profile and fire_mode.direct_damage_profile %}
+            {% if with_direct_damage_profile is true and fire_mode.direct_damage_profile %}
                 {{ direct_damage_profile_macro(direct=fire_mode.direct_damage_profile) }}
             {% endif %}
 
-            {% if with_indirect_damage_profile and fire_mode.indirect_damage_profile %}
+            {% if with_indirect_damage_profile is true and fire_mode.indirect_damage_profile %}
                 {{ indirect_damage_profile_macro(indirect=fire_mode.indirect_damage_profile) }}
             {% endif %}
 
-            {% if with_projectile and fire_mode.projectile %}
+            {% if with_projectile is true and fire_mode.projectile %}
                 {{ projectile_macro(projectile=fire_mode.projectile) }}
             {% endif %}
 
-            {% if with_lock_on and fire_mode.lock_on %}
+            {% if with_lock_on is true and fire_mode.lock_on %}
                 {{ lock_on_macro(lock_on=fire_mode.lock_on) }}
             {% endif %}
 
-            {% if with_timing and fire_mode.fire_timing %}
+            {% if with_timing is true and fire_mode.fire_timing %}
                 {{ fire_timing_macro(timing=fire_mode.fire_timing) }}
             {% endif %}
 
-            {% if with_recoil and fire_mode.recoil %}
+            {% if with_recoil is true and fire_mode.recoil %}
                 {{ recoil_macro(recoil=fire_mode.recoil) }}
             {% endif %}
 
-            {% if with_player_state_cone_of_fire and fire_mode.player_state_cone_of_fire %}
+            {% if with_player_state_cone_of_fire is true and fire_mode.player_state_cone_of_fire %}
                 <div class="box">
                     <p class="title is-5">Cone of fire</p>
 
@@ -143,4 +145,4 @@
             {% endif %}
         </div>
     </div>
-{%- endmacro %}
+{% endmacro %}
