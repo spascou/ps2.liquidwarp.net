@@ -1,0 +1,45 @@
+{% extends "base.html.jinja" %}
+
+{% block title %}vehicle weapons stats{% endblock %}
+
+{% block breadcrumb %}
+    <nav class="breadcrumb" aria-label="breadcrumbs">
+        <ul>
+            <li><a href="/index.html">Home</a></li>
+            <li><a>Stats</a></li>
+            <li><a>Weapons</a></li>
+            <li class="is-active"><a href="/stats/weapons/vehicle-list.html" aria-current="page">Vehicle</a></li>
+        </ul>
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <p class="title is-1">Vehicle weapons stats</p>
+
+    <br />
+
+    <div class="columns is-multiline is-centered">
+        {% for fac, v1 in faction_category_vehicle_weapons|items %}
+            <div class="column is-full {{ faction_background_color_classes[fac] }}">
+                <p class="title is-2 has-text-centered">{{ fac|enum_name }}</p>
+
+                <div class="columns is-multiline is-centered">
+                    {% for cat, v2 in v1|items %}
+                        <div class="column is-3">
+                            <div class="box">
+                                <p class="title is-3 has-text-centered">{{ cat|enum_name }}</p>
+                                <ul>
+                                    {% for w in v2 %}
+                                        <li>
+                                            <a href="/stats/weapons/vehicle/{{ w.slug }}-{{ w.item_id }}.html">{{ w.name }}</a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

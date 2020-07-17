@@ -10,13 +10,13 @@
 
 {% macro fire_mode_macro(fire_mode, render_items) %}
     <div class="column">
-        <div class="box">
-            <p class="title is-5" id="fire-mode-{{ fire_mode.fire_mode_id }}">
+        <div class="box has-background-black-ter">
+            <p class="title is-5 has-text-centered" id="fire-mode-{{ fire_mode.fire_mode_id }}">
                 Fire mode: {{ fire_mode.fire_mode_type|enum_name }} {{ "ADS" if fire_mode.is_ads is true else "Hipfire" }}
             </p>
 
             <div class="box">
-                <p class="title is-5">Basic information</p>
+                <p class="title is-5 has-text-centered">Basic information</p>
 
                 <table class="is-table">
                     <tbody>
@@ -66,13 +66,21 @@
                             </th>
                             <td>{{ fire_mode.max_consecutive_shots }}</td>
                         </tr>
+                        <tr>
+                            <th>
+                                <span class="has-tooltip" data-tooltip="Time to reload an empty magazine of dissipate all heat">
+                                    Full reload time
+                                </span>
+                            </th>
+                            <td>{{ fire_mode.reload_time }}ms</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
 
             {% if fire_mode.magdump_simulation_base_path %}
                 <div class="box">
-                    <p class="title is-5">
+                    <p class="title is-5 has-text-centered">
                         <span class="has-tooltip" data-tooltip="Simulation of multiple whole magazine dumps without any control">
                             Magazine dump simulation
                         </span>
@@ -81,7 +89,7 @@
                     <figure class="has-tooptip" data-tooltip="Click image to view interactive chart!">
                         <a href="/{{ fire_mode.magdump_simulation_base_path }}.html" target="_blank">
                             <img
-                                class="image"
+                                class="container image"
                                 src="/{{ fire_mode.magdump_simulation_base_path }}.png"
                                 style="max-width: 100%; width: auto"
                             />
@@ -90,46 +98,54 @@
                 </div>
             {% endif %}
 
-            {% if render_items.ammo is true and fire_mode.ammo and fire_mode.ammo.ammo_per_shot > 0 %}
+            {% set local_render_items = namespace(
+                ammo=render_items.ammo,
+                heat=render_items.heat,
+                direct_damage_profile=render_items.direct_damage_profile,
+                indirect_damage_profile=render_items.indirect_damage_profile,
+                projectile=render_items.projectile,
+                lock_on=render_items.lock_on,
+                fire_timing=render_items.fire_timing,
+                recoil=render_items.recoil,
+                player_state_cone_of_fire=render_items.player_state_cone_of_fire
+            ) %}
+
+            {% if local_render_items.ammo is true and fire_mode.ammo and fire_mode.ammo.ammo_per_shot > 0 %}
                 {{ ammo_macro(ammo=fire_mode.ammo) }}
             {% endif %}
 
-            {% if render_items.heat is true and fire_mode.heat and fire_mode.heat.heat_per_shot > 0 %}
+            {% if local_render_items.heat is true and fire_mode.heat and fire_mode.heat.heat_per_shot > 0 %}
                 {{ heat_macro(heat=fire_mode.heat) }}
             {% endif %}
 
-            {% if render_items.direct_damage_profile is true and fire_mode.direct_damage_profile %}
+            {% if local_render_items.direct_damage_profile is true and fire_mode.direct_damage_profile %}
                 {{ direct_damage_profile_macro(direct=fire_mode.direct_damage_profile) }}
             {% endif %}
 
-            {% if render_items.indirect_damage_profile is true and fire_mode.indirect_damage_profile %}
+            {% if local_render_items.indirect_damage_profile is true and fire_mode.indirect_damage_profile %}
                 {{ indirect_damage_profile_macro(indirect=fire_mode.indirect_damage_profile) }}
             {% endif %}
 
-            {% if render_items.projectile is true and fire_mode.projectile %}
+            {% if local_render_items.projectile is true and fire_mode.projectile %}
                 {{ projectile_macro(projectile=fire_mode.projectile) }}
             {% endif %}
 
-            {% if render_items.lock_on is true and fire_mode.lock_on %}
+            {% if local_render_items.lock_on is true and fire_mode.lock_on %}
                 {{ lock_on_macro(lock_on=fire_mode.lock_on) }}
             {% endif %}
 
-            {% if render_items.timing is true and fire_mode.fire_timing %}
+            {% if local_render_items.timing is true and fire_mode.fire_timing %}
                 {{ fire_timing_macro(timing=fire_mode.fire_timing) }}
             {% endif %}
 
-            {% if render_items.recoil is true and fire_mode.recoil %}
+            {% if local_render_items.recoil is true and fire_mode.recoil %}
                 {{ recoil_macro(recoil=fire_mode.recoil) }}
             {% endif %}
 
-            {% if render_items.player_state_cone_of_fire is true and fire_mode.player_state_cone_of_fire %}
-                <div class="box">
-                    <p class="title is-5">Cone of fire</p>
-
-                    {% for player_state, cone_of_fire in fire_mode.player_state_cone_of_fire|items %}
-                        {{ cone_of_fire_macro(player_state=player_state, cone_of_fire=cone_of_fire) }}
-                    {% endfor %}
-                </div>
+            {% if local_render_items.player_state_cone_of_fire is true and fire_mode.player_state_cone_of_fire %}
+                {% for player_state, cone_of_fire in fire_mode.player_state_cone_of_fire|items %}
+                    {{ cone_of_fire_macro(player_state=player_state, cone_of_fire=cone_of_fire) }}
+                {% endfor %}
             {% endif %}
         </div>
     </div>

@@ -1,6 +1,6 @@
 {% macro heat_macro(heat) %}
-    <div class="box">
-        <p class="title is-5">Heat</p>
+    <div class="box has-background-blue">
+        <p class="title is-5 has-text-centered">Heat</p>
 
         <table class="is-table">
             <tbody>
@@ -24,9 +24,9 @@
                 </tr>
                 {% if heat.recovery_rate %}
                     <tr>
-                        <th>Without / with overheat recovery time</th>
+                        <th>Without / with overheat recovery time (overheat penalty time)</th>
                         <td>
-                            {{ heat.full_recovery_time }}ms / {{ heat.overheat_recovery_time }}ms
+                            {{ heat.full_recovery_time }}ms / {{ heat.overheat_recovery_time }}ms ({{ heat.overheat_penalty_time }}ms)
                         </td>
                     </tr>
                 {% endif %}

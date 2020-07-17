@@ -1,6 +1,6 @@
 {% macro fire_timing_macro(timing) %}
-    <div class="box">
-        <p class="title is-5">Timing</p>
+    <div class="box has-background-green">
+        <p class="title is-5 has-text-centered">Timing</p>
 
         <table class="is-table">
             <tbody>
@@ -28,24 +28,18 @@
                     <th>Refire time</th>
                     <td>{{ timing.refire_time }}ms</td>
                 </tr>
-                {% if timing.fire_duration %}
-                    <tr>
-                        <th>Fire duration</th>
-                        <td>{{ timing.fire_duration }}ms</td>
-                    </tr>
-                {% endif %}
-                {% if timing.delay %}
-                    <tr>
-                        <th>Delay</th>
-                        <td>{{ timing.delay }}ms</td>
-                    </tr>
-                {% endif %}
-                {% if timing.charge_up_time %}
-                    <tr>
-                        <th>Charge time</th>
-                        <td>{{ timing.charge_up_time }}ms</td>
-                    </tr>
-                {% endif %}
+                <tr>
+                    <th>Fire duration</th>
+                    <td>{{ timing.fire_duration }}ms</td>
+                </tr>
+                <tr>
+                    <th>Delay</th>
+                    <td>{{ timing.delay }}ms</td>
+                </tr>
+                <tr>
+                    <th>Charge time</th>
+                    <td>{{ timing.charge_up_time }}ms</td>
+                </tr>
                 {% if timing.spool_up_time %}
                     <tr>
                         <th>Spooling</th>

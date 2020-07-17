@@ -1,6 +1,6 @@
 {% macro ammo_macro(ammo) %}
-    <div class="box">
-        <p class="title is-5">Ammo</p>
+    <div class="box has-background-blue">
+        <p class="title is-5 has-text-centered">Ammo</p>
 
         <table class="is-table">
             <tbody>
@@ -20,6 +20,22 @@
                     </th>
                     <td>{{ ammo.short_reload_time }}ms / {{ ammo.long_reload_time }}ms</td>
                 </tr>
+                <tr>
+                    <th>Block auto</th>
+                    <td>{{ ammo.block_auto }}</td>
+                </tr>
+                <tr>
+                    <th>Continuous</th>
+                    <td>{{ ammo.continuous }}</td>
+                </tr>
+                {% if ammo.loop_start_time and ammo.loop_end_time %}
+                    <tr>
+                        <th>Reload loop start / end time</th>
+                        <td>
+                            {{ ammo.loop_start_time }}ms / {{ ammo.loop_end_time }}ms
+                        </td>
+                    </tr>
+                {% endif %}
             </tbody>
         </table>
     </div>

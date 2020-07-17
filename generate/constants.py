@@ -11,14 +11,14 @@ SIMULATIONS_DIRECTORY: str = "simulations"
 
 TEMPLATE_EXTENSION: str = "html.jinja"
 
-INFANTRY_WEAPON_STATS_TEMPLATE_PATH: str = "stats/infantry_weapon.html.jinja"
-VEHICLE_WEAPON_STATS_TEMPLATE_PATH: str = "stats/vehicle_weapon.html.jinja"
+INFANTRY_WEAPON_STATS_TEMPLATE_PATH: str = "stats/weapons/infantry.html.jinja"
+VEHICLE_WEAPON_STATS_TEMPLATE_PATH: str = "stats/weapons/vehicle.html.jinja"
 CHART_TEMPLATE_PATH: str = "chart.html.jinja"
 
-FACTION_BACKGROUND_COLORS: Dict[Faction, str] = {
-    Faction.NONE: "",
-    Faction.VANU_SOVEREIGNTY: "#352c4f",
-    Faction.NEW_CONGLOMERATE: "#1a2b3d",
-    Faction.TERRAN_REPUBLIC: "#692b34",
-    Faction.NS_OPERATIVES: "",
+FACTION_BACKGROUND_COLOR_CLASSES: Dict[Faction, str] = {
+    Faction.NONE: "has-background-no-faction",
+    Faction.VANU_SOVEREIGNTY: "has-background-vs",
+    Faction.NEW_CONGLOMERATE: "has-background-nc",
+    Faction.TERRAN_REPUBLIC: "has-background-tr",
+    Faction.NS_OPERATIVES: "has-background-no-faction",
 }

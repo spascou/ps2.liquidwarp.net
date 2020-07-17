@@ -1,6 +1,6 @@
 {% macro direct_damage_profile_macro(direct) %}
-    <div class="box">
-        <p class="title is-5">
+    <div class="box has-background-red">
+        <p class="title is-5 has-text-centered">
             <span class="has-tooltip", data-tooltip="Damage caused directly on pellet impact location">
                 Direct damage
             </span>
@@ -32,7 +32,7 @@
                     </tr>
                 {% else %}
                     <tr>
-                        <th>Damage</th>
+                        <th>Damage per shot</th>
                         <td>
                             {% if direct.damage_range_delta == 0 and direct.damage_delta == 0%}
                                 {{ direct.max_damage }}
@@ -70,7 +70,7 @@
             </tbody>
         </table>
 
-        <p class="title is-5">
+        <p class="title is-5 has-text-centered">
             <span class="has-tooltip", data-tooltip="Often repeats the damage characteristics above, but sometimes contains other effects">
                 Direct damage effect
             </span>

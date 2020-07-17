@@ -1,6 +1,6 @@
 {% macro indirect_damage_profile_macro(indirect) %}
-    <div class="box">
-        <p class="title is-5">
+    <div class="box has-background-red">
+        <p class="title is-5 has-text-centered">
             <span class="has-tooltip", data-tooltip="Damage caused indirectly around the pellet impact location">
                 Indirect damage
             </span>
@@ -12,10 +12,9 @@
                     <th>Damage per shot</th>
                     <td>
                         {{ indirect.damage_per_shot(indirect.max_damage_range) }}
-                        at radius {{ indirect.max_damage_range }}m,<br />
+                        within {{ indirect.max_damage_range }}m radius,<br />
                         {{ indirect.damage_per_shot(indirect.min_damage_range) }}
-                        at radius {{ indirect.min_damage_range }}m,<br />
-                        0 beyond
+                        within {{ indirect.min_damage_range }}m radius<br />
                     </td>
                 </tr>
                 <tr>
@@ -31,9 +30,11 @@
             </tbody>
         </table>
 
-        <span class="has-tooltip", data-tooltip="Often repeats the damage characteristics above, but sometimes contains other effects">
-            <p class="title is-5">Indirect damage effect</p>
-        </span>
+        <p class="title is-5 has-text-centered">
+            <span class="has-tooltip", data-tooltip="Often repeats the damage characteristics above, but sometimes contains other effects">
+                Indirect damage effect
+            </span>
+        </p>
 
         <table class="is-table">
             <tbody>

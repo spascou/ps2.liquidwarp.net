@@ -14,7 +14,7 @@ from ps2_census.enums import Faction, ItemCategory
 
 from .constants import (
     DATA_FILES_DIRECTORY,
-    FACTION_BACKGROUND_COLORS,
+    FACTION_BACKGROUND_COLOR_CLASSES,
     PAGES_DIRECTORY,
     SITE_DIRECTORY,
     TEMPLATE_EXTENSION,
@@ -71,7 +71,7 @@ def generate_predefined_pages(update_simulations: bool = True):
     j2_context: Dict[str, Any] = {
         "DamageLocation": DamageLocation,
         "ItemCategory": ItemCategory,
-        "faction_background_colors": FACTION_BACKGROUND_COLORS,
+        "faction_background_color_classes": FACTION_BACKGROUND_COLOR_CLASSES,
         "faction_category_infantry_weapons": faction_category_infantry_weapons,
         "faction_category_vehicle_weapons": faction_category_vehicle_weapons,
     }

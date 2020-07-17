@@ -1,21 +1,25 @@
 {% macro projectile_macro(projectile) %}
-    <div class="box">
-        <p class="title is-5">Projectile</p>
+    <div class="box has-background-yellow">
+        <p class="title is-5 has-text-centered">Projectile</p>
 
         <table class="is-table">
             <tbody>
                 <tr>
-                    <th>Speed</th>
-                    <td>{{ projectile.speed }}m/s</td>
-                </tr>
-                <tr>
-                    <th>Life time / max range</th>
-                    <td>{{ projectile.life_time }}ms / {{ projectile.max_range }}m</td>
-                </tr>
-                <tr>
                     <th>Flight type</th>
                     <td>{{ projectile.flight_type|enum_name }}</td>
                 </tr>
+                <tr>
+                    <th>Speed</th>
+                    <td>{{ projectile.speed }}m/s</td>
+                </tr>
+                {% if projectile.acceleration or projectile.max_speed %}
+                    <tr>
+                        <th>Acceleration / max speed</th>
+                        <td>
+                            {{ projectile.acceleration }} / {{ projectile.max_speed }}m/s
+                        </td>
+                    </tr>
+                {% endif %}
                 <tr>
                     <th>Gravity</th>
                     <td>
@@ -26,6 +30,10 @@
                         {% endif %}
                     </td>
                 </tr>
+                <tr>
+                    <th>Life time / max range at base speed</th>
+                    <td>{{ projectile.life_time }}ms / {{ projectile.max_range }}m</td>
+                </tr>
                 {% if projectile.drag %}
                 <tr>
                     <th>Drag</th>
@@ -33,14 +41,6 @@
                         {{ projectile.drag }}
                     </td>
                 </tr>
-                {% endif %}
-                {% if projectile.acceleration or projectile.max_speed %}
-                    <tr>
-                        <th>Acceleration / max speed</th>
-                        <td>
-                            {{ projectile.acceleration }} / {{ projectile.max_speed }}m/s
-                        </td>
-                    </tr>
                 {% endif %}
                 {% if projectile.turn_rate %}
                     <tr>

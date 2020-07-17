@@ -12,6 +12,47 @@
 
 .is-table {
     @extend .table;
-    @extend .is-striped;
     @extend .is-hoverable;
+    @extend .is-fullwidth;
+    border-radius: 8px;
+}
+
+.has-background-orange {
+    background-color: darken($orange, 20%);
+}
+.has-background-yellow {
+    background-color: darken($yellow, 20%);
+}
+.has-background-green {
+    background-color: darken($green, 20%);
+}
+.has-background-turquoise {
+    background-color: darken($turquoise, 20%);
+}
+.has-background-blue {
+    background-color: darken($blue, 20%);
+}
+.has-background-purple {
+    background-color: darken($purple, 20%);
+}
+.has-background-red {
+    background-color: darken($red, 20%);
+}
+
+$vs-color: #352c4f;
+$nc-color: #1a2b3d;
+$tr-color: #692b34;
+$no-faction-color: #282f2f;
+
+.has-background-vs {
+    background-color: $vs-color;
+}
+.has-background-nc {
+    background-color: $nc-color;
+}
+.has-background-tr {
+    background-color: $tr-color;
+}
+.has-background-no-faction {
+    background-color: $no-faction-color;
 }

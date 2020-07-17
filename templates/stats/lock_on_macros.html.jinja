@@ -1,6 +1,6 @@
 {% macro lock_on_macro(lock_on) %}
-    <div class="box">
-        <p class="title is-5">Lock-on</p>
+    <div class="box has-background-orange">
+        <p class="title is-5 has-text-centered">Lock-on</p>
 
         <table class="is-table">
             <tbody>
@@ -22,27 +22,6 @@
                         {{ lock_on.seek_in_flight }}
                     </td>
                 </tr>
-                <!-- {% if lock_on.acquire_time or lock_on.acquire_close_time or lock_on.acquire_far_time %} -->
-                <!--     <tr> -->
-                <!--         <th>Acquire time</th> -->
-                <!--         <td> -->
-                <!--             {% if lock_on.acquire_time %} -->
-                <!--                 {{ lock_on.acquire_time }}ms -->
-                <!--             {% elif lock_on.acquire_close_time or lock_on.acquire_far_time %} -->
-                <!--                 {{ lock_on.acquire_close_time }}ms @ {{ lock_on.range_close }}m / -->
-                <!--                 {{ lock_on.acquire_far_time }}ms @ {{ lock_on.range_far }}m -->
-                <!--             {% endif %} -->
-                <!--         </td> -->
-                <!--     </tr> -->
-                <!-- {% endif %} -->
-                <!-- {% if lock_on.range %} -->
-                <!--     <tr> -->
-                <!--         <th>Range</th> -->
-                <!--         <td> -->
-                <!--             {{ lock_on.range }}m -->
-                <!--         </td> -->
-                <!--     </tr> -->
-                <!-- {% endif %} -->
                 {% if lock_on.turn_rate %}
                     <tr>
                         <th>Turn rate</th>
@@ -51,14 +30,6 @@
                         </td>
                     </tr>
                 {% endif %}
-                <!-- {% if lock_on.acceleration %} -->
-                <!--     <tr> -->
-                <!--         <th>Acceleration</th> -->
-                <!--         <td> -->
-                <!--             {{ lock_on.acceleration }} -->
-                <!--         </td> -->
-                <!--     </tr> -->
-                <!-- {% endif %} -->
                 {% if lock_on.life_time %}
                     <tr>
                         <th>Life time</th>
@@ -67,30 +38,6 @@
                         </td>
                     </tr>
                 {% endif %}
-                <!-- {% if lock_on.angle %} -->
-                <!--     <tr> -->
-                <!--         <th>Angle</th> -->
-                <!--         <td> -->
-                <!--             {{ lock_on.angle }}° -->
-                <!--         </td> -->
-                <!--     </tr> -->
-                <!-- {% endif %} -->
-                <!-- {% if lock_on.lose_angle %} -->
-                <!--     <tr> -->
-                <!--         <th>Lose angle</th> -->
-                <!--         <td> -->
-                <!--             {{ lock_on.lose_angle }}° -->
-                <!--         </td> -->
-                <!--     </tr> -->
-                <!-- {% endif %} -->
-                <!-- {% if lock_on.lose_time %} -->
-                <!--     <tr> -->
-                <!--         <th>Lose time</th> -->
-                <!--         <td> -->
-                <!--             {{ lock_on.lose_time }}ms -->
-                <!--         </td> -->
-                <!--     </tr> -->
-                <!-- {% endif %} -->
             </tbody>
         </table>
     </div>

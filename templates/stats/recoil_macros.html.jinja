@@ -1,6 +1,6 @@
 {% macro recoil_macro(recoil) %}
-    <div class="box">
-        <p class="title is-5">Recoil</p>
+    <div class="box has-background-purple">
+        <p class="title is-5 has-text-centered">Recoil</p>
 
         <table class="is-table">
             <tbody>
@@ -58,14 +58,6 @@
                         {% endif %}
                     </td>
                 </tr>
-                {% if recoil.max_total_magnitude %}
-                    <tr>
-                        <th>Max total magnitude</th>
-                        <td>
-                            {{ recoil.max_total_magnitude }}°
-                        </td>
-                    </tr>
-                {% endif %}
                 <tr>
                     <th>Horizontal tolerance / max horizontal deviation</th>
                     <td>
@@ -81,6 +73,14 @@
                         <th>Recovery</th>
                         <td>
                             {{ recoil.recovery_rate }}°/s after {{ recoil.recovery_delay }}ms
+                        </td>
+                    </tr>
+                {% endif %}
+                {% if recoil.max_total_magnitude %}
+                    <tr>
+                        <th>Max total magnitude</th>
+                        <td>
+                            {{ recoil.max_total_magnitude }}°
                         </td>
                     </tr>
                 {% endif %}

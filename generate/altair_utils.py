@@ -53,6 +53,19 @@ SIMULATION_FIRE_MODE_COLOR = altair.condition(
     altair.value("lightgray"),
 )
 
+# Simulation STK
+SIMULATION_STK_SELECTION = altair.selection_multi(fields=["Target"])
+SIMULATION_STK_COLOR = altair.condition(
+    SIMULATION_STK_SELECTION,
+    altair.Color("Target:N", scale=altair.Scale(scheme="dark2"), legend=None),
+    altair.value("lightgray"),
+)
+SIMULATION_STK_OPACITY = altair.condition(
+    SIMULATION_STK_SELECTION,
+    altair.Color("Target:N", scale=altair.Scale(scheme="dark2"), legend=None),
+    altair.value(0.1),
+)
+
 
 def dark_theme():
 
