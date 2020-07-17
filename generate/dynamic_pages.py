@@ -44,8 +44,6 @@ from .altair_utils import (
 from .constants import (
     CHART_TEMPLATE_PATH,
     DATA_FILES_DIRECTORY,
-    FIRE_GROUP_BACKGROUND_CLASSES,
-    FIRE_MODE_BACKGROUND_CLASSES,
     INFANTRY_WEAPON_STATS_TEMPLATE_PATH,
     PAGES_DIRECTORY,
     SIMULATIONS_DIRECTORY,
@@ -322,9 +320,6 @@ def _generate_infantry_weapons_stats_page(
 
     j2_context: Dict[str, Any] = {
         "DamageLocation": DamageLocation,
-        "fire_group_background_classes": FIRE_GROUP_BACKGROUND_CLASSES,
-        "fire_mode_background_classes": FIRE_MODE_BACKGROUND_CLASSES,
-        "with_magdump_simulation": True,
     }
 
     infantry_weapon_stats_template: Template = j2_env.get_template(
@@ -539,9 +534,6 @@ def _generate_vehicle_weapons_stats_page(
 
     j2_context: Dict[str, Any] = {
         "DamageLocation": DamageLocation,
-        "fire_group_background_classes": FIRE_GROUP_BACKGROUND_CLASSES,
-        "fire_mode_background_classes": FIRE_MODE_BACKGROUND_CLASSES,
-        "with_magdump_simulation": False,
     }
 
     vehicle_weapon_stats_template: Template = j2_env.get_template(

@@ -9,30 +9,91 @@
 {% from "stats/cone_of_fire_macros.html.jinja" import cone_of_fire_macro %}
 {% from "stats/fire_mode_macros.html.jinja" import fire_mode_macro %}
 
-{% macro fire_group_macro(
-    fire_group,
-    fire_group_background_classes,
-    fire_mode_background_classes,
-    _loop,
-    with_magdump_simulation=true,
-    with_ammo=true,
-    with_heat=true,
-    with_direct_damage_profile=true,
-    with_indirect_damage_profile=true,
-    with_projectile=true,
-    with_lock_on=true,
-    with_timing=true,
-    with_recoil=true,
-    with_player_state_cone_of_fire=true
-) %}
+
+{% macro parent_fire_groups_macro(parent) %}
     <div class="column is-full">
-        <div class="box {{ _loop.cycle(*fire_group_background_classes) }}">
-            <p class="title is-3 has-text-black" id="fire-group-{{ fire_group.fire_group_id }}">
-                {{ fire_group.description }}
+
+        {% set render_items = namespace(
+            ammo=true,
+            heat=true,
+            direct_damage_profile=true,
+            indirect_damage_profile=true,
+            projectile=true,
+            lock_on=true,
+            fire_timing=true,
+            recoil=true,
+            player_state_cone_of_fire=true
+        ) %}
+
+        {% if parent.ammo and parent.ammo.ammo_per_shot > 0 %}
+            {% set render_items.ammo = false %}
+            {{ ammo_macro(ammo=parent.ammo) }}
+        {% endif %}
+
+        {% if parent.heat and parent.heat.heat_per_shot > 0 %}
+            {% set render_items.heat = false %}
+            {{ heat_macro(heat=parent.heat) }}
+        {% endif %}
+
+        {% if parent.direct_damage_profile %}
+            {% set render_items.direct_damage_profile = false %}
+            {{ direct_damage_profile_macro(direct=parent.direct_damage_profile) }}
+        {% endif %}
+
+        {% if parent.indirect_damage_profile %}
+            {% set render_items.indirect_damage_profile = false %}
+            {{ indirect_damage_profile_macro(indirect=parent.indirect_damage_profile) }}
+        {% endif %}
+
+        {% if parent.projectile %}
+            {% set render_items.projectile = false %}
+            {{ projectile_macro(projectile=parent.projectile) }}
+        {% endif %}
+
+        {% if parent.lock_on %}
+            {% set render_items.lock_on = false %}
+            {{ lock_on_macro(lock_on=parent.lock_on) }}
+        {% endif %}
+
+        {% if parent.fire_timing %}
+            {% set render_items.timing = false %}
+            {{ fire_timing_macro(timing=parent.fire_timing) }}
+        {% endif %}
+
+        {% if parent.recoil %}
+            {% set render_items.recoil = false %}
+            {{ recoil_macro(recoil=parent.recoil) }}
+        {% endif %}
+
+        {% if parent.player_state_cone_of_fire %}
+            {% set render_items.player_state_cone_of_fire = false %}
+            <div class="box">
+                <p class="title is-5">Cone of fire</p>
+
+                {% for player_state, cone_of_fire in parent.player_state_cone_of_fire|items %}
+                    {{ cone_of_fire_macro(player_state=player_state, cone_of_fire=cone_of_fire) }}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="columns is-multiline">
+            {% for fire_group in parent.fire_groups %}
+                {{ fire_group_macro(fire_group=fire_group, render_items=render_items) }}
+            {% endfor %}
+        </div>
+    </div>
+{% endmacro %}
+
+
+{% macro fire_group_macro(fire_group, render_items) %}
+    <div class="column is-full">
+        <div class="box">
+            <p class="title is-3" id="fire-group-{{ fire_group.fire_group_id }}">
+                Fire group: {{ fire_group.description }}
             </p>
 
             <div class="content">
-                <p class="title is-4 has-text-black">Basic information</p>
+                <p class="title is-4">Basic information</p>
 
                 <table class="is-table">
                     <tbody>
@@ -58,7 +119,7 @@
                 </table>
             </div>
 
-            {% if with_magdump_simulation is true and fire_group.magdump_simulation_base_path %}
+            {% if fire_group.magdump_simulation_base_path %}
                 <div class="box">
                     <p class="title is-5">
                         <span class="has-tooltip" data-tooltip="Simulation of multiple whole magazine dumps without any control">
@@ -78,64 +139,48 @@
                 </div>
             {% endif %}
 
-            {% if with_ammo is true and fire_group.ammo and fire_group.ammo.ammo_per_shot > 0 %}
-                {% set fire_mode_ammo = false %}
+            {% if render_items.ammo is true and fire_group.ammo and fire_group.ammo.ammo_per_shot > 0 %}
+                {% set render_items.ammo = false %}
                 {{ ammo_macro(ammo=fire_group.ammo) }}
-            {% else %}
-                {% set fire_mode_ammo = true %}
             {% endif %}
 
-            {% if with_heat is true and fire_group.heat and fire_group.heat.heat_per_shot > 0 %}
-                {% set fire_mode_heat = false %}
+            {% if render_items.heat is true and fire_group.heat and fire_group.heat.heat_per_shot > 0 %}
+                {% set render_items.heat = false %}
                 {{ heat_macro(heat=fire_group.heat) }}
-            {% else %}
-                {% set fire_mode_heat = true %}
             {% endif %}
 
-            {% if with_direct_damage_profile is true and fire_group.direct_damage_profile %}
-                {% set fire_mode_direct_damage_profile = false %}
+            {% if render_items.direct_damage_profile is true and fire_group.direct_damage_profile %}
+                {% set render_items.direct_damage_profile = false %}
                 {{ direct_damage_profile_macro(direct=fire_group.direct_damage_profile) }}
-            {% else %}
-                {% set fire_mode_direct_damage_profile = true %}
             {% endif %}
 
-            {% if with_indirect_damage_profile is true and fire_group.indirect_damage_profile %}
-                {% set fire_mode_indirect_damage_profile = false %}
+            {% if render_items.indirect_damage_profile is true and fire_group.indirect_damage_profile %}
+                {% set render_items.indirect_damage_profile = false %}
                 {{ indirect_damage_profile_macro(indirect=fire_group.indirect_damage_profile) }}
-            {% else %}
-                {% set fire_mode_indirect_damage_profile = true %}
             {% endif %}
 
-            {% if with_projectile is true and fire_group.projectile %}
-                {% set fire_mode_projectile = false %}
+            {% if render_items.projectile is true and fire_group.projectile %}
+                {% set render_items.projectile = false %}
                 {{ projectile_macro(projectile=fire_group.projectile) }}
-            {% else %}
-                {% set fire_mode_projectile = true %}
             {% endif %}
 
-            {% if with_lock_on is true and fire_group.lock_on %}
-                {% set fire_mode_lock_on = false %}
+            {% if render_items.lock_on is true and fire_group.lock_on %}
+                {% set render_items.lock_on = false %}
                 {{ lock_on_macro(lock_on=fire_group.lock_on) }}
-            {% else %}
-                {% set fire_mode_lock_on = true %}
             {% endif %}
 
-            {% if with_timing is true and fire_group.fire_timing %}
-                {% set fire_mode_timing = false %}
+            {% if render_items.timing is true and fire_group.fire_timing %}
+                {% set render_items.timing = false %}
                 {{ fire_timing_macro(timing=fire_group.fire_timing) }}
-            {% else %}
-                {% set fire_mode_timing = true %}
             {% endif %}
 
-            {% if with_recoil is true and fire_group.recoil %}
-                {% set fire_mode_recoil = false %}
+            {% if render_items.recoil is true and fire_group.recoil %}
+                {% set render_items.recoil = false %}
                 {{ recoil_macro(recoil=fire_group.recoil) }}
-            {% else %}
-                {% set fire_mode_recoil = true %}
             {% endif %}
 
-            {% if with_player_state_cone_of_fire is true and fire_group.player_state_cone_of_fire %}
-                {% set fire_mode_player_state_cone_of_fire = false %}
+            {% if render_items.player_state_cone_of_fire is true and fire_group.player_state_cone_of_fire %}
+                {% set render_items.player_state_cone_of_fire = false %}
                 <div class="box">
                     <p class="title is-5">Cone of fire</p>
 
@@ -143,31 +188,14 @@
                         {{ cone_of_fire_macro(player_state=player_state, cone_of_fire=cone_of_fire) }}
                     {% endfor %}
                 </div>
-            {% else %}
-                {% set fire_mode_player_state_cone_of_fire = true %}
             {% endif %}
 
-            <div class="content">
-                <p class="title is-4 has-text-black">Fire modes</p>
+            <p class="title is-4">Fire modes</p>
 
-                <div class="columns is-multiline">
-                    {% for fire_mode in fire_group.fire_modes %}
-                        {{ fire_mode_macro(
-                            fire_mode,
-                            fire_mode_background_classes=fire_mode_background_classes,
-                            _loop=loop,
-                            with_ammo=with_ammo and fire_mode_ammo,
-                            with_heat=with_heat and fire_mode_heat,
-                            with_direct_damage_profile=with_direct_damage_profile and fire_mode_direct_damage_profile,
-                            with_indirect_damage_profile=with_indirect_damage_profile and fire_mode_indirect_damage_profile,
-                            with_projectile=with_projectile and fire_mode_projectile,
-                            with_lock_on=with_lock_on and fire_mode_lock_on,
-                            with_timing=with_timing and fire_mode_timing,
-                            with_recoil=with_recoil and fire_mode_recoil,
-                            with_player_state_cone_of_fire=with_player_state_cone_of_fire and fire_mode_player_state_cone_of_fire
-                        ) }}
-                    {% endfor %}
-                </div>
+            <div class="columns is-multiline">
+                {% for fire_mode in fire_group.fire_modes %}
+                    {{ fire_mode_macro(fire_mode, render_items=render_items) }}
+                {% endfor %}
             </div>
         </div>
     </div>

@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict
 
 from ps2_census.enums import Faction
 
@@ -14,17 +14,6 @@ TEMPLATE_EXTENSION: str = "html.jinja"
 INFANTRY_WEAPON_STATS_TEMPLATE_PATH: str = "stats/infantry_weapon.html.jinja"
 VEHICLE_WEAPON_STATS_TEMPLATE_PATH: str = "stats/vehicle_weapon.html.jinja"
 CHART_TEMPLATE_PATH: str = "chart.html.jinja"
-
-
-FIRE_GROUP_BACKGROUND_CLASSES: List[str] = [
-    "has-background-primary",
-    "has-background-success",
-]
-
-FIRE_MODE_BACKGROUND_CLASSES: List[str] = [
-    "has-background-info",
-    "has-background-warning",
-]
 
 FACTION_BACKGROUND_COLORS: Dict[Faction, str] = {
     Faction.NONE: "",
