@@ -56,7 +56,7 @@
         {% endif %}
 
         {% if parent.fire_timing %}
-            {% set render_items.timing = false %}
+            {% set render_items.fire_timing = false %}
             {{ fire_timing_macro(timing=parent.fire_timing) }}
         {% endif %}
 
@@ -195,8 +195,8 @@
                 {{ lock_on_macro(lock_on=fire_group.lock_on) }}
             {% endif %}
 
-            {% if local_render_items.timing is true and fire_group.fire_timing %}
-                {% set local_render_items.timing = false %}
+            {% if local_render_items.fire_timing is true and fire_group.fire_timing %}
+                {% set local_render_items.fire_timing = false %}
                 {{ fire_timing_macro(timing=fire_group.fire_timing) }}
             {% endif %}
 

@@ -134,7 +134,7 @@
                 {{ lock_on_macro(lock_on=fire_mode.lock_on) }}
             {% endif %}
 
-            {% if local_render_items.timing is true and fire_mode.fire_timing %}
+            {% if local_render_items.fire_timing is true and fire_mode.fire_timing %}
                 {{ fire_timing_macro(timing=fire_mode.fire_timing) }}
             {% endif %}
 
