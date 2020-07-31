@@ -163,6 +163,13 @@ def generate_magdump_simulation(
             else:
                 chart_height = width
 
+        total_shots: int = len(
+            list(filter(lambda x: x["Type"] == "cursor", datapoints))
+        )
+        total_pellets: int = len(
+            list(filter(lambda x: x["Type"] == "pellet", datapoints))
+        )
+
         dataset: altair.Data = altair.Data(values=datapoints)
 
         chart: altair.Chart = (
@@ -182,7 +189,11 @@ def generate_magdump_simulation(
                 color=SIMULATION_POINT_TYPE_COLOR,
                 tooltip=["Time:Q", f"{X}:Q", f"{Y}:Q"],
             )
-            .properties(width=chart_width, height=chart_height)
+            .properties(
+                width=chart_width,
+                height=chart_height,
+                title=f"{runs} magdumps, {total_shots} shots, {total_pellets} pellets",
+            )
             .interactive()
         )
 
@@ -200,12 +211,7 @@ def generate_magdump_simulation(
 
     # Fire group
     all_datapoints: List[dict] = list(
-        itertools.chain.from_iterable(
-            (
-                filter(lambda x: x["Type"] == "pellet", d)
-                for _, d in fire_modes_datapoints.items()
-            )
-        )
+        itertools.chain.from_iterable(fire_modes_datapoints.values())
     )
 
     fg_chart_height: int
@@ -236,7 +242,18 @@ def generate_magdump_simulation(
         else:
             fg_chart_height = 0
 
-    fg_dataset: altair.Data = altair.Data(values=all_datapoints)
+    all_total_shots: int = len(
+        list(filter(lambda x: x["Type"] == "cursor", all_datapoints))
+    ) // len(fire_modes_datapoints)
+    all_total_pellets: int = len(
+        list(filter(lambda x: x["Type"] == "pellet", all_datapoints))
+    ) // len(fire_modes_datapoints)
+
+    all_datapoints_pellets_only: List[dict] = list(
+        filter(lambda x: x["Type"] == "pellet", all_datapoints)
+    )
+
+    fg_dataset: altair.Data = altair.Data(values=all_datapoints_pellets_only)
 
     fg_chart: altair.Chart = (
         altair.Chart(fg_dataset)
@@ -255,7 +272,11 @@ def generate_magdump_simulation(
             color=SIMULATION_FIRE_MODE_COLOR,
             tooltip=["Time:Q", f"{X}:Q", f"{Y}:Q"],
         )
-        .properties(width=fg_chart_width, height=fg_chart_height)
+        .properties(
+            width=fg_chart_width,
+            height=fg_chart_height,
+            title=f"{runs} magdumps, {all_total_shots} shots, {all_total_pellets} pellets",
+        )
         .interactive()
     )
 
