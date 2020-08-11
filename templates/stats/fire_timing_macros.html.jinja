@@ -6,10 +6,10 @@
             <tbody>
                 <tr>
                     <th>Type</th>
-                    {% if timing.is_automatic is true %}
-                        <td>Automatic</td>
-                    {% elif timing.burst_length and timing.burst_refire_time %}
+                    {% if timing.burst_length and timing.burst_length > 1 and timing.burst_refire_time %}
                         <td>{{ timing.burst_length }}x burst with {{ timing.burst_refire_time }}ms refire</td>
+                    {% elif timing.is_automatic is true %}
+                        <td>Automatic</td>
                     {% elif timing.chamber_time %}
                         <td>Manual-action with {{ timing.chamber_time }}ms chamber time</td>
                     {% else %}
