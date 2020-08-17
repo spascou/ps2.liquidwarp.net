@@ -8,11 +8,14 @@
 {% from "stats/recoil_macros.html.jinja" import recoil_macro %}
 {% from "stats/cone_of_fire_macros.html.jinja" import cone_of_fire_macro %}
 
-{% macro fire_mode_macro(fire_mode, render_items) %}
+{% macro fire_mode_macro(fire_mode, render_items, firemode_ads_hipfire=true) %}
     <div class="column">
         <div class="box has-background-black-ter">
             <p class="title is-5 has-text-centered" id="fire-mode-{{ fire_mode.fire_mode_id }}">
-                Fire mode: {{ fire_mode.fire_mode_type|enum_name }} {{ "ADS" if fire_mode.is_ads is true else "Hipfire" }}
+                Fire mode: {{ fire_mode.fire_mode_type|enum_name }}
+                {% if firemode_ads_hipfire is true %}
+                    {{ "ADS" if fire_mode.is_ads is true else "Hipfire" }}
+                {% endif %}
             </p>
 
             <div class="box">

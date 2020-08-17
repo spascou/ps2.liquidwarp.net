@@ -118,7 +118,7 @@
         <p class="title is-2 has-text-centered" id="fire-groups">Fire groups</p>
 
         <div class="columns is-multiline is-centered">
-            {{ parent_fire_groups_macro(parent=weapon) }}
+            {{ parent_fire_groups_macro(parent=weapon, firemode_ads_hipfire=false) }}
         </div>
     {% endif %}
 
@@ -128,7 +128,7 @@
                 <p class="title is-2 has-text-centered" id="attachment-{{ attachment.attachment_item_id }}-fire-groups">{{ attachment.name }} attachment fire groups</p>
 
                 <div class="columns is-multiline is-centered">
-                    {{ parent_fire_groups_macro(parent=attachment) }}
+                    {{ parent_fire_groups_macro(parent=attachment, firemode_ads_hipfire=false) }}
                 </div>
             {% endfor %}
         {% endif %}
