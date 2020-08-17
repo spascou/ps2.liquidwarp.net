@@ -63,9 +63,7 @@ def generate_magdump_simulation(
     runs: int = 1,
     control_time: int = 0,
     auto_burst_length: Optional[int] = None,
-    recentering: bool = False,
-    recentering_response_time: int = 1_000,
-    recentering_inertia_factor: float = 0.3,
+    recoil_compensation: bool = False,
     player_state: PlayerState = PlayerState.STANDING,
     width: Optional[int] = None,
     height: Optional[int] = None,
@@ -85,16 +83,21 @@ def generate_magdump_simulation(
             datapoints = []
 
             simulation: Iterator[
-                Tuple[int, Tuple[float, float], List[Tuple[float, float]]]
+                Tuple[
+                    int,
+                    Tuple[float, float],
+                    List[Tuple[float, float]],
+                    float,
+                    Tuple[float, float],
+                    Tuple[float, float],
+                ]
             ]
             for simulation in (
                 fire_mode.simulate_shots(
                     shots=fire_mode.max_consecutive_shots,
                     control_time=control_time,
                     auto_burst_length=auto_burst_length,
-                    recentering=recentering,
-                    recentering_response_time=recentering_response_time,
-                    recentering_inertia_factor=recentering_inertia_factor,
+                    recoil_compensation=recoil_compensation,
                     player_state=player_state,
                 )
                 for _ in range(runs)
@@ -103,7 +106,17 @@ def generate_magdump_simulation(
                 t: int
                 cursor_coor: Tuple[float, float]
                 pellets_coors: List[Tuple[float, float]]
-                for t, cursor_coor, pellets_coors in simulation:
+                _cof: float
+                _vertical_recoil: Tuple[float, float]
+                _horizontal_recoil: Tuple[float, float]
+                for (
+                    t,
+                    cursor_coor,
+                    pellets_coors,
+                    _cof,
+                    _vertical_recoil,
+                    _horizontal_recoil,
+                ) in simulation:
 
                     cursor_x, cursor_y = cursor_coor
 
@@ -111,9 +124,9 @@ def generate_magdump_simulation(
                         {
                             "FireMode": f"{fire_mode_type_resolver[fire_mode.fire_mode_type]} {'ADS' if fire_mode.is_ads else 'Hipfire'} ({fire_mode.fire_mode_id})",
                             "Time": t,
+                            "Type": "cursor",
                             X: cursor_x,
                             Y: cursor_y,
-                            "Type": "cursor",
                         }
                     )
 
@@ -122,9 +135,9 @@ def generate_magdump_simulation(
                             {
                                 "FireMode": f"{fire_mode_type_resolver[fire_mode.fire_mode_type]} {'ADS' if fire_mode.is_ads else 'Hipfire'} ({fire_mode.fire_mode_id})",
                                 "Time": t,
+                                "Type": "pellet",
                                 X: pellet_x,
                                 Y: pellet_y,
-                                "Type": "pellet",
                             }
                         )
 
@@ -741,7 +754,7 @@ def _generate_infantry_weapons_stats_page(
                 fg_magdump_chart: Optional[altair.HConcatChart]
                 fm_magdump_charts: Dict[int, altair.HConcatChart]
                 fg_magdump_chart, fm_magdump_charts = generate_magdump_simulation(
-                    fire_group=fg, runs=50, recentering=False, height=800,
+                    fire_group=fg, runs=50, height=800,
                 )
 
                 # Fire group
@@ -760,7 +773,7 @@ def _generate_infantry_weapons_stats_page(
                                 chart_template.render(
                                     **j2_context,
                                     **{
-                                        "title": f"{infantry_weapon.name} {fg.description} fire group magazine dump simulation",
+                                        "title": f"{infantry_weapon.name} {fg.description} fire group magazine dump",
                                         "chart": fg_magdump_chart,
                                         "update_datetime": datetime.now(timezone.utc),
                                     },
@@ -802,7 +815,7 @@ def _generate_infantry_weapons_stats_page(
                                         chart_template.render(
                                             **j2_context,
                                             **{
-                                                "title": f"{infantry_weapon.name} {fg.description} {fire_mode_type_resolver[fm.fire_mode_type]} {'ADS' if fm.is_ads else 'Hipfire'} fire mode magazine dump simulation",
+                                                "title": f"{infantry_weapon.name} {fg.description} {fire_mode_type_resolver[fm.fire_mode_type]} {'ADS' if fm.is_ads else 'Hipfire'} fire mode magazine dump",
                                                 "chart": fm_magdump_chart,
                                                 "update_datetime": datetime.now(
                                                     timezone.utc
@@ -838,7 +851,7 @@ def _generate_infantry_weapons_stats_page(
                                 chart_template.render(
                                     **j2_context,
                                     **{
-                                        "title": f"{infantry_weapon.name} {fg.description} fire group shots to kill ranges simulation",
+                                        "title": f"{infantry_weapon.name} {fg.description} fire group shots to kill ranges",
                                         "chart": fg_stkr_chart,
                                         "update_datetime": datetime.now(timezone.utc),
                                     },
@@ -880,7 +893,7 @@ def _generate_infantry_weapons_stats_page(
                                         chart_template.render(
                                             **j2_context,
                                             **{
-                                                "title": f"{infantry_weapon.name} {fg.description} {fire_mode_type_resolver[fm.fire_mode_type]} {'ADS' if fm.is_ads else 'Hipfire'} fire mode shots to kill ranges simulation",
+                                                "title": f"{infantry_weapon.name} {fg.description} {fire_mode_type_resolver[fm.fire_mode_type]} {'ADS' if fm.is_ads else 'Hipfire'} fire mode shots to kill ranges",
                                                 "chart": fm_stkr_chart,
                                                 "update_datetime": datetime.now(
                                                     timezone.utc
