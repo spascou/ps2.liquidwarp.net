@@ -36,8 +36,10 @@ from ps2_census.enums import ItemCategory, PlayerState
 
 from .altair_utils import (
     SIMULATION_FIRE_MODE_COLOR,
+    SIMULATION_FIRE_MODE_OPACITY,
     SIMULATION_FIRE_MODE_SELECTION,
     SIMULATION_POINT_TYPE_COLOR,
+    SIMULATION_POINT_TYPE_OPACITY,
     SIMULATION_POINT_TYPE_SELECTION,
     SIMULATION_STK_COLOR,
     SIMULATION_STK_OPACITY,
@@ -209,6 +211,7 @@ def generate_magdump_simulation(
                     scale=altair.Scale(domain=(min_y, max_y)),
                 ),
                 color=SIMULATION_POINT_TYPE_COLOR,
+                opacity=SIMULATION_POINT_TYPE_OPACITY,
                 tooltip=["time:Q", f"{X}:Q", f"{Y}:Q"],
             )
             .properties(
@@ -292,6 +295,7 @@ def generate_magdump_simulation(
                 scale=altair.Scale(domain=(fg_min_y, fg_max_y)),
             ),
             color=SIMULATION_FIRE_MODE_COLOR,
+            opacity=SIMULATION_FIRE_MODE_OPACITY,
             tooltip=["time:Q", f"{X}:Q", f"{Y}:Q"],
         )
         .properties(

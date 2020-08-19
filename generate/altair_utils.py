@@ -46,6 +46,9 @@ SIMULATION_POINT_TYPE_COLOR = altair.condition(
     ),
     altair.value("lightgray"),
 )
+SIMULATION_POINT_TYPE_OPACITY = altair.condition(
+    SIMULATION_POINT_TYPE_SELECTION, altair.value(0.8), altair.value(0.1)
+)
 
 # Simulation fire mode color
 SIMULATION_FIRE_MODE_SELECTION = altair.selection_multi(fields=["firemode"])
@@ -53,6 +56,9 @@ SIMULATION_FIRE_MODE_COLOR = altair.condition(
     SIMULATION_FIRE_MODE_SELECTION,
     altair.Color("firemode:N", scale=altair.Scale(scheme="dark2"), legend=None),
     altair.value("lightgray"),
+)
+SIMULATION_FIRE_MODE_OPACITY = altair.condition(
+    SIMULATION_FIRE_MODE_SELECTION, altair.value(0.8), altair.value(0.1)
 )
 
 # Simulation STK
