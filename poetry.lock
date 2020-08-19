@@ -681,7 +681,7 @@ description = "Daybreak Game's Planetside 2 data analysis (UNOFFICIAL)"
 name = "ps2-analysis"
 optional = false
 python-versions = ">=3.8,<4.0"
-version = "0.23.0"
+version = "0.25.0"
 
 [package.dependencies]
 methodtools = ">=0.4,<0.5"
@@ -1066,7 +1066,7 @@ doc = ["sphinx"]
 test = ["pytest (4.6.7)", "pytest-cov (2.6.1)"]
 
 [metadata]
-content-hash = "b2b5c301884aa9fbd39baed9c8ab858b565a16734a3c99d1df1eb669eaad0537"
+content-hash = "a0601bae1eaff7bf7b30f6bea56452a06c4c3edf6a0dad2a41e336d54602471a"
 python-versions = "^3.8"
 
 [metadata.files]
@@ -1463,8 +1463,8 @@ protobuf = [
     {file = "protobuf-3.13.0.tar.gz", hash = "sha256:6a82e0c8bb2bf58f606040cc5814e07715b2094caeba281e2e7d0b0e2e397db5"},
 ]
 ps2-analysis = [
-    {file = "ps2_analysis-0.23.0-py3-none-any.whl", hash = "sha256:9f21a60d189c80885993bf411f183114d1eb56bfe5432a10c6aa0ee30881b15a"},
-    {file = "ps2_analysis-0.23.0.tar.gz", hash = "sha256:005bae450b5adf577eeb0fd6de45ce4c2b0d3a7522f4ba7ee3332d89ab4140e4"},
+    {file = "ps2_analysis-0.25.0-py3-none-any.whl", hash = "sha256:e0e5fa85133ef4cc68f9aca8005d9c1a2861a9648f4236444d9a4a9cb6da0264"},
+    {file = "ps2_analysis-0.25.0.tar.gz", hash = "sha256:00dc0a051e9596a066c1ffe87a0bc470bb368ca700d605dc7aafed88b275b8c4"},
 ]
 ps2-census = [
     {file = "ps2_census-0.12.8-py3-none-any.whl", hash = "sha256:691e9ca970a43c5cfc8f7bf082f354ceaca01a38551dff36ee646839c204edc3"},

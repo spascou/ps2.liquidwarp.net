@@ -3,13 +3,13 @@
   "version": "1.0.0",
   "main": "sass/mystyles.scss",
   "devDependencies": {
+    "@creativebulma/bulma-tooltip": "^1.2",
     "bulma": "^0.9",
     "bulmaswatch": "^0.8",
-    "node-sass": "^4.14",
-    "vega-lite": "^4.13",
-    "vega-cli": "^5.13",
     "canvas": "^2.6",
-    "@creativebulma/bulma-tooltip": "^1.2"
+    "node-sass": "^4.14",
+    "vega-cli": "^5.14.0",
+    "vega-lite": "^4.14.1"
   },
   "license": "MIT",
   "scripts": {
