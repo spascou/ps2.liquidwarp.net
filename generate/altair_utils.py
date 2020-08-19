@@ -1,8 +1,9 @@
 from typing import List
 
 import altair
-from constants import CURSOR, PELLET
 from ps2_census.enums import Faction
+
+from .constants import CURSOR, PELLET
 
 # Axis
 X: str = "x"

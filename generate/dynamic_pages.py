@@ -15,6 +15,7 @@ from ps2_analysis.fire_groups.data_files import (
 )
 from ps2_analysis.fire_groups.fire_group import FireGroup
 from ps2_analysis.fire_groups.fire_mode import FireMode
+from ps2_analysis.utils import fastround
 from ps2_analysis.weapons.infantry.data_files import (
     load_data_files as load_infantry_weapons_data_files,
 )
@@ -51,6 +52,7 @@ from .constants import (
     INFANTRY_WEAPON_STATS_TEMPLATE_PATH,
     PAGES_DIRECTORY,
     PELLET,
+    PRECISION_DECIMALS,
     SIMULATIONS_DIRECTORY,
     SITE_DIRECTORY,
     TEMPLATES_DIRECTORY,
@@ -122,6 +124,9 @@ def generate_magdump_simulation(
 
                     cursor_x, cursor_y = cursor_coor
 
+                    cursor_x = fastround(cursor_x, PRECISION_DECIMALS)
+                    cursor_y = fastround(cursor_y, PRECISION_DECIMALS)
+
                     datapoints.append(
                         {
                             "firemode": f"{fire_mode_type_resolver[fire_mode.fire_mode_type]} {'ADS' if fire_mode.is_ads else 'Hipfire'} ({fire_mode.fire_mode_id})",
@@ -133,6 +138,10 @@ def generate_magdump_simulation(
                     )
 
                     for pellet_x, pellet_y in pellets_coors:
+
+                        pellet_x = fastround(pellet_x, PRECISION_DECIMALS)
+                        pellet_y = fastround(pellet_y, PRECISION_DECIMALS)
+
                         datapoints.append(
                             {
                                 "firemode": f"{fire_mode_type_resolver[fire_mode.fire_mode_type]} {'ADS' if fire_mode.is_ads else 'Hipfire'} ({fire_mode.fire_mode_id})",

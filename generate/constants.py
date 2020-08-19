@@ -25,3 +25,5 @@ FACTION_BACKGROUND_COLOR_CLASSES: Dict[Faction, str] = {
 
 CURSOR: str = "cursor"
 PELLET: str = "pellet"
+
+PRECISION_DECIMALS: int = 3
