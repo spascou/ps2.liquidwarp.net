@@ -22,3 +22,6 @@ FACTION_BACKGROUND_COLOR_CLASSES: Dict[Faction, str] = {
     Faction.TERRAN_REPUBLIC: "has-background-tr",
     Faction.NS_OPERATIVES: "has-background-no-faction",
 }
+
+CURSOR: str = "cursor"
+PELLET: str = "pellet"

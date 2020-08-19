@@ -46,9 +46,11 @@ from .altair_utils import (
 )
 from .constants import (
     CHART_TEMPLATE_PATH,
+    CURSOR,
     DATA_FILES_DIRECTORY,
     INFANTRY_WEAPON_STATS_TEMPLATE_PATH,
     PAGES_DIRECTORY,
+    PELLET,
     SIMULATIONS_DIRECTORY,
     SITE_DIRECTORY,
     TEMPLATES_DIRECTORY,
@@ -122,9 +124,9 @@ def generate_magdump_simulation(
 
                     datapoints.append(
                         {
-                            "FireMode": f"{fire_mode_type_resolver[fire_mode.fire_mode_type]} {'ADS' if fire_mode.is_ads else 'Hipfire'} ({fire_mode.fire_mode_id})",
-                            "Time": t,
-                            "Type": "cursor",
+                            "firemode": f"{fire_mode_type_resolver[fire_mode.fire_mode_type]} {'ADS' if fire_mode.is_ads else 'Hipfire'} ({fire_mode.fire_mode_id})",
+                            "time": t,
+                            "type": CURSOR,
                             X: cursor_x,
                             Y: cursor_y,
                         }
@@ -133,9 +135,9 @@ def generate_magdump_simulation(
                     for pellet_x, pellet_y in pellets_coors:
                         datapoints.append(
                             {
-                                "FireMode": f"{fire_mode_type_resolver[fire_mode.fire_mode_type]} {'ADS' if fire_mode.is_ads else 'Hipfire'} ({fire_mode.fire_mode_id})",
-                                "Time": t,
-                                "Type": "pellet",
+                                "firemode": f"{fire_mode_type_resolver[fire_mode.fire_mode_type]} {'ADS' if fire_mode.is_ads else 'Hipfire'} ({fire_mode.fire_mode_id})",
+                                "time": t,
+                                "type": PELLET,
                                 X: pellet_x,
                                 Y: pellet_y,
                             }
@@ -176,11 +178,9 @@ def generate_magdump_simulation(
             else:
                 chart_height = width
 
-        total_shots: int = len(
-            list(filter(lambda x: x["Type"] == "cursor", datapoints))
-        )
+        total_shots: int = len(list(filter(lambda x: x["type"] == CURSOR, datapoints)))
         total_pellets: int = len(
-            list(filter(lambda x: x["Type"] == "pellet", datapoints))
+            list(filter(lambda x: x["type"] == PELLET, datapoints))
         )
 
         dataset: altair.Data = altair.Data(values=datapoints)
@@ -200,7 +200,7 @@ def generate_magdump_simulation(
                     scale=altair.Scale(domain=(min_y, max_y)),
                 ),
                 color=SIMULATION_POINT_TYPE_COLOR,
-                tooltip=["Time:Q", f"{X}:Q", f"{Y}:Q"],
+                tooltip=["time:Q", f"{X}:Q", f"{Y}:Q"],
             )
             .properties(
                 width=chart_width,
@@ -214,7 +214,7 @@ def generate_magdump_simulation(
             altair.Chart(dataset)
             .mark_point()
             .encode(
-                y=altair.Y("Type:N", axis=altair.Axis(orient="right")),
+                y=altair.Y("type:N", axis=altair.Axis(orient="right")),
                 color=SIMULATION_POINT_TYPE_COLOR,
             )
             .add_selection(SIMULATION_POINT_TYPE_SELECTION)
@@ -256,14 +256,14 @@ def generate_magdump_simulation(
             fg_chart_height = 0
 
     all_total_shots: int = len(
-        list(filter(lambda x: x["Type"] == "cursor", all_datapoints))
+        list(filter(lambda x: x["type"] == CURSOR, all_datapoints))
     ) // len(fire_modes_datapoints)
     all_total_pellets: int = len(
-        list(filter(lambda x: x["Type"] == "pellet", all_datapoints))
+        list(filter(lambda x: x["type"] == PELLET, all_datapoints))
     ) // len(fire_modes_datapoints)
 
     all_datapoints_pellets_only: List[dict] = list(
-        filter(lambda x: x["Type"] == "pellet", all_datapoints)
+        filter(lambda x: x["type"] == PELLET, all_datapoints)
     )
 
     fg_dataset: altair.Data = altair.Data(values=all_datapoints_pellets_only)
@@ -283,7 +283,7 @@ def generate_magdump_simulation(
                 scale=altair.Scale(domain=(fg_min_y, fg_max_y)),
             ),
             color=SIMULATION_FIRE_MODE_COLOR,
-            tooltip=["Time:Q", f"{X}:Q", f"{Y}:Q"],
+            tooltip=["time:Q", f"{X}:Q", f"{Y}:Q"],
         )
         .properties(
             width=fg_chart_width,
@@ -297,7 +297,7 @@ def generate_magdump_simulation(
         altair.Chart(fg_dataset)
         .mark_point()
         .encode(
-            y=altair.Y("FireMode:N", axis=altair.Axis(orient="right")),
+            y=altair.Y("firemode:N", axis=altair.Axis(orient="right")),
             color=SIMULATION_FIRE_MODE_COLOR,
         )
         .add_selection(SIMULATION_FIRE_MODE_SELECTION)
@@ -363,7 +363,7 @@ def generate_stkr_simulation(
                     {
                         X: b_distance,
                         Y: b_stk,
-                        "Target": DamageTargetType.INFANTRY_BASELINE,
+                        "target": DamageTargetType.INFANTRY_BASELINE,
                     }
                 )
 
@@ -388,7 +388,7 @@ def generate_stkr_simulation(
                     stk: int
                     for distance, stk in stkr:
                         datapoints.append(
-                            {X: distance, Y: stk, "Target": damage_target_type}
+                            {X: distance, Y: stk, "target": damage_target_type}
                         )
 
             if not datapoints:
@@ -411,11 +411,11 @@ def generate_stkr_simulation(
             target: str
             target_dp_it: Iterator[dict]
             for target, target_dp_it in itertools.groupby(
-                sorted(datapoints, key=lambda x: x["Target"]), lambda x: x["Target"]
+                sorted(datapoints, key=lambda x: x["target"]), lambda x: x["target"]
             ):
                 last_stk = sorted(target_dp_it, key=lambda x: x[X])[-1][Y]
 
-                datapoints.append({X: max_x, Y: last_stk, "Target": target})
+                datapoints.append({X: max_x, Y: last_stk, "target": target})
 
             size_properties: dict
 
@@ -428,12 +428,7 @@ def generate_stkr_simulation(
 
             chart: altair.Chart = (
                 altair.Chart(dataset)
-                .mark_line(
-                    interpolate="step-after",
-                    point=True,
-                    strokeOpacity=0.5,
-                    strokeWidth=10,
-                )
+                .mark_line(interpolate="step-after", strokeOpacity=0.5, strokeWidth=10)
                 .encode(
                     x=altair.X(
                         f"{X}:Q",
@@ -447,7 +442,7 @@ def generate_stkr_simulation(
                     ),
                     color=SIMULATION_STK_COLOR,
                     opacity=SIMULATION_STK_OPACITY,
-                    tooltip=["Target:N", f"{X}:Q", f"{Y}:Q"],
+                    tooltip=["target:N", f"{X}:Q", f"{Y}:Q"],
                 )
                 .properties(title=damage_location, **size_properties)
                 .interactive()
@@ -457,7 +452,7 @@ def generate_stkr_simulation(
                 altair.Chart(dataset)
                 .mark_point()
                 .encode(
-                    y=altair.Y("Target:N", axis=altair.Axis(orient="right")),
+                    y=altair.Y("target:N", axis=altair.Axis(orient="right")),
                     color=SIMULATION_STK_COLOR,
                 )
                 .add_selection(SIMULATION_STK_SELECTION)
@@ -491,7 +486,7 @@ def generate_stkr_simulation(
                             {
                                 X: b_distance,
                                 Y: b_stk,
-                                "Target": DamageTargetType.INFANTRY_BASELINE,
+                                "target": DamageTargetType.INFANTRY_BASELINE,
                             }
                         )
 
@@ -513,7 +508,7 @@ def generate_stkr_simulation(
                         if stkr and stkr != baseline_stkr:
                             for distance, stk in stkr:
                                 datapoints.append(
-                                    {X: distance, Y: stk, "Target": damage_target_type}
+                                    {X: distance, Y: stk, "target": damage_target_type}
                                 )
 
                     if not datapoints:
@@ -534,12 +529,12 @@ def generate_stkr_simulation(
                         max_x = zero_range_width
 
                     for target, target_dp_it in itertools.groupby(
-                        sorted(datapoints, key=lambda x: x["Target"]),
-                        lambda x: x["Target"],
+                        sorted(datapoints, key=lambda x: x["target"]),
+                        lambda x: x["target"],
                     ):
                         last_stk = sorted(target_dp_it, key=lambda x: x[X])[-1][Y]
 
-                        datapoints.append({X: max_x, Y: last_stk, "Target": target})
+                        datapoints.append({X: max_x, Y: last_stk, "target": target})
 
                     if width:
                         size_properties = {"width": width}
@@ -551,10 +546,7 @@ def generate_stkr_simulation(
                     chart = (
                         altair.Chart(dataset)
                         .mark_line(
-                            interpolate="step-after",
-                            point=True,
-                            strokeOpacity=0.5,
-                            strokeWidth=10,
+                            interpolate="step-after", strokeOpacity=0.5, strokeWidth=10,
                         )
                         .encode(
                             x=altair.X(
@@ -569,7 +561,7 @@ def generate_stkr_simulation(
                             ),
                             color=SIMULATION_STK_COLOR,
                             opacity=SIMULATION_STK_OPACITY,
-                            tooltip=["Target:N", f"{X}:Q", f"{Y}:Q"],
+                            tooltip=["target:N", f"{X}:Q", f"{Y}:Q"],
                         )
                         .properties(title=damage_location, **size_properties)
                         .interactive()
@@ -579,7 +571,7 @@ def generate_stkr_simulation(
                         altair.Chart(dataset)
                         .mark_point()
                         .encode(
-                            y=altair.Y("Target:N", axis=altair.Axis(orient="right")),
+                            y=altair.Y("target:N", axis=altair.Axis(orient="right")),
                             color=SIMULATION_STK_COLOR,
                         )
                         .add_selection(SIMULATION_STK_SELECTION)

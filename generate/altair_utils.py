@@ -1,6 +1,7 @@
 from typing import List
 
 import altair
+from constants import CURSOR, PELLET
 from ps2_census.enums import Faction
 
 # Axis
@@ -28,14 +29,14 @@ FACTION_COLOR = altair.condition(
 )
 
 # Simulation point type color
-_SIMULATION_POINT_TYPE_COLOR_DOMAIN: List[str] = ["cursor", "pellet"]
+_SIMULATION_POINT_TYPE_COLOR_DOMAIN: List[str] = [CURSOR, PELLET]
 _SIMULATION_POINT_TYPE_COLOR_RANGE: List[str] = ["red", "green"]
 
-SIMULATION_POINT_TYPE_SELECTION = altair.selection_multi(fields=["Type"])
+SIMULATION_POINT_TYPE_SELECTION = altair.selection_multi(fields=["type"])
 SIMULATION_POINT_TYPE_COLOR = altair.condition(
     SIMULATION_POINT_TYPE_SELECTION,
     altair.Color(
-        "Type:N",
+        "type:N",
         scale=altair.Scale(
             domain=_SIMULATION_POINT_TYPE_COLOR_DOMAIN,
             range=_SIMULATION_POINT_TYPE_COLOR_RANGE,
@@ -46,23 +47,23 @@ SIMULATION_POINT_TYPE_COLOR = altair.condition(
 )
 
 # Simulation fire mode color
-SIMULATION_FIRE_MODE_SELECTION = altair.selection_multi(fields=["FireMode"])
+SIMULATION_FIRE_MODE_SELECTION = altair.selection_multi(fields=["firemode"])
 SIMULATION_FIRE_MODE_COLOR = altair.condition(
     SIMULATION_FIRE_MODE_SELECTION,
-    altair.Color("FireMode:N", scale=altair.Scale(scheme="dark2"), legend=None),
+    altair.Color("firemode:N", scale=altair.Scale(scheme="dark2"), legend=None),
     altair.value("lightgray"),
 )
 
 # Simulation STK
-SIMULATION_STK_SELECTION = altair.selection_multi(fields=["Target"])
+SIMULATION_STK_SELECTION = altair.selection_multi(fields=["target"])
 SIMULATION_STK_COLOR = altair.condition(
     SIMULATION_STK_SELECTION,
-    altair.Color("Target:N", scale=altair.Scale(scheme="dark2"), legend=None),
+    altair.Color("target:N", scale=altair.Scale(scheme="dark2"), legend=None),
     altair.value("lightgray"),
 )
 SIMULATION_STK_OPACITY = altair.condition(
     SIMULATION_STK_SELECTION,
-    altair.Color("Target:N", scale=altair.Scale(scheme="dark2"), legend=None),
+    altair.Color("target:N", scale=altair.Scale(scheme="dark2"), legend=None),
     altair.value(0.1),
 )
 
