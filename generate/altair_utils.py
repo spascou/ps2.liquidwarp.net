@@ -63,9 +63,7 @@ SIMULATION_STK_COLOR = altair.condition(
     altair.value("lightgray"),
 )
 SIMULATION_STK_OPACITY = altair.condition(
-    SIMULATION_STK_SELECTION,
-    altair.Color("target:N", scale=altair.Scale(scheme="dark2"), legend=None),
-    altair.value(0.1),
+    SIMULATION_STK_SELECTION, altair.value(0.8), altair.value(0.1),
 )
 
 
