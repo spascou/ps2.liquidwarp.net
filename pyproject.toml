@@ -18,7 +18,7 @@ keywords = []
 
 [tool.poetry.dependencies]
 python = "^3.8"
-ps2-analysis = "^0.25"
+ps2-analysis = "^0.27"
 altair = "^4.1"
 altair-saver = "^0.5"
 jinja2 = "^2.11"
