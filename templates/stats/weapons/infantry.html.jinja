@@ -33,7 +33,7 @@
         </figure>
     {% endif %}
 
-    <p class="title is-1">{{ weapon.name }}</p>
+    <h1 class="title is-1">{{ weapon.name }}</h1>
 
     {% if weapon.description %}
         <p class="subtitle is-4">{{ weapon.description }}</p>
@@ -85,7 +85,7 @@
 
     <br />
 
-    <p class="title is-2 has-text-centered" id="basic-information">Basic information</p>
+    <h2 class="title is-2 has-text-centered" id="basic-information">Basic information</h2>
 
     <div class="columns is-multiline is-centered">
         <div class="column is-10">
@@ -133,7 +133,7 @@
     </div>
 
     {% if weapon.fire_groups %}
-        <p class="title is-2 has-text-centered" id="fire-groups">Fire groups</p>
+        <h2 class="title is-2 has-text-centered" id="fire-groups">Fire groups</h2>
 
         <div class="columns is-multiline is-centered">
             {{ parent_fire_groups_macro(parent=weapon, firemode_ads_hipfire=true) }}
@@ -143,7 +143,7 @@
     {% if weapon.attachments %}
         {% if weapon.attachment_fire_groups %}
             {% for attachment, fire_groups in weapon.attachment_fire_groups %}
-                <p class="title is-2 has-text-centered" id="attachment-{{ attachment.attachment_item_id }}-fire-groups">{{ attachment.name }} attachment fire groups</p>
+                <h2 class="title is-2 has-text-centered" id="attachment-{{ attachment.attachment_item_id }}-fire-groups">{{ attachment.name }} attachment fire groups</h2>
 
                 <div class="columns is-multiline is-centered">
                     {{ parent_fire_groups_macro(parent=attachment, firemode_ads_hipfire=true) }}
@@ -151,7 +151,7 @@
             {% endfor %}
         {% endif %}
 
-        <p class="title is-2 has-text-centered" id="attachments">Attachments</p>
+        <h2 class="title is-2 has-text-centered" id="attachments">Attachments</h2>
 
         <div class="columns is-multiline is-centered">
             {% for attachment in weapon.attachments %}

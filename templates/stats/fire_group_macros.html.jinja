@@ -84,11 +84,11 @@
 {% macro fire_group_macro(fire_group, render_items, firemode_ads_hipfire=true) %}
     <div class="column is-full">
         <div class="box has-background-grey-darker">
-            <p class="title is-3 has-text-centered" id="fire-group-{{ fire_group.fire_group_id }}">
+            <h3 class="title is-3 has-text-centered" id="fire-group-{{ fire_group.fire_group_id }}">
                 Fire group: {{ fire_group.description }}
-            </p>
+            </h3>
 
-            <p class="title is-4 has-text-centered">Basic information</p>
+            <h4 class="title is-4 has-text-centered">Basic information</h4>
 
             <table class="is-table">
                 <tbody>
@@ -115,11 +115,11 @@
 
             {% if fire_group.magdump_simulation_base_path %}
                 <div class="box">
-                    <p class="title is-5 has-text-centered">
+                    <h5 class="title is-5 has-text-centered">
                         <span class="has-tooltip" data-tooltip="Simulation of multiple whole magazine dumps without any control">
                             Magazine dump simulation
                         </span>
-                    </p>
+                    </h5>
 
                     <figure class="has-tooptip" data-tooltip="Click image to view interactive chart!">
                         <a href="/{{ fire_group.magdump_simulation_base_path }}.html" target="_blank">
@@ -135,11 +135,11 @@
 
             {% if fire_group.stkr_simulation_base_path %}
                 <div class="box">
-                    <p class="title is-5 has-text-centered">
+                    <h5 class="title is-5 has-text-centered">
                         <span class="has-tooltip" data-tooltip="Simulation of shots to kill at ranges assuming all hits">
                             Shots to kill ranges simulation
                         </span>
-                    </p>
+                    </h5>
 
                     <figure class="has-tooptip" data-tooltip="Click image to view interactive chart!">
                         <a href="/{{ fire_group.stkr_simulation_base_path }}.html" target="_blank">
@@ -212,7 +212,7 @@
                 {% endfor %}
             {% endif %}
 
-            <p class="title is-4 has-text-centered">Fire modes</p>
+            <h4 class="title is-4 has-text-centered">Fire modes</h4>
 
             <div class="columns is-multiline is-centered">
                 {% for fire_mode in fire_group.fire_modes %}

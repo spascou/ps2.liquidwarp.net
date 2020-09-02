@@ -14,20 +14,20 @@
 {% endblock %}
 
 {% block content %}
-    <p class="title is-1">Infantry weapons stats</p>
+    <h1 class="title is-1">Infantry weapons stats</h1>
 
     <br />
 
     <div class="columns is-multiline is-centered">
         {% for fac, v1 in faction_category_infantry_weapons|items %}
             <div class="column is-full {{ faction_background_color_classes[fac] }}">
-                <p class="title is-2 has-text-centered">{{ fac|enum_name }}</p>
+                <h2 class="title is-2 has-text-centered">{{ fac|enum_name }}</h2>
 
                 <div class="columns is-multiline is-centered">
                     {% for cat, v2 in v1|items %}
                         <div class="column is-3">
                             <div class="box">
-                                <p class="title is-3 has-text-centered">{{ cat|enum_name }}</p>
+                                <h3 class="title is-3 has-text-centered">{{ cat|enum_name }}</h3>
                                 <ul>
                                     {% for w in v2 %}
                                         <li>

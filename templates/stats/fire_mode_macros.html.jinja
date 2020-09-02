@@ -11,15 +11,15 @@
 {% macro fire_mode_macro(fire_mode, render_items, firemode_ads_hipfire=true) %}
     <div class="column">
         <div class="box has-background-black-ter">
-            <p class="title is-5 has-text-centered" id="fire-mode-{{ fire_mode.fire_mode_id }}">
+            <h5 class="title is-5 has-text-centered" id="fire-mode-{{ fire_mode.fire_mode_id }}">
                 Fire mode: {{ fire_mode.fire_mode_type|enum_name }}
                 {% if firemode_ads_hipfire is true %}
                     {{ "ADS" if fire_mode.is_ads is true else "Hipfire" }}
                 {% endif %}
-            </p>
+            </h5>
 
             <div class="box">
-                <p class="title is-5 has-text-centered">Basic information</p>
+                <h5 class="title is-5 has-text-centered">Basic information</h5>
 
                 <table class="is-table">
                     <tbody>
@@ -83,11 +83,11 @@
 
             {% if fire_mode.magdump_simulation_base_path %}
                 <div class="box">
-                    <p class="title is-5 has-text-centered">
+                    <h5 class="title is-5 has-text-centered">
                         <span class="has-tooltip" data-tooltip="Simulation of multiple whole magazine dumps without any control">
                             Magazine dump simulation
                         </span>
-                    </p>
+                    </h5>
 
                     <figure class="has-tooptip" data-tooltip="Click image to view interactive chart!">
                         <a href="/{{ fire_mode.magdump_simulation_base_path }}.html" target="_blank">
