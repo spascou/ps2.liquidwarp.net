@@ -8,6 +8,7 @@ PAGES_DIRECTORY: str = "pages"
 STATICS_DIRECTORY: str = "statics"
 DATA_FILES_DIRECTORY: str = "datafiles"
 SIMULATIONS_DIRECTORY: str = "simulations"
+MISC_DIRECTORY: str = "misc"
 
 TEMPLATE_EXTENSION: str = "html.jinja"
 

@@ -4,6 +4,7 @@ from typing import Optional
 from generate import (
     clean_bucket,
     clean_site,
+    copy_misc,
     copy_statics,
     generate_css,
     generate_pages,
@@ -31,6 +32,7 @@ if __name__ == "__main__":
 
     action_group.add_argument("--generate", action="store_true")
     action_group.add_argument("--copy-statics", action="store_true")
+    action_group.add_argument("--copy-misc", action="store_true")
     action_group.add_argument("--generate-css", action="store_true")
 
     action_group.add_argument("--clean-local", action="store_true")
@@ -60,6 +62,10 @@ if __name__ == "__main__":
     if args.update or args.generate or args.copy_statics:
 
         copy_statics()
+
+    if args.update or args.generate or args.copy_misc:
+
+        copy_misc()
 
     if args.clean_remote:
 

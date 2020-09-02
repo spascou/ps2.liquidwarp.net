@@ -16,7 +16,12 @@ from ps2_analysis.weapons.vehicle.data_files import (
 )
 
 from .altair_utils import dark_theme
-from .constants import DATA_FILES_DIRECTORY, SITE_DIRECTORY, STATICS_DIRECTORY
+from .constants import (
+    DATA_FILES_DIRECTORY,
+    MISC_DIRECTORY,
+    SITE_DIRECTORY,
+    STATICS_DIRECTORY,
+)
 from .dynamic_pages import generate_dynamic_pages
 from .predefined_pages import generate_predefined_pages
 
@@ -87,3 +92,24 @@ def copy_statics():
         print(f"Copying {destination_path}")
 
         shutil.copyfile(static_path, destination_path)
+
+
+def copy_misc():
+
+    for misc_path in Path(MISC_DIRECTORY).rglob("*"):
+
+        if not os.path.isfile(misc_path):
+            continue
+
+        misc_dirs: List[str]
+        misc_filename: str
+        _, *misc_dirs, misc_filename = misc_path.parts
+
+        destination_dir: Path = Path(SITE_DIRECTORY, *misc_dirs)
+        destination_dir.mkdir(parents=True, exist_ok=True)
+
+        destination_path: Path = destination_dir.joinpath(misc_filename)
+
+        print(f"Copying {destination_path}")
+
+        shutil.copyfile(misc_path, destination_path)
