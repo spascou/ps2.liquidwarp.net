@@ -1,7 +1,8 @@
 import gzip
 from io import BytesIO
+from multiprocessing import Pool
 from pathlib import Path
-from typing import List
+from typing import Iterable, List
 
 from google.cloud import storage
 
@@ -23,49 +24,53 @@ def clean_bucket(bucket_name: str):
         blob.delete()
 
 
-def upload_to_bucket(bucket_name: str, prefix: str = ""):
+def upload_to_bucket(bucket_name: str, prefix: str = "", processes: int = 10):
 
     print(f"Uploading files to {bucket_name} bucket")
+
+    pool = Pool(processes)
+    file_paths: Iterable[Path] = filter(
+        lambda x: (
+            not x.is_dir()
+            and str(x).startswith(str(Path(SITE_DIRECTORY).joinpath(prefix)))
+        ),
+        Path(SITE_DIRECTORY).rglob("*"),
+    )
+
+    pool.starmap(_upload_file_to_bucket, ((bucket_name, fp) for fp in file_paths))
+
+
+def _upload_file_to_bucket(bucket_name: str, file_path: Path):
 
     client: storage.Client = storage.Client()
     bucket: storage.Bucket = client.get_bucket(bucket_name)
 
-    for file_path in Path(SITE_DIRECTORY).rglob("*"):
+    file_dirs: List[str]
+    file_filename: str
+    _, *file_dirs, file_filename = file_path.parts
 
-        if file_path.is_dir():
+    destination_path = Path(*file_dirs, file_filename)
 
-            continue
+    suffix: str = file_path.suffix
 
-        elif not str(file_path).startswith(str(Path(SITE_DIRECTORY).joinpath(prefix))):
+    print(f"Uploading {destination_path}")
 
-            continue
+    blob: storage.Blob = bucket.blob(str(destination_path))
 
-        file_dirs: List[str]
-        file_filename: str
-        _, *file_dirs, file_filename = file_path.parts
+    # Compress files that can be compressed
+    if suffix in {".html", ".css", ".js"}:
 
-        destination_path = Path(*file_dirs, file_filename)
+        content_type: str = SUFFIX_CONTENT_TYPE[suffix]
 
-        suffix: str = file_path.suffix
+        blob.content_encoding = "gzip"
+        blob.content_type = content_type
 
-        print(f"Uploading {destination_path}")
+        with open(file_path, "rb") as f:
+            data: BytesIO = BytesIO(gzip.compress(f.read()))
 
-        blob: storage.Blob = bucket.blob(str(destination_path))
+        blob.upload_from_file(data, rewind=True, content_type=content_type)
 
-        # Compress files that can be compressed
-        if suffix in {".html", ".css", ".js"}:
+    # Otherwise just upload
+    else:
 
-            content_type: str = SUFFIX_CONTENT_TYPE[suffix]
-
-            blob.content_encoding = "gzip"
-            blob.content_type = content_type
-
-            with open(file_path, "rb") as f:
-                data: BytesIO = BytesIO(gzip.compress(f.read()))
-
-            blob.upload_from_file(data, rewind=True, content_type=content_type)
-
-        # Otherwise just upload
-        else:
-
-            blob.upload_from_filename(str(file_path))
+        blob.upload_from_filename(str(file_path))

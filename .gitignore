@@ -136,3 +136,6 @@ datafiles/
 
 # Generated site
 site/
+
+# Google Cloud key
+gcloud-key.json
