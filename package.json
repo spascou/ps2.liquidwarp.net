@@ -8,8 +8,8 @@
     "bulmaswatch": "^0.8",
     "canvas": "^2.6",
     "node-sass": "^4.14",
-    "vega-cli": "^5.14.0",
-    "vega-lite": "^4.14.1"
+    "vega-cli": "^5.15.0",
+    "vega-lite": "^4.15.0"
   },
   "license": "MIT",
   "scripts": {
