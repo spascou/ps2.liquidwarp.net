@@ -1,9 +1,11 @@
+import gzip
+from io import BytesIO
 from pathlib import Path
 from typing import List
 
 from google.cloud import storage
 
-from .constants import SITE_DIRECTORY
+from .constants import SITE_DIRECTORY, SUFFIX_CONTENT_TYPE
 
 
 def clean_bucket(bucket_name: str):
@@ -44,7 +46,26 @@ def upload_to_bucket(bucket_name: str, prefix: str = ""):
 
         destination_path = Path(*file_dirs, file_filename)
 
+        suffix: str = file_path.suffix
+
         print(f"Uploading {destination_path}")
 
         blob: storage.Blob = bucket.blob(str(destination_path))
-        blob.upload_from_filename(str(file_path))
+
+        # Compress files that can be compressed
+        if suffix in {".html", ".css", ".js"}:
+
+            content_type: str = SUFFIX_CONTENT_TYPE[suffix]
+
+            blob.content_encoding = "gzip"
+            blob.content_type = content_type
+
+            with open(file_path, "rb") as f:
+                data: BytesIO = BytesIO(gzip.compress(f.read()))
+
+            blob.upload_from_file(data, rewind=True, content_type=content_type)
+
+        # Otherwise just upload
+        else:
+
+            blob.upload_from_filename(str(file_path))

@@ -27,4 +27,11 @@ FACTION_BACKGROUND_COLOR_CLASSES: Dict[Faction, str] = {
 CURSOR: str = "cursor"
 PELLET: str = "pellet"
 
+SUFFIX_CONTENT_TYPE: Dict[str, str] = {
+    ".html": "text/html",
+    ".css": "text/css",
+    ".js": "text/javascript",
+}
+
+
 PRECISION_DECIMALS: int = 3
